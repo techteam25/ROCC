@@ -1,0 +1,52 @@
+// Change color of stories in Stories menu depending on story status
+// Sort (working on top, waiting in middle, approved on bottom)
+
+Communications with database
+- Minimum initial
+    Pull all slide pictures for given template
+    Pull all notes for whole story
+    Pull slide text for opening slide
+    Pull audio for opening slide
+    Pull slide notes for opening slide
+    Pull status of opening slide
+    Pull messages for opening slide
+    Pull logs for opening slide
+- Ongoing
+    Save whole story notes
+    Save slide notes
+    Save slide messages
+    Save slide status
+    Save updated slide logs
+
+Considerations
+    How much to pull from database initially
+    When to save to database
+    What actions should update slide logs
+    When notifications should be sent to translators
+    Whether translator/consultant work should be done concurrently or sequentially
+    Making sure slide notes fit LWC
+    Put slide status in slide preview pane
+    Headings for different areas of the page
+    What happens after every slide is approved
+
+Thoughts/Decisions
+    Observe speeds of different loading paradigms
+    Save to database every time focus leaves area whose contents can be saved
+    Save every few minutes, too, in case of being in process of taking notes
+    No ROCC action updates slide logs
+
+Unfinished parts of the page
+    Bible versions menu and Bible lookup
+    Reasons for rejection of translation
+    Final approval after all slides approved
+    Play bars and audio
+    Key terms area
+
+TO DO:
+1. Install Ubuntu Server and any additional setup
+2. Connect to database or file storage (possibly reconfigure database)
+3. Use API to pull files and communicate with database
+
+Things to Document:
+    Different API functions (and how to call/use them)
+    Which functions contain HTML (in case it needs to be changed)

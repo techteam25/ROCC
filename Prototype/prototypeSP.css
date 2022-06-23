@@ -1,0 +1,407 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+    background: #2196F3;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ccc; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(77,76,77,0.75); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.ql-toolbar.ql-snow, .ql-container.ql-snow {
+    border: 1px solid rgb(183, 183, 183);
+}
+
+/* Header styles */
+
+header {
+    height: 65px;
+    width: 100%;
+    background-color: #2196F3;
+    box-shadow: 2px 2px 2px 2px rgba(77,76,77,0.40);
+    padding: 0px;
+    position: relative;
+    z-index: 30;
+    color: white;
+}
+
+header ul {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    list-style-type: none;
+}
+
+header li {
+    margin: auto;
+    padding: 10px;
+}
+
+header img, #logo {
+    height: 65px;
+    margin: 0px;
+    padding: 0px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+#stories {
+    width: calc(1/3 * 100% - 65px);
+}
+
+#story-title {
+    width: calc(1/3 * 100%);
+    text-align: center;
+    font-size: 18pt;
+}
+
+.header-button {
+    height: 100%;
+    margin: 0px;
+    padding: 15px;
+    font-size: 11pt;
+    cursor: pointer;
+}
+
+.header-button:hover {
+    background-color: rgb(25, 111, 182);
+}
+
+#header-right {
+    width: calc(1/3 * 100%);
+    padding-right: 20px;
+    text-align: right;
+}
+
+.account-access {
+    padding: 15px 15px;
+}
+
+.divider {
+    padding: 15px 0px;
+    color: rgba(77,76,77,0.75);
+}
+
+/* Stories menu display styles */
+
+.sidebar {
+    height: calc(100% - 65px);
+    width: 250px;
+    display: none;
+    z-index: 25;
+    background-color: white;
+    position: fixed!important;
+    animation: animateleft 0.4s;
+} @keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+
+#menu-header {
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+    padding: 10px 10px 20px 10px;
+}
+
+#menu-sort {
+    display: flex;
+    float: left;
+}
+
+#menu-sort label {
+    margin: auto 5px auto 0;
+}
+
+#sort-select {
+    margin: auto 0;
+    font-size: 11pt;
+}
+
+#menu-header i {
+    float: right;
+    cursor: pointer;
+    color: rgba(77,76,77,0.75);
+}
+
+#menu-header i:hover {
+    color: #555;
+}
+
+#language-projects-list {
+    height: calc(100% - 40px);
+    overflow: auto;
+}
+
+.language-project {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 14pt;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.language-project:hover {
+    background-color: #ccc;
+}
+
+.language-stories-list {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    display: none;
+}
+
+.language-stories-list a {
+    text-decoration: none;
+    color: black;
+}
+
+.language-stories-list li {
+    width: calc(100% - 40px);
+    padding: 5px 10px 5px 30px;
+}
+
+.approved {
+    background-color: rgba(0, 128, 0, 0.25);
+}
+
+.approved:hover {
+    background-color: rgba(0, 128, 0, 0.35);
+}
+
+.working {
+    background-color: rgba(255, 215, 0, 0.25);
+}
+
+.working:hover {
+    background-color: rgba(255, 215, 0, 0.35);
+}
+
+.waiting {
+    background-color: rgba(255, 0, 0, 0.25);
+}
+
+.waiting:hover {
+    background-color: rgba(255, 0, 0, 0.35);
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    display: none;
+    position: fixed;
+    z-index: 20;
+    background-color:rgba(0,0,0,0.5);
+    animation:opac 0.8s;
+} @keyframes opac{from{opacity:0} to{opacity:1}}
+
+/* Slide preview pane styles */
+
+nav {
+    height: calc(100% - 65px);
+    width: 207px; /* calc(13% - 1px); */
+    float: left;
+    background-color: #ccc;
+    color: rgba(77,76,77);
+    overflow-y: auto;
+    position: relative;
+    z-index: 15;
+}
+
+.slide-preview {
+    height: 120px;
+    width: 100%;
+}
+
+.slide-preview:hover {
+    cursor: pointer;
+}
+
+.slide-preview:hover .slide-pic-preview img {
+    margin: 0px;
+    border: 3px solid rgba(77,76,77,0.75);
+}
+
+.slide-num {
+    height: calc(100% - 20px);
+    width: calc(20% - 10px);
+    float: left;
+    margin: 10px 0px 10px 10px;
+    text-align: center;
+}
+
+.slide-num i {
+    color: yellow;
+}
+
+.slide-pic-preview {
+    height: calc(100% - 20px);
+    width: calc(80% - 10px);
+    margin: 7px 10px 7px 0px;
+    float: right;
+    /* text-align: center; */
+}
+
+.slide-pic-preview img {
+    height: 100%;
+    max-width: 100%;
+    margin: 3px 0px 3px 3px;
+}
+
+.active-slide{
+    color: #2196F3;
+}
+
+.active-slide img {
+    margin: 0px;
+    border: 3px solid #2196F3;
+}
+
+.active-slide:hover {
+    color: rgb(25, 111, 182);
+}
+
+.active-slide:hover .slide-pic-preview img {
+    margin: 0px;
+    border: 3px solid rgb(25, 111, 182);
+}
+
+/* Whole story element styles */
+
+#whole-story {
+    height: calc(40% - 45px);
+    width: calc(100% - 207px);
+    float: right;
+    position: relative;
+    z-index: 10;
+    background-color: white;
+}
+
+#bible-lookup {
+    height: calc(100% - 20px);
+    width: calc(37.5% - 21px);
+    float: left;
+    padding: 10px;
+    border-right: 1px solid rgba(77,76,77,0.75);
+}
+
+#lookup-control {
+    height: 30px;
+    display: flex;
+}
+
+input:focus {
+    outline: none;
+    /* border: 1px solid #2196F3; */
+}
+
+#reference-search {
+    height: 20px;
+    margin: auto 10px auto 0px;
+}
+
+#version-picker {
+    height: 100%;
+    margin-right: 10px;
+    display: flex;
+}
+
+#version-choice {
+    height: 20px;
+    margin: auto 0px;
+}
+
+#version-select {
+    height: 26px;
+    margin: auto;
+    margin-right: 0px;
+    float: left;
+    display: none;
+}
+
+#version-select-button {
+    height: 26px;
+    width: 30px;
+    margin: auto;
+    margin-left: 0px;
+    background-color: #2196F3;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+.lookup-button {
+    height: 14px;
+    width: 100px;
+    padding: 8px;
+    float: right;
+    background-color: #2196F3;
+    cursor: pointer;
+
+    text-align: center;
+    font-size: 13px;
+    color: white;
+}
+
+.lookup-button:hover, #version-select-button:hover {
+    background-color: rgb(25, 111, 182);
+}
+
+#bible-passage {
+    height: calc(100% - 42px);
+    width: calc(100% - 2px);
+    margin-top: 10px;
+    border: 1px solid rgb(183, 183, 183);
+}
+
+#story-notes {
+    height: calc(100% - 20px);
+    width: calc(37.5% - 21px);
+    float: left;
+    padding: 10px 10px 10px 10px;
+    border-right: 1px solid rgba(77,76,77,0.75);
+}
+
+#ws-editor-container {
+    height: calc(100% - 42px);
+    width: 100%;
+}
+
+#ws-editor-container .ql-container {
+    height: calc(100% - 40px);
+}
+
+#keyterms {
+    height: 100%;
+    width: 25%;
+    float: left;
+}
+
+header img, #logo, .header-button, #header-right, #menu-header, .language-project, .slide-preview,
+#version-select-button, .lookup-button {
+    -webkit-user-select: none;        
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}

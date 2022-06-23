@@ -1,0 +1,295 @@
+body,html{
+	height: 100%;
+	margin: 0;
+	padding: 0px;
+}
+.flex-header {
+	background-color: #25274d;
+}
+.header-top{
+	display: flex;
+	justify-content: space-between;
+}
+
+.story-info{
+	display: flex;
+	flex-direction: row;
+	color: white; 
+	font-family: 'Abel', sans-serif;
+}
+.story-info h1{
+	font-weight: normal;
+	padding-top:8px;
+	font-size: 48px;
+	margin:0;
+}
+.header-btm, .header-top{
+	display:flex;
+	flex-direction: row;
+}
+.header-menu{
+	margin-top: 50px;
+}
+.header-menu a{
+	-webkit-transition-duration: 0.4s; /* Safari */
+	transition-duration: 0.4s;
+	text-decoration: none;
+	margin: 30px;
+	color: white;
+	font-family: 'Montserrat', sans-serif; 
+	font-size: 18px;
+
+}
+.header-menu a:hover{
+	color:#53A4E8;
+	text-decoration: none;
+
+}
+.flex-content{
+	font-family: 'Montserrat', sans-serif; 
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	margin: 15px;
+}
+.scroll_list {
+    overflow-y:auto;
+    height:150px;
+}
+
+.scroll_assign {
+    overflow-y:auto;
+}
+
+.login-body {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.add {
+    font-size: 19px;
+}
+.add form{
+	width: 30%;
+}
+
+
+.users-table {
+    width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#logo{
+    margin: 8px 8px 8px 8px;
+}
+
+.banner {
+  width: 100%;
+  margin: 30px auto;
+  font-size: 30px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form > * {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.login-button{
+background-color: rgba(255, 255, 255, 0.8);	
+    border: 1px solid black;
+    margin: 0px 5px;
+    border-radius: 6px;
+}
+
+.login-button:hover {
+	background-color:#0000CD;
+}
+
+.login-button:active {
+	background-color: #0000CD;
+	box-shadow: 0 3px #666;
+	transform: translateY(2px);
+}
+
+.error-alert {
+  padding: 5px;
+  background: #ff00006e;
+}
+
+
+/*Below sets the basic layout of the flex and grid boxes
+for the client.php page.
+*/
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  background-color: #2196F3;
+  padding: 20px;
+  /*Sets the grid to fill the whole page
+  width: 100vw;
+  height: 100vw;*/
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid black;
+  font-size: 30px;
+  display:grid;
+}
+
+
+
+.slides {
+	grid-row-start: 1;
+  	grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    max-height: 100vh;
+    overflow: auto;
+}
+
+.audio {
+	grid-row-start: 1;
+  	grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.story-title {
+	self-align: left;
+}
+
+.audio {
+	self-align: right;
+	vertical-align: bottom;
+}
+
+.messages {
+	grid-row-start: 1;
+  	grid-row-end: 3;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.lookup{
+	grid-row-start: 3;
+  	grid-row-end: 4;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.tracker{
+	grid-row-start: 3;
+  	grid-row-end: 4;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+
+/*styling for thumbnails*/
+.thumbnail{
+	padding: 15px;
+}
+
+
+/*Below sets the styling for consultants.php*/
+.assignment-form{
+	padding: 10px;
+}
+
+.assignment-form > * {
+	padding: 5px;
+}
+
+.consultants-button{
+	background-color: rgba(255, 255, 255, 0.8);	
+    border: 1px solid black;
+    margin: 0px 5px;
+    border-radius: 6px;
+}
+
+.consultants-button:hover{
+	background-color:#0000CD;
+}
+
+.consultants-button:active{
+	background-color: #0000CD;
+	box-shadow: 0 3px #666;
+	transform: translateY(2px);
+}
+
+.remove-consultant{
+	background-color: rgba(255, 255, 255, 0.8);	
+    border: 1px solid black;
+    margin: 0px 5px;
+    border-radius: 6px;
+}
+
+.remove-consultant:hover{
+	background-color:#0000CD;
+}
+
+.consultants-button:active{
+	background-color: #0000CD;
+	box-shadow: 0 3px #666;
+	transform: translateY(2px);
+}
+
+/*New stuff for admin page: search by language for consultants*/
+#searchForLan, #searchForName {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 601px;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+#users-table, #assign-table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 19px;
+}
+
+#users-table th, #users-table td, #assign-table th, #assign-table td{
+    text-align: left;
+    padding: 12px;
+}
+
+#users-table tr, #assign-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+#users-table tr.header, #users-table tr:hover, #assign-table tr.header, #assign-table tr:hover {
+    background-color: #f1f1f1;
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>ROCC</title>
+        <link rel="icon" type="image/png" href="favicon.png">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/prototypeSP.css">
+        <link rel="stylesheet" type="text/css" href="css/slidesyncSP.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+	    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+        <script src="js/project.js"></script>
+        <script src="js/story.js"></script>
+        <script src="js/slide.js"></script>
+        <script src="js/appearance.js"></script>
+    </head>
+    <body>
+        <header>
+            <ul>
+                <li id="logo">
+                    <a href="#"><img src="favicon1.png" alt="ROCC Logo"></a>
+                </li>
+                <li id="stories">
+                    <span id="stories-menu-button" class="header-button">Stories</span>
+                </li>
+                <li id="story-title">3a 242 Widow’s Gift - Swahili</li>
+                <li id="header-right">
+                    <a href="#"><span id="admin-access" class="account-access header-button">Admin</span></a>
+                    <span class="divider">|</span>
+                    <a href="#"><span id="user-account" class="account-access header-button">robin_rempel@sil.org</span></a>
+                    <span class="divider">|</span>
+                    <a href="#"><span class="account-access header-button">Logout</span></a>
+                </li>
+            </ul>
+        </header>
+        <div id="stories-menu" class="sidebar">
+            <div id="menu-header">
+                <div id="menu-sort">
+                    <label>Sort by:</label>
+                    <select id="sort-select">
+                        <option value="language">Language</option>
+                        <option value="status">Status</option>
+                    </select>
+                </div>                
+                <i class="material-icons menu-close">close</i>
+            </div>
+            <div id="language-projects-list">
+                <div class="language-project current-project">Swahili</div>
+                <ul class="language-stories-list">
+                    <a href="#"><li class="approved">3a 225 Water Walk</li></a>
+                    <a href="#"><li class="working">3a 242 Widow's Gift</li></a>
+                </ul>
+                <div class="language-project">Example Language</div>
+                <ul class="language-stories-list">
+                    <a href="#"><li class="approved">Example Story #1</li></a>
+                    <a href="#"><li class="working">Example Story #2</li></a>
+                    <a href="#"><li class="waiting">Example Story #3</li></a>
+                </ul>
+                <div class="language-project">Another Language</div>
+                <ul class="language-stories-list">
+                    <a href="#"><li class="waiting">Example Story #4</li></a>
+                </ul>
+            </div>
+        </div>
+        <div id="content-overlay" class="overlay menu-close"></div>
+        <nav>
+            <div class="slide-preview active-slide">
+                <div class="slide-num"><p></p>0
+                    <i class="material-icons slide-status-yellow">stop</i>  
+                </div>
+                <div class="slide-pic-preview">
+                    <img src="/Prototype/0.jpg">
+                </div>
+            </div>
+        </nav>
+        <div id="slide-synced">
+            <div id="slide-logs">
+                <div id="slide-logs-header">Logs for Current Slide</div>
+                <div id="learn-option" class="log-options">Learn
+                    <input type="checkbox" name="" id="learn-check" class="log-display" checked="true">
+                </div>
+                <div id="translate-option" class="log-options">Translate
+                    <input type="checkbox" name="" id="translate-check" class="log-display" checked="true">
+                </div>
+                <div id="community-option" class="log-options">Community Work
+                    <input type="checkbox" name="" id="community-check" class="log-display" checked="true">
+                </div>
+                <div id="logs">
+                    <div class="log-entry learn-logs">Slides 1-2 (1 sec)<br>
+                        Wed Jan 23 2019 10:55 AM
+                    </div>
+                    <div class="log-entry community-logs">Comment Recording<br>
+                        Mon Jan 28 2019 11:56 AM
+                    </div>
+                    <div class="log-entry translate-logs">Draft Recording<br>
+                        Mon Jan 28 2019 11:57 AM
+                    </div>
+                </div>
+            </div>
+            <button id="logs-toggle-button" title="Slide Logs">&#187</button>
+            <div id="slide-display">
+                <div id="story-reference">Mark 12:41-44, Luke 21:1-4</div>
+                <div id="slide-picture">
+                    <img src="/Prototype/0.jpg"/>
+                </div>
+                <div id="slide-text">
+                    <p id="verse-reference">Mark 12:41</p>
+                    <p>One day, Jesus went into the inner courtyard of the Big Worshipping Place [Temple] with his close friends [disciples].</p> 
+                    <p>They sat down near the container [offering box] where the people were putting their money that they were giving to God.</p>
+                </div>
+                <div id="play-control">
+                    <button class="prev button">
+                        <i class="material-icons">skip_previous</i>
+                    </button>
+                    <button class="play button">
+                        <i class="material-icons">play_arrow</i>
+                    </button>
+                    <button class="next button">
+                        <i class="material-icons">skip_next</i>
+                    </button>
+                </div>
+            </div>
+            <div id="slide-notes">
+                <div class="play-bar"></div>
+                <div id="slide-editor-container">
+                    <div id="slide-notes-editor"></div>
+                </div>                
+                <div id="slide-status">
+                    <button id="red-status" class="status-button">
+                        <i class="material-icons">error</i>
+                    </button>
+                    <button id="yellow-status" class="status-button active-status">
+                        <i class="material-icons">hourglass_full</i>
+                    </button>
+                    <button id="green-status" class="status-button">
+                        <i class="material-icons">done_all</i>
+                    </button>
+                </div>
+            </div>
+            <div id="messages">
+                <div id="message-history">
+                    <div class="message-span">
+                        <div class="message-box received-message">This is a message the user received.</div>
+                    </div>
+                    <div class="message-span">
+                        <div class="message-box sent-message">This is a message the user sent.</div>
+                    </div>
+                </div>
+                <div id="new-message">
+                    <textarea name="" cols="38" rows="4"></textarea>  
+                </div>
+                <div id="message-control">
+                    <div id="transcript-request">
+                        <input type="checkbox" name="" id="request-check">
+                        <label>Request Transcription</label>
+                    </div>                    
+                    <i id="send-button" class="material-icons">send</i>
+                </div>
+            </div>
+        </div> 
+        <div id="whole-story">
+            <div id="bible-lookup">
+                <div id="lookup-control">
+                    <input type="text" id="reference-search">
+                    <div id="version-picker">
+                        <!-- <select size="2" id="version-select">
+                            <option value="0">English (US) - NASB</option>
+                            <option value="1">English (US) - NIV</option>
+                        </select> -->
+                        <input type="text" id="version-choice" autocomplete="off" list="versions">
+                        <!-- <datalist id="versions">
+                            <option>English (US) - NASB</option>
+                            <option>English (US) - NIV</option>
+                        </datalist> -->
+                        <div id="version-select-button">
+                            <i class="material-icons">arrow_drop_down</i>
+                        </div>
+                    </div>
+                    <div class="lookup-button">SEARCH</div>
+                    <!-- <div class="lookup-button"></div> -->
+                </div>
+                <div id="bible-passage"></div>
+            </div>
+            <div id="story-notes">
+                <div class="play-bar"></div>
+                <div id="ws-editor-container">
+                    <div id="ws-notes-editor"></div>
+                </div>                
+            </div>
+            <div id="keyterms">
+
+            </div>
+        </div>
+    </body>
+</html>

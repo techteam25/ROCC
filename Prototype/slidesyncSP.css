@@ -1,0 +1,363 @@
+/* Slide-synced element styles */
+
+#slide-synced {
+    height: calc(60% - 21px);
+    width: calc(100% - 207px); /* 87% */
+    float: right;
+    border-bottom: 1px solid rgba(77,76,77,0.75);
+    position: relative;
+}
+
+#logs-toggle-button {
+    height: 40px;
+    width: 30px;
+    position: absolute;
+    top: calc(50% - 40px);
+    border: 2px solid #2196F3;
+    border-left: 0px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    z-index: 10;
+    background-color: #2196F3;
+    cursor: pointer;
+    color: white;
+    font-size: 16pt;
+}
+
+#logs-toggle-button:focus {
+    outline: 0;
+}
+
+#slide-logs {
+    height: calc(60% - 21px);
+    width: 250px;
+    display: block;
+    position: fixed;
+    z-index: 5;
+    background-color: #eee;
+    left: -43px;
+}
+
+#slide-logs-header {
+    width: calc(100% - 20px);
+    padding: 10px;
+    text-align: center;
+    background-color: #2196F3;
+    font-size: 14pt;
+    color: white;
+}
+
+.log-options {
+    width: calc(100% - 20px);
+    padding: 5px 10px;
+    color: white;
+    font-weight: bold;
+}
+
+#learn-option {
+    background-color: rgb(42, 161, 152);
+}
+
+#translate-option {
+    background-color: rgb(220, 50, 47);
+}
+
+#community-option {
+    background-color: rgb(133, 153, 0);
+}
+
+input[type="checkbox"] {
+    float: right;
+}
+
+#logs {
+    height: calc(100% - 126px);
+    width: 100%;
+    overflow: auto;
+}
+
+.log-entry {
+    width: calc(100% - 10px);
+    border-bottom: 1px solid rgba(77,76,77,0.40);
+    padding: 5px 0px 5px 10px;
+    color: #111;
+}
+
+.learn-logs {
+    background-color: rgba(42, 161, 151, 0.5);
+}
+
+.learn-logs:hover {
+    background-color: rgba(42, 161, 151, 0.75);
+}
+
+.translate-logs {
+    background-color: rgba(220, 50, 47, 0.5);
+}
+
+.translate-logs:hover {
+    background-color: rgba(220, 50, 47, 0.75);
+}
+
+.community-logs {
+    background-color: rgba(133, 153, 0, 0.5);
+}
+
+.community-logs:hover {
+    background-color: rgba(133, 153, 0, 0.75);
+}
+
+#slide-display {
+    height: calc(100% - 10px);
+    width: calc(46% - 30px);
+    float: left;
+    padding: 10px 10px 0px 20px;
+}
+
+#story-reference {
+    height: 30px;
+    font-size: 20pt;
+    font-weight: bold;
+}
+
+#slide-picture {
+    height: calc(100% - 50px - 62px);
+    width: calc(70% - 2px);
+    float: left;
+    display: flex;
+    margin-top: 10px;
+    text-align: center;
+    background-color: rgb(183, 183, 183);
+    border: 1px solid rgb(183, 183, 183);
+}
+
+#slide-picture img {
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+}
+
+#slide-text {
+    height: calc(100% - 50px - 72px);
+    width: calc(30% - 11px);
+    float: right;
+    margin-top: 10px;
+    padding: 5px;
+    border-top: 1px solid rgb(183, 183, 183);
+    border-bottom: 1px solid rgb(183, 183, 183);
+    border-right: 1px solid rgb(183, 183, 183);
+}
+
+#slide-text p {
+    margin: 5px 0px 0px 0px;
+}
+
+#play-control {
+    height: 60px;
+    width: 70%;
+    float: left;
+    text-align: center;
+}
+
+.button, .status-button {
+    height: 50px;
+    width: 50px;
+    margin: 10px 10px 0px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:focus, .status-button:focus {
+    outline: 0;
+}
+
+#play-control .button {
+    border: none;
+    padding: 13px;
+    background-color: #eee;
+    box-shadow: 0px 1px 1px 1px rgba(77,76,77,0.40);
+}
+
+#play-control .button:active {
+    background-color: #ccc;
+}
+
+#slide-notes {
+    height: 100%;
+    width: calc(29% - 11px);
+    float: left;
+    padding-top: 50px;
+    padding-right: 10px;
+    border-right: 1px solid rgba(77,76,77,0.75);
+}
+
+.play-bar {
+    height: 40px;
+    background-color: darkorchid;
+}
+
+#slide-editor-container {
+    height: calc(100% - 162px);
+}
+
+#slide-editor-container .ql-container {
+    height: calc(100% - 40px);
+}
+
+#slide-status {
+    height: 60px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.status-button {
+    padding: 9px;
+    background-color: white;
+    box-shadow: 0px 1px 1px 1px rgba(77,76,77,0.40);
+}
+
+#red-status {
+    border: 4px solid red;
+}
+
+#red-status i {
+    display: none;
+}
+
+#red-status.active-status {
+    background-color: red !important;
+    color: white;
+}
+
+#red-status.active-status i {
+    border-radius: 50%;
+}
+
+#yellow-status {
+    border: 4px solid yellow;
+}
+
+#yellow-status.active-status {
+    background-color: yellow !important;
+}
+
+#green-status {
+    border: 4px solid green;
+}
+
+#green-status i {
+    display: none;
+}
+
+#green-status.active-status {
+    background-color: green !important;
+}
+
+#messages {
+    height: calc(100% - 20px);
+    width: calc(25% - 20px);
+    padding: 10px;
+    float: left;
+    position: relative;
+}
+
+#message-history {
+    height: 80%;
+    width: calc(100% - 22px);
+    border: 1px solid rgb(183, 183, 183);
+    border-bottom: 0px;
+    padding: 0px 10px;
+    position: relative;
+    z-index: 0;
+    overflow: auto;
+}
+
+.message-span {
+    width: 100%;
+    float: left;
+}
+
+.message-box {
+    max-width: 75%;
+    font-size: 11pt;
+    margin: 5px 0px;
+    border-radius: 10px;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+.received-message {
+    float: left;
+    background-color: #eee;
+}
+
+.sent-message {
+    float: right;
+    background-color: #2196F3;
+    color: white;
+}
+
+#new-message {
+    height: calc(20% - 31px);
+    width: calc(100% - 2px);
+    border: 1px solid rgb(183, 183, 183);
+    border-bottom: none;
+}
+
+#new-message textarea {
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    float: left;
+    border: none;
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#new-message textarea:focus {
+    outline: none;
+}
+
+#message-control {
+    height: 29px;
+    width: calc(100% - 2px);
+    border: 1px solid rgb(183, 183, 183);
+    border-top: none;
+    display: flex;
+}
+
+#transcript-request {
+    height: 100%;
+    width: 90%;
+    display: flex;
+}
+
+#request-check {
+    margin: auto 5px;
+}
+
+label {
+    margin: auto 0;
+    color: #444;
+}
+
+#send-button {
+    width: 10%;
+    margin: auto 5px;
+    color: #2196F3;
+    float: right;
+    cursor: pointer;
+    text-align: right;
+}
+
+#send-button:hover {
+    color: rgb(25, 111, 182);
+}
+
+#logs-toggle-button, #slide-logs-header, .log-options, #slide-picture, #play-control, .button, 
+#slide-status, .status-button, #transcript-request, #send-button {
+    -webkit-user-select: none;        
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}

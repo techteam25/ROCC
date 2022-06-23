@@ -1,0 +1,117 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+    background: #2196F3;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ccc; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(77,76,77,0.75); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.ql-toolbar.ql-snow, .ql-container.ql-snow {
+    border: 1px solid rgb(183, 183, 183);
+}
+
+header {
+    height: 65px;
+    width: 100%;
+    background-color: #2196F3;
+    box-shadow: 2px 2px 2px 2px rgba(77,76,77,0.40);
+    padding: 0px;
+    position: relative;
+    z-index: 30;
+    color: white;
+}
+
+header ul {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    list-style-type: none;
+}
+
+header li {
+    margin: auto;
+    padding: 10px;
+}
+
+header img, #logo {
+    height: 65px;
+    margin: 0px;
+    padding: 0px;
+
+    -webkit-user-select: none;        
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+#stories {
+    width: calc(1/3 * 100% - 65px);
+}
+
+#story-title {
+    width: calc(1/3 * 100%);
+    text-align: center;
+    font-size: 18pt;
+}
+
+.header-button {
+    height: 100%;
+    margin: 0px;
+    padding: 15px;
+    font-size: 11pt;
+    cursor: pointer;
+
+    -webkit-user-select: none;        
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}
+
+.header-button:hover {
+    background-color: rgb(25, 111, 182);
+}
+
+#header-right {
+    width: calc(1/3 * 100%);
+    padding-right: 20px;
+    text-align: right;
+    -webkit-user-select: none;        
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}
+
+.account-access {
+    padding: 15px 15px;
+}
+
+.divider {
+    padding: 15px 0px;
+    color: rgba(77,76,77,0.75);
+}

@@ -1,0 +1,13 @@
+vendor/
+composer.lock
+DBConfig.php
+php_errorlog
+.htaccess
+*.code-workspace
+error.log
+*.swp
+*.swo
+composer.phar
+/nbproject/private/
+*~
+Files/

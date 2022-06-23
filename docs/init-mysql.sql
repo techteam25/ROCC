@@ -1,0 +1,3 @@
+REPLACE INTO StoryProducer.Consultants (id, name, language, phone, email, password, isAdmin) VALUES (1, 'Daniel Weaver', 'English', '2054131948', 'dweaver@cedarville.edu', '$2y$10$CUanUfS.iNODvlZZe0PeYeQo.LJgbpK/2718in07uCzsozbVcTXcq', 0);
+REPLACE INTO StoryProducer.Stories (id, title, projectId, notes) VALUES (1, '235 One Grateful Eng', 'f1571ed113e620a5', '');
+REPLACE INTO StoryProducer.Projects (androidId, ethnoCode, language, country, majorityLanguage, consultantId, trainerEmail, email, phone, spokenLanguage) VALUES ('f1571ed113e620a5', 'tpi', 'tpi test 4', 'usa test', 'english', 16, 'dweaver@cedarville.edu', 'dweaver@cedarville.edu', '2054131948', 'tok pisin. english');

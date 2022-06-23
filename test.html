@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<title>Testing file upload</title>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+</head>
+<body>
+	<form class="test">
+		<label for="Language">Language:</label><br />
+		<input type="text" name="Language" class="language"><br />
+		<label for="TemplateTitle">Template Title:</label><br />
+		<input type="text" name="TemplateTitle" class="templatetitle"><br />
+		<input type="file" name="file[]" class="file" multiple><br />
+		<input type="submit" name="submit" value="Submit">
+	</form>
+	<script>
+		$('.test').on('submit', (e) => {
+			e.preventDefault();
+			var form = $('.test')[0];
+			var formData = new FormData(form);
+
+			$.ajax({
+				url: '/API/UploadTemplate.php',
+				data: formData,
+				type: 'POST',
+				contentType: false,
+				processData: false,
+				success: function (data) {
+					if(data.Success) {
+						alert('Upload complete!');
+					}
+				}
+			});
+		});
+	</script>
+</body>
+</html>
