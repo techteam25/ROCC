@@ -157,17 +157,18 @@ if (array_key_exists('story', $_GET)) {
                     <div class="left-audio">
                         <div id ="lf-t"> Current Slide </div>
 
-                        <div class="currSlide">
+			<div class="currSlide">
+				<div style="width=10%">
 
                             <button id="prevSlide" onclick="changeSlide(currentSlide - 1, currentSlide)">
                                 <img id ="p-bt" src="images/back.jpg">
                             </button>
-
-                            <div class="currSlideInner">
+</div>
+                            <div class="currSlideInner" style="width=90%">
 
                                 <div class="approvedTitle">
                                     <p id="status"></p>
-                                    <p> approved status:</p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; approved status:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <label class="switch">
                                         <input id="approveSwitch" 
                                                onclick="approveSwitchChanged(currentSlide, this, event)" 
@@ -183,17 +184,21 @@ if (array_key_exists('story', $_GET)) {
                                 </div>
 
                                 <!--Get audio file and put it inthe player-->
+                                <div class ="theAudioPlayer">
                                 <audio controls id="audioPlayer">
                                     <source id="mainAudio" 
                                             src="<?=$storyRoot?>/0.m4a" 
                                             type="audio/x-m4a"></source>
                                 </audio>
+                                </div>
                             </div>
 
+				<div style="width=10%">
 
                             <button id="fwdSlide" onclick="changeSlide(currentSlide + 1, currentSlide)">
                                 <img id="f-bt" src="images/forward.jpg">
                             </button>
+                            </div>
 
                         </div>
                     </div>
@@ -237,9 +242,11 @@ if (array_key_exists('story', $_GET)) {
                                         src="<?=$storyRoot?>/wholeStory.m4a" 
                                         type="audio/x-m4a">
                             </audio>
+			<!-- Removing the save button becuase it is not necessary anymore:::
                             <button id="saveButton2" onclick="saveWholeNotes()" 
                                     type="button" 
-                                    value="Save">Save Whole Story Notes</button>
+				    value="Save">Save Whole Story Notes</button>
+-->
                         </div>
                     </div>
                 </div>
@@ -256,7 +263,74 @@ if (array_key_exists('story', $_GET)) {
                 </div>
             </div>
         </div>
+        <script>
+<?php
+        $file1 = $templateRoot . "/project/story.json";
+	if (file_exists($file1))
+	{
+	    $string1 = file_get_contents($file1);
+			// newlines cause parser to fail
+	    $string = str_replace('\n', "<BR>", $string1);
+?>
+        let json_a = JSON.parse('<?php echo $string; ?>');
+        function readProperties(slideNumber)
+        {
+            document.getElementById("storyTitle").innerHTML = json_a.title;
+            let currSlide = json_a.slides[slideNumber]
+            document.getElementById("lf-t").innerHTML = currSlide.reference;
+            fileDisplayArea = document.getElementById("mainText");
+            fileDisplayArea.innerHTML = currSlide.content;
+        }
+<?php
+	}
+	else
+	{
+?>
+        function readTextFile(file)
+        {
+            let rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function ()
+            {
+                if (rawFile.readyState === 4)
+                {
+                    if (rawFile.status === 200 || rawFile.status == 0) {
+                        let allText = rawFile.responseText;
 
+                        let title = allText.split("~")[0] + ": " + allText.split("~")[1];
+                        let slideref = allText.split("~", 4)[2];
+                        let trans = allText.split("~", 4)[3];
+
+			setPropertiesCommon(title, slideref, trans);
+
+                    }else{
+                        fileDisplayArea = document.getElementById("mainText");
+                        fileDisplayArea.innerText = " ";
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+<?php
+	}
+?>
+        function setPropertiesCommon(title, reference, content)
+        {
+            document.getElementById("storyTitle").innerHTML = title;
+            document.getElementById("lf-t").innerHTML = reference;
+            fileDisplayArea = document.getElementById("mainText");
+            fileDisplayArea.innerHTML = content;
+        }
+        function setProperties(slideNumber)
+        {
+            console.log("in setProperties");
+<?php	        if (file_exists($file1)) { ?>
+            readProperties(slideNumber);
+<?php	        } else {?>
+            readTextFile(`${templateRoot}/${slideNumber}.txt`);
+<?php 		} ?>
+        }
+        </script>
         <script src="client.js"></script>
         <script>
             //check if admin

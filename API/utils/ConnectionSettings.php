@@ -1,8 +1,8 @@
 <?php
 
-$serverName = 'mysql.ttapps.org';
+$serverName = '10.10.10.248';
 $databaseName = 'StoryProducer';
-$databaseUser = 'admin';
-$databasePassword = 'm.t2d3cs';
-$filesRoot = '/kunden/homepages/2/d770299264/htdocs/TECH/_rocc';
+$databaseUser = 'dharding';
+$databasePassword = '4maria';
+$filesRoot = '/var/www/html/roccnew/Files';
 $websocketPort = '8082';

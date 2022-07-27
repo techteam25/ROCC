@@ -14,6 +14,8 @@ if (approvalsStorageString && approvalsStorageString != '') {
 }
 
 let slideUnreadState = [];
+let lastNotes = "";
+let lastWholeNotes = "";
 
 function parseMessageDateString(dateString) {
     let splitDateString = dateString.split(/[- :]/);
@@ -91,41 +93,18 @@ function changeSlide(slideNumber, oldSlideNumber) {
     if (slideNumber > -1 && slideNumber < slideCount) {
         
         console.log(oldSlideNumber);
+        console.log("in changeSlide");
 
         currentSlide = slideNumber;
         let fileDisplayArea = document.getElementById('mainText');
         let storyRoot = `Files/Projects/${projectId}/${storyId}`;
         document.getElementById("mainAudio").src = `${storyRoot}/${slideNumber}.m4a`;
-        fileDisplayArea.setAttribute('data', `${storyRoot}/${slideNumber}.txt`);
+//        fileDisplayArea.setAttribute('data', `${storyRoot}/${slideNumber}.txt`);
         document.getElementById("status").innerHTML = "Slide " + currentSlide;
 
         //displaying transcript files from directory.
-        function readTextFile(file)
-        {
-            let rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, false);
-            rawFile.onreadystatechange = function ()
-            {
-                if (rawFile.readyState === 4)
-                {
-                    if (rawFile.status === 200 || rawFile.status == 0) {
-                        let allText = rawFile.responseText;
 
-                        let title = allText.split("~")[0] + ": " + allText.split("~")[1];
-                        let slideref = allText.split("~", 4)[2];
-                        let trans = allText.split("~", 4)[3];
-
-                        document.getElementById("storyTitle").innerHTML = title;
-                        document.getElementById("lf-t").innerHTML = slideref;
-                        fileDisplayArea.innerText = trans;
-
-                    }
-                }
-            }
-            rawFile.send(null);
-        }
-        readTextFile(`${templateRoot}/${slideNumber}.txt`);
-
+	setProperties(slideNumber);
         //display approval from DB
         let checkbox = document.getElementById('approveSwitch');
         if (approvals[slideNumber]) {
@@ -187,11 +166,13 @@ function changeSlide(slideNumber, oldSlideNumber) {
             }
         }
 
-        document.getElementById(`msgImg${slideNumber}`).style.display = 'none';
-
+        let msg = document.getElementById(`msgImg${slideNumber}`)
+	if (msg != null)
+	    msg.style.display = 'none';
         //Set border around selected thumbnail
-        document.getElementById("thumbnail " + slideNumber).style.backgroundColor = "#fff";
-
+        let thumb = document.getElementById("thumbnail " + slideNumber);
+	if (thumb != null)
+            thumb.style.backgroundColor = "#fff";
     }
 }
 
@@ -209,7 +190,10 @@ function addMessage(message) {
 function saveNotes(slideNumber) {
     let myEditor = document.querySelector('#editor-container');
     let notes = myEditor.children[0].innerHTML;
-    $.ajax({
+    if (notes != lastNotes)
+    {
+      console.log("in saveNotes");
+      $.ajax({
         data: "notes=" + notes +
         "&slideNumber=" + slideNumber +
         "&storyId=" + storyId,
@@ -220,7 +204,9 @@ function saveNotes(slideNumber) {
         success: function (data) { 
             console.log(notes);
         }
-    });
+      });
+      lastNotes = notes;
+    }
 }
 
 function approveSwitchChanged(slideNumber, checkbox, event) {
@@ -237,14 +223,19 @@ function saveWholeNotes() {
     let myEditor = document.querySelector('#editor-container2');
     let notes = myEditor.children[0].innerHTML;
     //document.getElementById("textField").value;
-    $.ajax({
+    if (notes != lastWholeNotes)
+    {
+      console.log("in saveWholeNotes");
+      $.ajax({
         data: "notes=" + notes +
         "&storyId=" + storyId,
         url: "API/submitWholeStoryNote.php",
         type: "POST",
         success: function () {
         }
-    });
+      });
+      lastWholeNotes = notes;
+    }
 }
 
 function sendMessageInputKeyPress(e) {
@@ -307,13 +298,17 @@ function openTab(evt, contentName){
     evt.currentTarget.className += " active";
 }
 
+//changed so as to not change slide when user is using one of the text boxes. May need to add more exception when more stuff is added!
 $(document).keydown(function(e) {
-    var focused = document.activeElement.parentNode;
-    if(e.which === 37){
+    	var focused = document.activeElement.parentNode;
+	if(!((focused.id === "editor-container2") || (focused.id === "editor-container") || ($(e.target).is('input,text')))){
+    
+		if(e.which === 37){
         changeSlide(currentSlide - 1, currentSlide);
     }
-    else if(e.which === 39){
+    		else if(e.which === 39){
         changeSlide(currentSlide + 1, currentSlide);
+	}
     }
 });
 
@@ -357,8 +352,8 @@ changeSlide(0, 0);
 setInterval(function() {
     saveNotes(currentSlide)
     saveWholeNotes()
-    console.log("auto save");
-}, 10000);
+    //console.log("auto save");
+}, 1000);
 
 let connection = connect();
 

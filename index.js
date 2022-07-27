@@ -121,9 +121,10 @@ function reloadStoryTitle(titleArray) {
 		var storyTitle = document.createElement("p");
 		storyTitle.innerHTML = key.title;
 		storyDiv.id = index; 
-		storyDiv.className= "storyDivClass"; 
-		perc.innerHTML = (key.approved * 100) + '%';
-		perc.style.fontSize = '13px';
+		storyDiv.className= "storyDivClass";
+		percentage = (key.approved * 100);
+		perc.innerHTML = percentage.toFixed(0) + '%';
+		perc.style.fontSize = '15px';
 		if(key.approved == 1){
 			storyDiv.style.color = 'green';
 		}
@@ -137,11 +138,13 @@ function reloadStoryTitle(titleArray) {
 		index ++;
 	}
 	var img = document.getElementById("img_thumb");  
-	img.src ='Files/Templates/' + keyData.currProjId + "/" + keyData.storyId+ '/1.jpg'; 
-	img.onerror = function() { 
-		document.getElementById('img_link').src = "images/noimg.png"; 
-	}	
-
+	img.src ='Files/Templates/' + keyData.currProjId + "/" + keyData.storyId + '/1.jpg'; 
+	img.onerror = function() {
+		img.src ='Files/Templates/' + keyData.currProjId + "/" + keyData.storyId + '/1.png'; 
+		img.onerror = function() {
+			document.getElementById('img_link').src = "images/noimg.png"; 
+		}	
+	}
 }
 
 function reloadStoryImg(titleArray) {
@@ -154,7 +157,10 @@ function reloadStoryImg(titleArray) {
 		var img = document.getElementById("img_thumb");  
 		img.src =`Files/Templates/${keyData.title}/1.jpg`; 
 		img.onerror = function() {
-			img.src = "images/noimg.png"; 
+			img.src =`Files/Templates/${keyData.title}/1.png`; 
+			img.onerror = function() {
+				img.src = "images/noimg.png";
+			}
 		}	
 
 		vs.href=  "client.php?story="+ keyData.storyId;
@@ -202,7 +208,10 @@ function reloadPage(data) {
 			csRightLink.innerHTML = storyTitle; 
         		img.src =`Files/Templates/${keyData.title}/1.jpg`; 
 			img.onerror = function() { 
-				document.getElementById('img_thumb').src = "images/noimg.png"; 
+        			img.src =`Files/Templates/${keyData.title}/1.png`; 
+				img.onerror = function() { 
+					document.getElementById('img_thumb').src = "images/noimg.png"; 
+				}
 			}
 			vs.href=  "client.php?story="+ keyData.storyId;
 			imgLink.href=  "client.php?story="+ keyData.storyId;

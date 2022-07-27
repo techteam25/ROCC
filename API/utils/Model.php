@@ -7,7 +7,10 @@ require_once('Storage.php');
 use storyproducer\Respond;
 use storyproducer\Storage;
 
+$lastConnectionTime = 0;
+
 function GetDatabaseConnection() {
+	global $lastConnectionTime;
     try {
         // The file ConnectionSettings.php defines some global constants
         // for how to connect to the database. Because php assumes that any
@@ -17,6 +20,7 @@ function GetDatabaseConnection() {
         $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
             $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
         $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$lastConnectionTime = time();
         return $cn;
     } catch (\Exception $e) {
         error_log($e);
@@ -24,9 +28,18 @@ function GetDatabaseConnection() {
     }
 }
 
-function PrepareAndExecute($conn, $sql, $params) {
+function PrepareAndExecute(&$conn, $sql, $params) {
+    global $lastConnectionTime;
+    $currentTime = time();
+
+    if (($currentTime - $lastConnectionTime)/3600 > 4){
+	error_log("new connection dbh");
+	$conn = GetDatabaseConnection();
+    }
+    $lastConnectionTime = $currentTime;
     $stmt = $conn->prepare($sql);
     if (!$stmt->execute($params)) {
+	    var_dump($params);
         if (($errors = $conn->errorInfo() ) != null) {
             foreach ($errors as $error) {
                 error_log("SQLSTATE: {$error[0]}");

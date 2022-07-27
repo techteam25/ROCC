@@ -1,0 +1,29 @@
+[10-Jun-2022 13:05:02 America/Chicago] #1
+[10-Jun-2022 13:05:02 America/Chicago] server started on port 8082
+[20-Jun-2022 15:42:37 America/Chicago] #2
+[20-Jun-2022 15:42:37 America/Chicago] #3/phone/32088649e78413a5
+[20-Jun-2022 15:42:37 America/Chicago] ["","phone","32088649e78413a5"]
+[20-Jun-2022 15:42:37 America/Chicago] #43
+[20-Jun-2022 15:42:37 America/Chicago] {"conn":{},"isConsultant":false,"projectId":"32088649e78413a5"}
+[20-Jun-2022 15:42:37 America/Chicago] got new connection http://10.10.10.248:8082/phone/32088649e78413a5
+[20-Jun-2022 15:42:37 America/Chicago] from 96: {
+  "type": "catchup",
+  "since": "1969-12-31 19:00:00"
+}
+[20-Jun-2022 15:42:37 America/Chicago] type: catchup
+[20-Jun-2022 15:42:37 America/Chicago] from phone: sending all messages for project 32088649e78413a5
+[20-Jun-2022 15:42:37 America/Chicago] new connection dbh
+[20-Jun-2022 15:57:25 America/Chicago] Connection to 96 has closed
+[20-Jun-2022 15:57:38 America/Chicago] #2
+[20-Jun-2022 15:57:38 America/Chicago] #3/phone/32088649e78413a5
+[20-Jun-2022 15:57:38 America/Chicago] ["","phone","32088649e78413a5"]
+[20-Jun-2022 15:57:38 America/Chicago] #43
+[20-Jun-2022 15:57:38 America/Chicago] {"conn":{},"isConsultant":false,"projectId":"32088649e78413a5"}
+[20-Jun-2022 15:57:38 America/Chicago] got new connection http://10.10.10.248:8082/phone/32088649e78413a5
+[20-Jun-2022 15:57:38 America/Chicago] from 120: {
+  "type": "catchup",
+  "since": "1969-12-31 19:00:00"
+}
+[20-Jun-2022 15:57:38 America/Chicago] type: catchup
+[20-Jun-2022 15:57:38 America/Chicago] from phone: sending all messages for project 32088649e78413a5
+[20-Jun-2022 16:03:29 America/Chicago] Connection to 120 has closed

@@ -129,10 +129,10 @@ td:hover{
 	border: 1px solid white;
 	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 	border-radius: 5px;
-	min-height: 190px;
-	max-width: 200px;
+	/* Changed aspect ratio of the thumbnail */
+	height: 140px;
+	width: 190px;
 	margin-top: 20px;
-	max-height: 200px;
 }
 
 #csLeft> a{

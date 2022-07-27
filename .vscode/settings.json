@@ -1,0 +1,6 @@
+{
+	"liveSassCompile.settings.excludeList": [
+		"**/slick/**"
+	],
+	"python.pythonPath": "C:\\Program Files\\Python36\\python.exe"
+}

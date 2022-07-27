@@ -161,7 +161,7 @@ html{
 }
 .left-audio .currSlide, .slideBar{
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 .left-audio #lf-t{
     text-align: left;
@@ -195,8 +195,6 @@ html{
 }
 
 .transcripts{
-    max-width: 400px;
-    max-height: 250px;
     overflow:auto;
     color: black;
     margin: 10px;
@@ -217,6 +215,7 @@ html{
     display:flex;
     flex-direction:column;
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    min-width: 200px;
 }
 .right-audio #rt-t{
     text-align: left;
@@ -238,6 +237,12 @@ html{
 }
 audio{
     max-width: auto;
+}
+.theAudioPlayer{
+    margin: 5px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .approvedTitle{
@@ -278,7 +283,7 @@ audio{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     height:350px;
-    width:25px;
+    width:35px;
     margin: 5px;
     background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
     border: none;
@@ -464,6 +469,7 @@ input[type="text"]
     background:white;
     border-radius: 5px;
     grid-column: col3-start;
+    min-width: 250px;
 }
 
 button.tablinks{
