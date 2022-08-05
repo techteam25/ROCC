@@ -45,13 +45,21 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
     if (!file_exists($templateDirectory) || !is_dir($templateDirectory)) {
         RespondWithError(400, "Server does not contain requested template.");
     }
-    $projectDocument = new DOMDocument;
-    $projectDocument->preserveWhiteSpace = false;
-    $projectDocument->load("$templateDirectory/project.xml");
-    $projectXPath = new DOMXPath($projectDocument);
-    $projectXPath->registerNamespace('m', 'MSPhotoStory');
-    $slideEntries = $projectXPath->query('/m:MSPhotoStoryProject/m:VisualUnit');
+
+//  this was for XML templates
+//  $projectDocument = new DOMDocument;
+//  $projectDocument->preserveWhiteSpace = false;
+//  $projectDocument->load("$templateDirectory/project.xml");
+//    $projectXPath = new DOMXPath($projectDocument);
+//    $projectXPath->registerNamespace('m', 'MSPhotoStory');
+//    $slideEntries = $projectXPath->query('/m:MSPhotoStoryProject/m:VisualUnit');
+
+//  this was for json templates
+    $storyJson = file_get_contents("$templateDirectory/project/story.json");
+    $decode_story = json_decode($storyJson, true);
+    $slideEntries = $decode_story['slides'];
     $slideIndex = 0;
+
     error_log("Copying template '$templateTitle' folder to new project directory and creating slides");
     foreach ($slideEntries as $slideEntry) {
         error_log("Got slide number $slideIndex");

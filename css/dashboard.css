@@ -1,14 +1,28 @@
+/* This sets global css variables used for colors */
+/* use it by replacing  #d8e1e5;   with  var(--lightG);  */
+/* be sure not to replace the root section color code  */
+
+:root {
+   --lightG: #d8e1e5;       /*  var(--lightG);      */
+   --darkG: #2e6d89;        /*  var(--darkG);       */
+   --medDark: #5289a0;     /*  var(--medDark);  */
+   --medLight: #93b2c1;   /*  var(--medLight);  */
+}
+
+
 /*Below sets the basic layout of the flex and grid boxes
 for the client.php page.
  */
 body,html{
-	background-color: #a9abb8;
+	background-color: var(--medLight);
 	height: 100%;
 	padding: 0px;
 }
+
 a{
-	color:black;
+	color: black;
 }
+
 .container{
 	padding-right: 0px !important;
 	padding-left: 0px !important;
@@ -21,9 +35,12 @@ a{
 #logo{
 	margin: 8px 8px 8px 8px;
 }
+
 .flex-header {
-	background-color: #25274d;
+    background: linear-gradient(to right, var(--lightG), var(--darkG));
 }
+
+
 .header-top{
 	display: flex;
 	justify-content: space-between;
@@ -39,6 +56,7 @@ a{
 .story-info h1{
 	margin-top:10px;
 	font-size: 48px;
+    	text-shadow: 2px 2px black;
 }
 .header-btm, .header-top{
 	display:flex;
@@ -57,7 +75,7 @@ a{
 
 }
 .header-menu a:hover{
-	color:#53A4E8;
+	color: var(--medDark);
 	text-decoration: none;
 
 }
@@ -79,9 +97,10 @@ td:hover{
 }
 .languages{
 	padding-top: 10px;
-	background: #474867;
+      background: var(--medDark);
 	flex: 1;
 }
+
 .langDiv{
 	text-align: right;
 	font-family: 'Raleway', sans-serif;
@@ -91,16 +110,16 @@ td:hover{
 	font-size: 20px;
 	padding: 10px;
 }
+
 .langDiv:hover{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    background-color:#212238;
+    background: var(--darkG);
     text-decoration: none;
-
 }
 
 #info{
-	background-color:#a9abb8;
+      background: var(--lightG);
 	flex: 5;
 	display:flex;
 	flex-direction: row;

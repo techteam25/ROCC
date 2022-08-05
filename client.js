@@ -53,7 +53,17 @@ function syncApprovalSwitch(slideNumber) {
 }
 
 function connect() {
-    let conn = new WebSocket(`wss://${window.location.hostname}:${websocketPort}/consultant/${projectId}/${storyId}`);
+    host = window.location.hostname;
+    hostpre = host.slice(0, 9);
+    if (hostpre === "10.10.10.")
+    {
+	service = 'ws';
+    }
+    else
+    {
+	service = 'wss';
+    }
+    let conn = new WebSocket(`${service}://${host}:${websocketPort}/consultant/${projectId}/${storyId}`);
     conn.onopen = () => {
         console.log("opened!!!");
         let m = { 'type': 'catchup' };
@@ -93,18 +103,25 @@ function changeSlide(slideNumber, oldSlideNumber) {
     if (slideNumber > -1 && slideNumber < slideCount) {
         
         console.log(oldSlideNumber);
-        console.log("in changeSlide");
+        saveNotes(oldSlideNumber);        
 
         currentSlide = slideNumber;
         let fileDisplayArea = document.getElementById('mainText');
         let storyRoot = `Files/Projects/${projectId}/${storyId}`;
         document.getElementById("mainAudio").src = `${storyRoot}/${slideNumber}.m4a`;
 //        fileDisplayArea.setAttribute('data', `${storyRoot}/${slideNumber}.txt`);
+
+
+	//The slide name in the slide. Also check for Song slide
+	if(slideNumber == songSlideNumber){
+        document.getElementById("status").innerHTML = "Song Slide";
+	}else{
         document.getElementById("status").innerHTML = "Slide " + currentSlide;
+	}
 
-        //displaying transcript files from directory.
+        setProperties(slideNumber);
 
-	setProperties(slideNumber);
+
         //display approval from DB
         let checkbox = document.getElementById('approveSwitch');
         if (approvals[slideNumber]) {
@@ -114,7 +131,6 @@ function changeSlide(slideNumber, oldSlideNumber) {
         }
 
         //display slide-by-slide notes from DB
-
         $.ajax({
             data: "slideNumber=" + slideNumber + "&storyId=" + storyId,
             url: "API/getNote.php",
@@ -126,7 +142,6 @@ function changeSlide(slideNumber, oldSlideNumber) {
         });
 
         //display WholeStory notes from DB
-
         $.ajax({
             data: "storyId=" + storyId,
             url: "API/getWholeStoryNote.php",
@@ -147,8 +162,6 @@ function changeSlide(slideNumber, oldSlideNumber) {
             }
         }
 
-        saveNotes(oldSlideNumber);
-
         //Clear isUnread flag for messages
         $.ajax({
             data: "storyId=" + storyId + "&slideNumber=" + slideNumber,
@@ -166,13 +179,24 @@ function changeSlide(slideNumber, oldSlideNumber) {
             }
         }
 
-        let msg = document.getElementById(`msgImg${slideNumber}`)
-	if (msg != null)
-	    msg.style.display = 'none';
-        //Set border around selected thumbnail
-        let thumb = document.getElementById("thumbnail " + slideNumber);
-	if (thumb != null)
-            thumb.style.backgroundColor = "#fff";
+	    //Set the border of the Song slide to normal if songSlideNumber is not deactivated by setting it = -1
+	    if(!(songSlideNumber == -1)){
+        document.getElementById("thumbnail Song").style.backgroundColor = "#25274d";
+	    }
+
+	    //checking if this is the song slide
+	    if(slideNumber == songSlideNumber){
+        	document.getElementById(`msgImgSong`).style.display = 'none';
+	    }else{
+        document.getElementById(`msgImg${slideNumber}`).style.display = 'none';
+	    }
+
+        //Set border around selected thumbnail... And checking for the Song slide
+	    if(slideNumber == songSlideNumber){
+        	document.getElementById("thumbnail Song").style.backgroundColor = "#fff";
+	    }else{
+        document.getElementById("thumbnail " + slideNumber).style.backgroundColor = "#fff";
+	    }
     }
 }
 
@@ -198,11 +222,9 @@ function saveNotes(slideNumber) {
         "&slideNumber=" + slideNumber +
         "&storyId=" + storyId,
         url: "/API/submitNote.php",
-        data: "notes=" + notes + "&slideNumber=" + slideNumber + "&storyId=" + storyId,
         url: "API/submitNote.php",
         type: "POST",
-        success: function (data) { 
-            console.log(notes);
+        success: function () { 
         }
       });
       lastNotes = notes;
@@ -226,6 +248,8 @@ function saveWholeNotes() {
     if (notes != lastWholeNotes)
     {
       console.log("in saveWholeNotes");
+      console.log(notes);
+      console.log(storyId);      
       $.ajax({
         data: "notes=" + notes +
         "&storyId=" + storyId,
@@ -243,6 +267,7 @@ function sendMessageInputKeyPress(e) {
         sendMessage();
     }
 }
+
 
 function sendMessage() {
     const sendMessageInput = document.getElementById("sendMessageInput");
@@ -298,18 +323,27 @@ function openTab(evt, contentName){
     evt.currentTarget.className += " active";
 }
 
-//changed so as to not change slide when user is using one of the text boxes. May need to add more exception when more stuff is added!
+//changed so as to not change slide when user is editing text in one of the text boxes. May need to add more exceptions when more stuff is added!
 $(document).keydown(function(e) {
-    	var focused = document.activeElement.parentNode;
-	if(!((focused.id === "editor-container2") || (focused.id === "editor-container") || ($(e.target).is('input,text')))){
+        var focused = document.activeElement.parentNode;
+    if(!((focused.id === "editor-container2") || (focused.id === "editor-container") || ($(e.target).is('input,text')))){
     
-		if(e.which === 37){
-        changeSlide(currentSlide - 1, currentSlide);
+        if(e.which === 37){
+                changeSlide(currentSlide - 1, currentSlide);
+            //scroll up
+            document.getElementById("thumbnail_text_" + currentSlide).scrollIntoView({block: "nearest", inline: "nearest"});
     }
-    		else if(e.which === 39){
-        changeSlide(currentSlide + 1, currentSlide);
-	}
-    }
+            else if(e.which === 39){
+                changeSlide(currentSlide + 1, currentSlide);
+            //scroll down
+            if(currentSlide == songSlideNumber){
+                document.getElementById("thumbnail Song").scrollIntoView({block: "nearest", inline: "nearest"});
+            }else{
+                document.getElementById("thumbnail " + currentSlide).scrollIntoView({block: "nearest", inline: "nearest"});
+            }
+        }
+    
+        }
 });
 
 //for global hot key to play/pause audio

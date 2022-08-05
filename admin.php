@@ -5,13 +5,14 @@
         header("Location: login.php");
     }
 
-    if ($_SESSION['admin'] === false){
-        header("Location: index.php");
-    }
+    //if ($_SESSION['admin'] === false){
+        //header("Location: index.php");
+    //}
 
     require_once('API/utils/Model.php');
 
     //submit consultant-project assignment to database
+    $alertMsg = "";
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log(json_encode($_POST));
 
@@ -31,6 +32,15 @@
             $conn = GetDatabaseConnection();
             $sql = "DELETE FROM Assigned WHERE ConsultantId = ? AND ProjectId = ?";
             $stmt = PrepareAndExecute($conn, $sql, array($removalConsultantId, $removalProjectId));
+        }
+
+        if (array_key_exists('passwordConsultantId', $_POST) && array_key_exists('Password', $_POST)) {
+            $passwordConsultantId = trim($_POST['passwordConsultantId']);
+            $Password = password_hash($_POST['Password'], PASSWORD_DEFAULT);
+            $conn = GetDatabaseConnection();
+            $sql = "UPDATE Consultants SET password = ? WHERE Consultants.id = ?";
+            $stmt = PrepareAndExecute($conn, $sql, array($Password, $passwordConsultantId));
+	    $alertMsg = "Password change successful";
         }
 
         if (array_key_exists('name', $_POST) &&
@@ -58,7 +68,13 @@
             $isSuccessful = false;
             $error = 'Request does not contain name, language, phone, email, password, and isAdmin fields.';
         }
-    }
+    }	
+    $conn = GetDatabaseConnection();
+        //get consultantId from email
+    $sql = "SELECT id FROM Consultants WHERE email = ?";
+    $stmt = PrepareAndExecute($conn, $sql, array($_SESSION['email']));
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $consultantId = $row['id'];
 ?>
 
 <!doctype html>
@@ -77,13 +93,20 @@
 
 
 <body>
+<?php
+    if (!empty($alertMsg)) {
+?>
+    <script>alert('<?php echo $alertMsg; ?>')</script>
+<?php
+    }
+?>
 <div class ="container">
     
 	<div class="flex-header">
 		<div class ="header-top">
 			<div class="story-info">
 				<img id ="logo" src='images/SP.png' width="60" height="60">
-				<h1>StoryProducer</h1>
+				<h1>ROCC for SPadv</h1>
 			</div>
 
 			<div class ="header-menu">
@@ -95,6 +118,42 @@
 
     <div class = "flex-content">
 
+    <div class="banner">Change Password</div>
+        <table class="assign-table1">
+            <tr>
+                <th>Consultant</th>
+                <th>New Password</th>
+                <th>Change</th>
+            </tr>
+            <form class='assignment-form' method='POST'>
+                <tr>
+                    <td>
+                        <select name='passwordConsultantId'>
+                            <?php 
+                                $conn = GetDatabaseConnection();
+                                $stmt = PrepareAndExecute($conn, "SELECT DISTINCT name, id FROM Consultants", array());
+				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                    if ($_SESSION['admin'] == true || $consultantId == $row['id']){
+			    ?>
+                                    <option type='consultantId' value='<?=$row['id']?>'><?=$row['name']?></option>
+                                <?php } ?>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
+        		<input type="password" name="Password" placeholder="password"></input>
+                    </td>
+                    <td>
+                        <input class='consultants-button' type='submit' value='Change'>
+                    </td>
+                </tr>
+            </form>
+        </table>
+
+<?php
+  if ($_SESSION['admin'] == true)
+  {
+?>
     <div class="banner">Assign Consultants</div>
         <table class="assign-table1">
             <tr>
@@ -237,6 +296,9 @@
 
 
     </div>
+<?php
+  }
+?>
     </div>
 </div>
 

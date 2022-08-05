@@ -59,6 +59,7 @@ function PutFile($directory, $filename, $data) {
         mkdir($dir, 0777, true);
     }
     error_log("Putting file '$dir/$filename'");
+    sleep(3);
     file_put_contents("$dir/$filename", $data);
 }
 

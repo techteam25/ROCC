@@ -83,32 +83,14 @@ if (array_key_exists('story', $_GET)) {
 
         //sort files in numeric order instead of alphabetical order
         $image_extensions = [];
-        $slideFiles[$slideCount] = '../../../images/TitleSlide.jpg';
-        $filename = pathinfo($slideFiles[$slideCount]);
-        array_push($image_extensions, $filename['extension']);
-        $slideCount++;
-        $BloomFiles = true;
         foreach ($files as $file) {
-        if (strcmp($file, "license.png") <> 0
-		&& strcmp($file, "placeHolder.png") <> 0) 
-	  {
             if (strpos(basename($file), ".jpg") || strpos(basename($file), ".png")) {
                 $slideFiles[$slideCount] = $file;
                 $filename = pathinfo($file);
                 array_push($image_extensions, $filename['extension']);
                 $slideCount++;
             }
-	  }
         }
-	if ($BloomFiles == false)
-	{ // Remove last slide (license slide)
-	  array_pop($image_extensions);
-	  $slideCount--;
-	}
-        $slideFiles[$slideCount] = '../../../images/SongSlide.jpg';
-        $filename = pathinfo($slideFiles[$slideCount]);
-        array_push($image_extensions, $filename['extension']);
-        $slideCount++;
         ?>
 
 
@@ -133,7 +115,7 @@ if (array_key_exists('story', $_GET)) {
 
                 <!--Get current project number and story title-->
                 <div class="story-info">
-                    <h1 id="storyTitle">ROCC for SPadv</h1>
+                    <h1 id="storyTitle">StoryProducer</h1>
                 </div>
 
                 <div class="header-menu">
@@ -148,24 +130,22 @@ if (array_key_exists('story', $_GET)) {
                 <!--Thumbnail section on left-hand side-->
                 <div class="slides">
                     <!--Pull in all .jpg files for the thumbnails -->
-<?php
-		    $amountOfSlides = count($slideFiles) - 1; // Subtracted 1 to start counting from zero
-	            $numberOfSlide = -1;
-		    foreach ($slideFiles as $file):
+                    <?php foreach ($slideFiles as $file):
                         //check if file is .JPG
                         $filename = pathinfo($file);
-			//$name = $filename['filename']; 
-			$numberOfSlide++;
+			$name = $filename['filename']; 
+			$numberOfSlide = $name;
+			$amountOfSlides = count($slideFiles) - 1; // Subtracted 1 to start counting from zero
 			//Searching for the song audio!!!
-			$songAudioFile = $filename['dirname'] . "/" . $storyRoot . '/' . $amountOfSlides . '.m4a';
+			$songAudioFile = '/var/www/html/' . $storyRoot . '/' . $amountOfSlides . '.m4a';
 			if(file_exists($songAudioFile)){
 			//"Creating" the song slide!!!
-				if($numberOfSlide == $amountOfSlides){
+				if($name == $amountOfSlides){
 		?>
-					<script>let songSlideNumber = <?=$amountOfSlides?></script>
-<?php
-					//$name = 'Song';
-					$file = '../../../images/SongSlide.jpg';
+					<script>let songSlideNumber = <?=$name?></script>
+			<?php
+					$name = 'Song';
+					$file = '../../../images/songBackGround.jpg';
 				}
 			}else{
 				?><script>let songSlideNumber = (-1)</script><?php
@@ -174,16 +154,16 @@ if (array_key_exists('story', $_GET)) {
 			?>
 			
 
-                        <div class="tn_text" id="thumbnail_text_<?=$numberOfSlide?>">
-                            <div id="tn_slide"><?=$numberOfSlide?></div>
-                            <div id="msgImg<?=$numberOfSlide?>" style="display:none;">
+                        <div class="tn_text" id="thumbnail_text_<?=$name?>">
+                            <div id="tn_slide"><?=$name?></div>
+                            <div id="msgImg<?=$name?>" style="display:none;">
                                 <img src="images/msg.png" width="30px" height="30px"> 
                             </div>
-                            <div id="checkImg<?=$numberOfSlide?>" style="display:none;">
+                            <div id="checkImg<?=$name?>" style="display:none;">
                                 <img src="images/cmark.png" width="20px" height="20px">
                             </div>
                         </div>
-			<div class="thumbnail" id="thumbnail <?=$numberOfSlide?>" onclick="changeSlide(parseInt(<?=$numberOfSlide?>), currentSlide)">
+                        <div class="thumbnail" id="thumbnail <?=$name?>" onclick="changeSlide(parseInt(<?=$numberOfSlide?>), currentSlide)">
                             <img src="<?=$templateRoot?>/<?=$file?>">
                         </div>
                     <?php endforeach; ?>
@@ -199,7 +179,7 @@ if (array_key_exists('story', $_GET)) {
 			<div class="currSlide">
 				<div style="width=10%">
 
-				<button id="prevSlide" onclick="changeSlide(currentSlide - 1, currentSlide)">
+                            <button id="prevSlide" onclick="changeSlide(currentSlide - 1, currentSlide)">
                                 <img id ="p-bt" src="images/back.jpg">
                             </button>
 </div>
@@ -207,7 +187,7 @@ if (array_key_exists('story', $_GET)) {
 
                                 <div class="approvedTitle">
                                     <p id="status"></p>
-                                    <p>&nbsp;&nbsp;&nbsp; approved status:&nbsp;&nbsp;&nbsp;</p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; approved status:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <label class="switch">
                                         <input id="approveSwitch" 
                                                onclick="approveSwitchChanged(currentSlide, this, event)" 
@@ -222,11 +202,19 @@ if (array_key_exists('story', $_GET)) {
                                     <div id="mainText"></div>
                                 </div>
 
+                                <!--Get audio file and put it inthe player-->
+                                <div class ="theAudioPlayer">
+                                <audio controls id="audioPlayer">
+                                    <source id="mainAudio" 
+                                            src="<?=$storyRoot?>/0.m4a" 
+                                            type="audio/x-m4a"></source>
+                                </audio>
+                                </div>
                             </div>
 
 				<div style="width=10%">
 
-				<button id="fwdSlide" onclick="changeSlide(currentSlide + 1, currentSlide)">
+                            <button id="fwdSlide" onclick="changeSlide(currentSlide + 1, currentSlide)">
                                 <img id="f-bt" src="images/forward.jpg">
                             </button>
                             </div>
@@ -241,14 +229,6 @@ if (array_key_exists('story', $_GET)) {
                                 <div id ="editor-container"></div>
                             </form>
                         </div>
-                                <!--Get audio file and put it inthe player-->
-                                <div class ="theAudioPlayer">
-                                <audio controls id="audioPlayer">
-                                    <source id="mainAudio" 
-                                            src="<?=$storyRoot?>/0.m4a" 
-                                            type="audio/x-m4a"></source>
-                                </audio>
-                                </div>                        
                     </div>
                 </div>
 
@@ -302,75 +282,6 @@ if (array_key_exists('story', $_GET)) {
                 </div>
             </div>
         </div>
-
-        <script>
-<?php
-        $file1 = $templateRoot . "/project/story.json";
-    if (file_exists($file1))
-    {
-        $string1 = file_get_contents($file1);
-            // newlines cause parser to fail
-        $string = str_replace('\n', "<BR>", $string1);
-?>
-        let json_a = JSON.parse('<?php echo $string; ?>');
-        function readProperties(slideNumber)
-        {
-            document.getElementById("storyTitle").innerHTML = json_a.title;
-            let currSlide = json_a.slides[slideNumber]
-            document.getElementById("lf-t").innerHTML = currSlide.reference;
-            fileDisplayArea = document.getElementById("mainText");
-            fileDisplayArea.innerHTML = currSlide.content;
-        }
-<?php
-    }
-    else
-    {
-?>
-        function readTextFile(file)
-        {
-            let rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, false);
-            rawFile.onreadystatechange = function ()
-            {
-                if (rawFile.readyState === 4)
-                {
-                    if (rawFile.status === 200 || rawFile.status == 0) {
-                        let allText = rawFile.responseText;
-
-                        let title = allText.split("~")[0] + ": " + allText.split("~")[1];
-                        let slideref = allText.split("~", 4)[2];
-                        let trans = allText.split("~", 4)[3];
-
-            setPropertiesCommon(title, slideref, trans);
-
-                    }else{
-                        fileDisplayArea = document.getElementById("mainText");
-                        fileDisplayArea.innerText = " ";
-                    }
-                }
-            }
-            rawFile.send(null);
-        }
-<?php
-    }
-?>
-        function setPropertiesCommon(title, reference, content)
-        {
-            document.getElementById("storyTitle").innerHTML = title;
-            document.getElementById("lf-t").innerHTML = reference;
-            fileDisplayArea = document.getElementById("mainText");
-            fileDisplayArea.innerHTML = content;
-        }
-        function setProperties(slideNumber)
-        {
-            console.log("in setProperties");
-<?php           if (file_exists($file1)) { ?>
-            readProperties(slideNumber);
-<?php           } else {?>
-            readTextFile(`${templateRoot}/${slideNumber}.txt`);
-<?php       } ?>
-        }
-        </script>
 
         <script src="client.js"></script>
         <script>

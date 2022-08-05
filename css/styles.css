@@ -1,10 +1,22 @@
+/* This sets global css variables used for colors */
+/* use it by replacing  #d8e1e5;   with  var(--lightG);  */
+/* be sure not to replace the root section color code  */
+
+:root {
+   --lightG: #d8e1e5;       /*  var(--lightG);      */
+   --darkG: #2e6d89;        /*  var(--darkG);       */
+   --medDark: #5289a0;     /*  var(--medDark);  */
+   --medLight: #93b2c1;   /*  var(--medLight);  */
+}
+
+
 body,html{
 	height: 100%;
 	margin: 0;
 	padding: 0px;
 }
 .flex-header {
-	background-color: #25274d;
+    background: linear-gradient(to right, var(--lightG), var(--darkG));
 }
 .header-top{
 	display: flex;
@@ -22,6 +34,7 @@ body,html{
 	padding-top:8px;
 	font-size: 48px;
 	margin:0;
+    	text-shadow: 2px 2px black;
 }
 .header-btm, .header-top{
 	display:flex;

@@ -51,7 +51,8 @@ require_once('API/utils/Model.php');
 					</div>
 
 					<div class ="header-menu">
-						<a id="admin-link"  href="admin.php">Admin</a>
+						<a id="about-link" href="about.php">About</a>
+						<a id="admin-link" href="admin.php">Admin</a>
 						<a href="logout.php">Logout</a>
 					</div>
 				</div>
@@ -104,7 +105,8 @@ require_once('API/utils/Model.php');
             var isAdmin = "<?php echo $isAdmin ?>";
                 if (!isAdmin){
                     var adminLink = document.getElementById("admin-link");
-                    adminLink.style.display = "none";
+                    //adminLink.style.display = "none";
+		    adminLink.innerHTML = 'Change Password';
                 }
 
 

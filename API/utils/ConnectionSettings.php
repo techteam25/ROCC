@@ -1,8 +1,8 @@
 <?php
 
-$serverName = '10.10.10.248';
+$serverName = 'localhost';
 $databaseName = 'StoryProducer';
-$databaseUser = 'dharding';
-$databasePassword = '4maria';
-$filesRoot = '/var/www/html/roccnew/Files';
+$databaseUser = 'StoryP';
+$databasePassword = 'StoryProducer';
+$filesRoot = '/var/www/html/Files';
 $websocketPort = '8082';

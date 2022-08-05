@@ -1,8 +1,21 @@
+/* This sets global css variables used for colors */
+/* use it by replacing  #d8e1e5;   with  var(--lightG);  */
+/* be sure not to replace the root section color code  */
+
+:root {
+   --lightG: #d8e1e5;       /*  var(--lightG);      */
+   --darkG: #2e6d89;        /*  var(--darkG);       */
+   --medDark: #5289a0;   /*  var(--medDark);  */
+   --medLight: #93b2c1;   /*  var(--medLight);  */
+}
+
+
 /*Below sets the basic layout of the flex and grid boxes
 for the client.php page.
 */
+
 html{
-    background-color: #a9abb8;
+    background-color: var(--medLight);
 }
 
 .content-body{
@@ -22,30 +35,34 @@ html{
     color: white; 
     font-family: 'Abel', sans-serif;
 }
-.story-info h1{
 
+.story-info h1{
     margin-top:10px;
     width: 100%;
-    font-size: 3vw;
+    font-size: 48px;
+    text-shadow: 2px 2px black;
 }
 
 .header{
-    display:flex;
+    display: flex;
     flex-direction: row;
-    background-color: #25274d;
+    background: linear-gradient(to right, var(--lightG), var(--darkG));
     padding-left: 6px;
     height: 75px;
 }
+
 .story-title{
     margin-left: 18px;
-    color:white;
+    color: white;
     font-family: 'Raleway', sans-serif; 
     font-size: 18px;
 }
+
 .header-menu{
     margin-left: auto;
     margin-top: 48px;
 }
+
 .header-menu a{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
@@ -56,7 +73,7 @@ html{
 
 }
 .header-menu a:hover{
-    color:#53A4E8;
+    color: var(--lightG);
     text-decoration: none;
 
 }
@@ -67,7 +84,7 @@ html{
     position: relative;
     display: grid;
     /*grid-gap: 13px;*/
-    background-color: #a9abb8;
+    background-color: var(--lightG);
     grid-template-columns: [col1-start] 180px  [col2-start] 3fr  [col3-start] 1.8fr ;
     grid-template-rows: [row1-start] 490px [row2-start] 370px [row3-start];
 }
@@ -80,13 +97,11 @@ html{
     text-align: center;
     padding-top: 10px;
     justify-content: center;
-    background: rgb(71,72,103);
-    background: linear-gradient(180deg, rgba(71,72,103,1) 0%, rgba(71,72,103,1) 78%, rgba(38,38,54,1) 100%);
+    background: var(--medDark);
     grid-column: col1-start / col2-start;
     grid-row: row1-start / row3-start ;
     overflow:auto;
     text-color: white;
-
 }
 
 
@@ -104,10 +119,10 @@ html{
     padding-top: 6px;
     font-family: 'Raleway', sans-serif;
     display : flex; 
-    flex-direction: row; 
+    flex-direction: row;
     justify-content: space-between;
     font-size: 15px;
-    color: #cecee4;
+    color: var(--lightG);
 }
 #checkImg{
 	margin: 0;
@@ -116,7 +131,7 @@ html{
 .slides::-webkit-scrollbar-track, #messagesContainer::-webkit-scrollbar-track
 {
     border-radius: 10px;
-    background-color: #262636;
+    background-color: var(--darkG);
 }
 #messagesContainer::-webkit-scrollbar-thumb
 {
@@ -129,7 +144,7 @@ html{
 .slides::-webkit-scrollbar, #messagesContainer::-webkit-scrollbar
 {
     width: 15px;
-    background-color: #474867;
+    background-color: var(--medDark);
 
 }
 
@@ -147,8 +162,7 @@ html{
     width: 100%;
     flex-direction: row;
     /*margin-top: 10px;*/
-    background: rgb(37,39,77);
-    background: linear-gradient(180deg, rgba(37,39,77,0.6250875350140056) 0%, rgba(37,39,77,0.28895308123249297) 52%, rgba(37,39,77,0) 100%);
+    background: var(--medLight);
 }
 .left-audio{
     background: white;
@@ -165,8 +179,7 @@ html{
 }
 .left-audio #lf-t{
     text-align: left;
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
     color: white;
     padding: 7px;
     font-family: 'Quicksand', sans-serif;
@@ -186,8 +199,7 @@ html{
 }
 .center-audio #ca-t{
     text-align: left;
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
     color: white;
     padding: 7px;
     font-family: 'Quicksand', sans-serif;
@@ -219,8 +231,7 @@ html{
 }
 .right-audio #rt-t{
     text-align: left;
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
     color: white;
     padding: 7px;
     font-family: 'Quicksand', sans-serif;
@@ -253,6 +264,7 @@ audio{
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
+    min-width: 350px;
 }
 
 .approvedTitle p{
@@ -262,15 +274,14 @@ audio{
 }
 
 
-
 .written-notes{
-    height: 90%; 
+    height: 77%; 
 }
 
 .written-notes #editor-container{
 
-    min-height: 330px;
-    max-height: 330px;
+    min-height: 310px;
+    max-height: 310px;
     overflow:auto;
 
 }
@@ -285,14 +296,14 @@ audio{
     height:350px;
     width:35px;
     margin: 5px;
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
     border: none;
     border-radius: 4px;
     display: inline-block;
 
 }
 #prevSlide:hover, #fwdSlide:hover{
-    background-color: #474867;
+    background-color: var(--darkG);
 }
 
 #saveButton{
@@ -310,7 +321,7 @@ audio{
 }
 
 #saveButton:hover{
-    background-color: #474867;
+    background-color: var(--medDark);
 }
 #prevSlide img{
     width:10px;
@@ -336,14 +347,13 @@ audio{
     padding-bottom: 15px;
     padding-right: 15px;
     grid-row: row1-start ;
-    background: linear-gradient(180deg, rgba(37,39,77,0.6250875350140056) 0%, rgba(37,39,77,0.28895308123249297) 52%, rgba(37,39,77,0) 100%);
+    background: var(--medLight);
 
 }
 
 .messages #m-t{
     text-align: left;
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
     color: white;
     padding: 7px;
     margin-bottom: 2px;
@@ -358,17 +368,16 @@ audio{
     height:100%;
     overflow:auto;
     background: white;
-
 }
+
 .msg{
     display:flex;
     background:white;
     flex-direction:row;
     border-top:1px solid gray;
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-
-
 }
+
 .msg-input{
 
     background: white;
@@ -377,17 +386,16 @@ audio{
     overflow:auto;
     border:none;
     outline: none;
-
 }
 
 #msg-send{
-
     margin-right: 4px;
     color:white;
     background-color: white;
     border:none;
     outline: none;
 }
+
 input[type="text"]
 {
     padding-left: 10px;
@@ -406,9 +414,9 @@ input[type="text"]
 .fieldMessage {
     padding:9px;
     margin: 7px;
-    background-color:#cbcbcb;
+    background-color: #cbcbcb;
     border-radius: 10px;
-    float: left;
+    float: left;s
     font-size: 10pt;
     font-family: 'Raleway', sans-serif; 
     font-weight: bold;
@@ -416,11 +424,10 @@ input[type="text"]
 }
 
 .consultantMessage {
-
     padding:9px;
     margin: 7px;
     color:white;
-    background-color:#474867;
+    background-color:var(--medDark);
     border-radius: 10px;
     float: right;
     font-size: 10pt;
@@ -433,7 +440,7 @@ input[type="text"]
     margin: 7px;
     color:white;
     background: rgb(231,105,42);
-    background: linear-gradient(125deg, rgba(231,105,42,1) 0%, rgba(227,71,66,0.5886729691876751) 100%);
+    background: var(--medLight);
     border-radius: 10px;
     font-weight: bold;
     color: white;
@@ -443,11 +450,8 @@ input[type="text"]
     font-size: 15px;
     width: 75%;
     float: left;
-
-    float: left;
     font-size: 10pt;
     font-family: 'Raleway', sans-serif; 
-
     width: 75%;
 }
 
@@ -459,9 +463,9 @@ input[type="text"]
     flex-direction: row;
     grid-column: col2-start/col3-start ;
     grid-row: row2-start ;
-    background: linear-gradient(180deg, rgba(37,39,77,0.6250875350140056) 0%, rgba(37,39,77,0.28895308123249297) 52%, rgba(37,39,77,0) 100%);
-
+    background: var(--medLight);
 }
+
 .bible{
     flex: 1;
     margin-right: 10px;
@@ -474,8 +478,7 @@ input[type="text"]
 
 button.tablinks{
     text-align: left;
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background-color: var(--darkG);
     color: white;
     padding: 7px;
     margin-bottom: 2px;
@@ -494,8 +497,6 @@ button.tablinks{
 
 }
 
-
-
 .w-trans{
     flex: 3;
     height: 80%;
@@ -507,17 +508,20 @@ button.tablinks{
     flex-direction:column; 
     height:100%;
 }
+
 #editor-container2{
   height: 100%;   
 
  overflow:auto;    
 }
+
 .w-audio{
     margin: 5px;
     display:flex;
     flex-direction: row;
     justify-content: space-around;
 }
+
 #saveButton2{
     margin: 5px;
     -webkit-transition-duration: 0.4s; /* Safari */
@@ -546,7 +550,8 @@ button.tablinks{
 
 .switch {
     position: relative;
-    width: 60px;
+    min-width: 58px;
+    max-width: 58px;
     height: 43px;
     justify-self: end;
 }
@@ -564,7 +569,7 @@ button.tablinks{
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #c95538;
+    background-color: var(--darkG);
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -616,13 +621,12 @@ input:checked + .slider:before {
 
 /*Below for tabs in lower right div*/
 
-
 .tab button:hover{
-    background-color:#ddd;
+    background: var(--medDark);
 }
 
 .tab button:active{
-    background-color:#838d96;
+    background: var(--medDark);
 }
 
 .tabcontent{
@@ -633,6 +637,5 @@ input:checked + .slider:before {
 }
 
 .tabHeader {
-    background: rgb(37,39,77);
-    background: linear-gradient(300deg, rgba(37,39,77,1) 0%, rgba(37,39,77,0.7847514005602241) 100%);
+    background: var(--medDark);
 }

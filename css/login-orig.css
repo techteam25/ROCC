@@ -1,7 +1,7 @@
 
 body,html {
-    background: #d8e1e5;
-    background: linear-gradient(to right, #d8e1e5, #2e6d89);
+    background: #25274d;
+    background: linear-gradient(to right, #25274d, #61649d);
     width:100%;
     height: 100%;
 }
@@ -24,14 +24,12 @@ p3{
     font-size: 60px;
     color:white;
     font-family: 'Montserrat', sans-serif;
-    text-shadow: 2px 2px black;
 }
 p4{
     margin-top: 30px;
     font-size: 18px;
     color:white;
     font-family: 'Montserrat', sans-serif;
-    text-shadow: 1px 1px black;
 }
 img{
     height: 150px;
@@ -91,10 +89,10 @@ img{
 }
 
 .btn-primary{
-    background: #2e6d89;
+    background: #25274d;
 }
 .btn-primary:hover{
-    background:#d8e1e5;
+    background:#5c5f8c;
 }
 
 
