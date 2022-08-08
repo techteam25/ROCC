@@ -440,7 +440,7 @@ input[type="text"]
     margin: 7px;
     color:white;
     background: rgb(231,105,42);
-    background: var(--medLight);
+    background: #FF69B4;
     border-radius: 10px;
     font-weight: bold;
     color: white;

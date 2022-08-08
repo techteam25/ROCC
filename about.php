@@ -50,7 +50,7 @@
         <tr>ROCC for SPadv 2.0</tr>
         <br><br>
             <tr>
-The Remote Oral Consultant Checker for StoryProducerAdv (ROCC4SPadv) software is jointly copyrighted (c) by Tyndale Bible Translators and Robin Rempel, 2022.
+The Remote Oral Consultant Checker for StoryProducerAdv (ROCC4SPadv) software is jointly copyrighted &copy; by Tyndale Bible Translators and Robin Rempel, 2022.
             </tr>
         <br><br>
             <tr>
