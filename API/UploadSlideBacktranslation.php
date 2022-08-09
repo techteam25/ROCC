@@ -62,10 +62,13 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
 
     error_log("Copying template '$templateTitle' folder to new project directory and creating slides");
     foreach ($slideEntries as $slideEntry) {
+
+        if ($slideEntry[slideType] !== 'COPYRIGHT') {
         error_log("Got slide number $slideIndex");
         PrepareAndExecute($conn,
             'INSERT IGNORE INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)', 
             array($storyId, $slideIndex));
+        }
         $slideIndex++;
     }
     if (!$conn->commit()) {
