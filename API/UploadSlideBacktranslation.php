@@ -55,7 +55,8 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
 //    $slideEntries = $projectXPath->query('/m:MSPhotoStoryProject/m:VisualUnit');
 
 //  this was for json templates
-    $storyJson = file_get_contents("$templateDirectory/project/story.json");
+    $storyJson1 = file_get_contents("$templateDirectory/project/story.json");
+    $storyJson = str_replace('\n', "<BR>", $storyJson1);
     $decode_story = json_decode($storyJson, true);
     $slideEntries = $decode_story['slides'];
     $slideIndex = 0;
@@ -63,7 +64,7 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
     error_log("Copying template '$templateTitle' folder to new project directory and creating slides");
     foreach ($slideEntries as $slideEntry) {
 
-        if ($slideEntry[slideType] !== 'COPYRIGHT') {
+        if ($slideEntry['slideType'] !== 'COPYRIGHT') {
         error_log("Got slide number $slideIndex");
         PrepareAndExecute($conn,
             'INSERT IGNORE INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)', 
