@@ -182,8 +182,8 @@ $server->on('error', function(Exception $e) {
     error_log("error: {$e->getMessage()}");
 });
 $secureServer = new React\Socket\SecureServer($server, $loop, [
-    'local_cert' => '/var/www/keys/fullchain1.pem',
-    'local_pk' => '/var/www/keys/privkey1.pem',
+    'local_cert' => '/etc/letsencrypt/live/rocc.ttapps.org/fullchain.pem',
+    'local_pk' => '/etc/letsencrypt/live/rocc.ttapps.org/privkey.pem',
     'allow_self_signed' => false,
     'verify_peer' => false,
     'verify_host' => false
