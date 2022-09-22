@@ -17,21 +17,17 @@ class MessageHandler implements MessageComponentInterface {
     protected $conn;
 
     public function __construct() {
-error_log("#1");
         $this->clients = array();
         $this->conn = GetDatabaseConnection();
     }
 
     public function onOpen(ConnectionInterface $conn) {
-error_log("#2");
         $url = parse_url($conn->httpRequest->getUri());
-error_log("#3" . $url['path']);
         $path_elements = explode('/', $url['path'], 4);
         error_log(json_encode($path_elements));
         $client = (object)array();
         $client->conn = $conn;
         $client->isConsultant = $path_elements[1] === 'consultant';
-error_log("#4" . count($path_elements));
         $client->projectId = $path_elements[2];
         if ($client->isConsultant) {
             $client->storyId = intval($path_elements[3]);
@@ -48,7 +44,6 @@ error_log("#4" . count($path_elements));
 
         $messageData = json_decode($messageString);
         $type = $messageData->type;
-error_log("type: " . $type);	
         if ($type === "text") {
             $storyId = intval($messageData->storyId);
             if ($storyId === null) {
@@ -61,7 +56,6 @@ error_log("type: " . $type);
 
             $currentTimestamp = date('Y-m-d H:i:s');
             error_log("from {$conn->resourceId}: $currentTimestamp");
-error_log("#6");
             $stmt = PrepareAndExecute($this->conn,
                 'INSERT INTO Messages (storyId, slideNumber, isConsultant, isUnread, isTranscript, timeSent, text)
                 VALUES (?,?,?,true,?,?,?)',
