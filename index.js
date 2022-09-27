@@ -97,7 +97,6 @@ function reloadStoryInfo(storyId){
 }
 
 function reloadStoryTitle(titleArray) {
-
 	var titleDiv = document.getElementById('storyList');
 	titleDiv.innerHTML = '';
 	var bar_info = document.getElementById("bar-info");
@@ -111,10 +110,12 @@ function reloadStoryTitle(titleArray) {
 	apr_info.textContent= ''; 
 	
 	var index = 0;
+
+	document.getElementById("view_story").innerHTML = "View Story";
 	document.getElementById("view_story").href = "";
 	document.getElementById("img_link").href = "";
 	document.getElementById("csRightLink").href = "";
-
+	
 	for (const key of titleArray){
 		var storyDiv = document.createElement("div");
 		var perc = document.createElement("p");
@@ -175,14 +176,47 @@ function reloadPage(data) {
  
 	var vs = document.getElementById("view_story");  
 
+// a consultant with no projects yet
 	var titleArray = JSON.parse(data);
 	if(isEmpty(titleArray)){
-		let no_story = document.getElementById('csLeft');
-		no_story.innerHTML = '';
-		let ns_error = document.createElement("p");
-		ns_error.innerHTML = 'No Story Associated with this Project';
-		no_story.appendChild(ns_error);
+		var img = document.getElementById("img_thumb");  
+		img.src = "images/noimg.png";
+		document.getElementById("img_link").href = "index.php";
+		document.getElementById("csRightLink").href = "index.php";
+		document.getElementById("view_story").href = "index.php";
+		document.getElementById("view_story").innerHTML = "No stories for this project.";
+
+		//let newDiv = document.createElementNS('http://www.w3.org/1999/xhtml', "a")
+		var nsText = document.createElement("p");
+		nsText.innerHTML = 'No stories for this project';
+		let no_story2 = document.getElementById('csRightLink');
+		no_story2.innerHTML = '';
+		no_story2.appendChild(nsText);
 		
+		let no_story3 = document.getElementById('storyList');
+		no_story3.innerHTML = '';
+		no_story3.appendChild(nsText);
+	}
+
+// a project/language with no story(s) uploaded yet
+	else if (titleArray[0].title == "none"){
+		var img = document.getElementById("img_thumb");  
+		img.src = "images/noimg.png";
+		document.getElementById("img_link").href = "index.php";
+		document.getElementById("csRightLink").href = "index.php";
+		document.getElementById("view_story").href = "index.php";
+		document.getElementById("view_story").innerHTML = "No stories for this project.";
+
+		//let newDiv = document.createElementNS('http://www.w3.org/1999/xhtml', "a")
+		var nsText = document.createElement("p");
+		nsText.innerHTML = 'No stories for this project';
+		let no_story2 = document.getElementById('csRightLink');
+		no_story2.innerHTML = '';
+		no_story2.appendChild(nsText);
+		
+		let no_story3 = document.getElementById('storyList');
+		no_story3.innerHTML = '';
+		no_story3.appendChild(nsText);
 	}
 
 	else if(typeof titleArray[0] !== 'undefined'){

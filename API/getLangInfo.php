@@ -15,13 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    on Slide.storyId = Stories.id
 	    GROUP BY Stories.title, Stories.id, Stories.projectId) S
             ON Projects.id = S.PID 
-            WHERE Projects.language = ? 
+        WHERE Projects.language = ?
 	    ORDER BY approved ASC';
     $stmt = PrepareAndExecute($conn, $sql, array($language));
     $data_arr = []; 
-    while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
-	array_push($data_arr, array("title" => $row['title'], "currProjId" => $row['currProjId'], "storyId" => $row['storyId'], "approved" => $row['approved']));
+
+    if ($stmt->rowCount() > 0) {
+        while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+            array_push($data_arr, array("title" => $row['title'], "currProjId" => $row['currProjId'], "storyId" => $row['storyId'], "approved" => $row['approved']));
+        }
+    } else {
+        array_push($data_arr, array("title" => "none", "currProjId" => "0", "storyId" => "0", "approved" => "0"));
     }
     echo json_encode($data_arr);
-}
 
+}
