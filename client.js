@@ -53,7 +53,7 @@ function syncApprovalSwitch(slideNumber) {
 }
 
 function connect() {
-    host = window.location.hostname;
+    host = externalWebsocketHost;
     hostpre = host.slice(0, 9);
     if (hostpre === "10.10.10.")
     {
@@ -63,7 +63,7 @@ function connect() {
     {
 	service = 'wss';
     }
-    let conn = new WebSocket(`${service}://${host}:${websocketPort}/consultant/${projectId}/${storyId}`);
+    let conn = new WebSocket(`${service}://${host}:${externalWebsocketPort}/consultant/${projectId}/${storyId}`);
     conn.onopen = () => {
         console.log("opened!!!");
         let m = { 'type': 'catchup' };

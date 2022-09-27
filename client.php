@@ -118,7 +118,8 @@ if (array_key_exists('story', $_GET)) {
         var storyId = <?=json_encode($storyId)?>;
         var projectId = <?=json_encode($projectId)?>;
         var templateRoot = <?=json_encode($templateRoot)?>;
-        var websocketPort = <?=json_encode($GLOBALS['websocketPort'])?>;
+        var externalWebsocketPort = <?=json_encode($GLOBALS['externalWebsocketPort'])?>;
+        var externalWebsocketHost = <?=json_encode($GLOBALS['externalWebsocketHost'])?>;
 
         </script>
 
@@ -316,8 +317,12 @@ if (array_key_exists('story', $_GET)) {
         function readProperties(slideNumber)
         {
             document.getElementById("storyTitle").innerHTML = json_a.title;
-            let currSlide = json_a.slides[slideNumber]
-            document.getElementById("lf-t").innerHTML = currSlide.reference;
+	    let currSlide = json_a.slides[slideNumber]
+		    if(currSlide.reference == ""){
+            		document.getElementById("lf-t").innerHTML = "&nbsp;";
+		    } else{
+            		document.getElementById("lf-t").innerHTML = currSlide.reference;
+		    }
             fileDisplayArea = document.getElementById("mainText");
             fileDisplayArea.innerHTML = currSlide.content;
         }
