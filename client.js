@@ -209,6 +209,7 @@ function addMessage(message) {
         messageClass = 'transcriptMessage';
     }
     messagesContainer.innerHTML += `<div class='${messageClass}'>${message.text}</div>`;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function saveNotes(slideNumber) {
