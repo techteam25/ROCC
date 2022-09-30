@@ -154,6 +154,7 @@ class MessageHandler implements MessageComponentInterface {
                     $client->conn->send($message);
                 }
             }
+	    FCMSend($storyId, $currentClient->projectId);
         }
     }
 
@@ -164,6 +165,32 @@ class MessageHandler implements MessageComponentInterface {
 
     public function onError(ConnectionInterface $conn, \Exception $e) {
         error_log("Error: {$e->getMessage()}");
+    }
+
+}
+
+function FCMSend(int $storyId, $projectId) {
+    $conn = GetDatabaseConnection();
+    $SQL = 'SELECT SUM(isApproved) AS Approved, COUNT(isApproved) AS Total, title FROM Stories ' .
+	    'LEFT JOIN Slide ON Stories.id = Slide.storyId WHERE Stories.id = ' . $storyId;
+    $Pct = PrepareAndExecute($conn, $SQL, array());
+    while (($row = $Pct->fetch(PDO::FETCH_ASSOC))) {
+	$PctApproved = (int)($row['Approved'] / ($row['Total'] - 1) * 100);
+	$Title = $row['title'];
+    }
+    if ($PctApproved == 100) {   // 100% of slides approved
+	error_log("projectID: " . $projectId);
+        $SQL = 'SELECT fcmToken FROM Projects WHERE androidId = "' . $projectId . '"';
+        $FCMToken = PrepareAndExecute($conn, $SQL, array());
+	$fcmToken = "";
+        while (($row = $FCMToken->fetch(PDO::FETCH_ASSOC))) {
+	    $fcmToken = $row['fcmToken'];
+	}
+        if ($fcmToken != "") {
+            $cmd = 'curl -X POST --header "Authorization: key=AAAAU8MDzIQ:APA91bEm-Xskg66XnJXnUe5MvFs60eHiq-14eCiZ3n7atak-mbYcz7idkWQ7OB1IDDsQV0TPWhixEX_StNGCZUemP805qd4vzKndmvuAMcvfmr35gZZTzN3qVeXsBnmB3lGHZB-9QdVT "     --Header "Content-Type: application/json"     https://fcm.googleapis.com/fcm/send -d "{\"to\":\"' . $fcmToken . '\",\"notification\":{\"title\":\"Story Producer Adv\",\"body\":\"Story - ' . $Title . ' - ' . $PctApproved . '% audio files approved.\"}}"';
+            $result = shell_exec($cmd);
+            error_log("100% approved, notification: " . $result);
+	}
     }
 }
 

@@ -77,6 +77,23 @@ function CopyFileIfExists($from_filename, $to_directory, $to_filename) {
     copy($from, $to);
 }
 
+function GetNumberOfSlides($conn, $storyId) {
+    $sql = "SELECT COUNT(*) AS num
+		FROM Slide
+		WHERE storyId = ?;";
+    $stmt = PrepareAndExecute($conn, $sql, array($storyId));
+    $model = new Model();
+    $numSlides = $model->FetchValueByKey($stmt, 'num');
+    if (!$numSlides) {
+        Respond\error("Unable to access story approvals");
+        throw new DBException();
+        ;
+    }
+
+    $model->FreeStmt($stmt);
+    return $numSlides;
+}
+
 function RespondWithError($code, $message) {
     error_log($message);
     // We should not give the end user reasons for why we have internal server
@@ -150,7 +167,7 @@ class Model {
         return $stmt;
     }
 
-    private function FreeStmt(&$stmt) {
+    function FreeStmt(&$stmt) {
         $stmt = null;
         return true;
     }
@@ -175,7 +192,7 @@ class Model {
         return false;
     }
 
-    private function FetchValueByKey($stmt, $key) {
+    function FetchValueByKey($stmt, $key) {
         $results = $this->FetchArray($stmt);
         return array_key_exists($key, $results) ? $results[$key] : false;
     }
@@ -269,7 +286,7 @@ class Model {
     }
 
     private function AddBtText($storyId, $slideNumber, $btText) {
-        $numberOfSlides = $this->GetNumberOfSlides($storyId);
+        $numberOfSlides = $this->GetNumberOfSlides($this->cn, $storyId);
 
         // Make sure this story actually contains this slide number
         if ($slideNumber >= $numberOfSlides) {
@@ -296,7 +313,7 @@ class Model {
     }
 
     private function UpdateStoryNotes($storyId, $notes) {
-        $numberOfSlides = $this->GetNumberOfSlides($storyId);
+        $numberOfSlides = $this->GetNumberOfSlides($this->cn, $storyId);
 
         if ($numberOfSlides != count($notes)) {
             Respond\error("Invalid number of slide notes");
@@ -318,7 +335,7 @@ class Model {
     }
 
     private function UpdateSlideStatuses($storyId, $slideStatus) {
-        $numberOfSlides = $this->GetNumberOfSlides($storyId);
+        $numberOfSlides = $this->GetNumberOfSlides($this->cn, $storyId);
 
         if ($numberOfSlides != count($slideStatus)) {
             Respond\error("Invalid number of slide statuses");
@@ -337,23 +354,6 @@ class Model {
             }
             $this->FreeStmt($stmt);
         }
-    }
-
-    private function GetNumberOfSlides($storyId) {
-        $sql = "SELECT COUNT(*) AS num
-				FROM Approvals
-				WHERE storyId = ?;";
-        $stmt = $this->PrepareAndExecute($sql, array($storyId));
-
-        $numSlides = $this->FetchValueByKey($stmt, 'num');
-        if (!$numSlides) {
-            Respond\error("Unable to access story approvals");
-            throw new DBException();
-            ;
-        }
-
-        $this->FreeStmt($stmt);
-        return $numSlides;
     }
 
     private function GetStoryId($phoneId, $storyTitle) {

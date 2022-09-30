@@ -1,5 +1,6 @@
 <?php
 require_once('utils/Model.php');
+require_once('utils/MailROCC.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     RespondWithError(405, "Request must be a POST");
@@ -78,6 +79,62 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
     return $storyId;
 }
 
+function CheckEmailNotify($conn, $storyId, $androidId) {
+    $total = GetNumberOfSlides($conn, $storyId);
+    $totalReq = $total - 3;
+    $count = CountReqAudioFiles($total, $storyId, $androidId);
+    $projectIdStmt = PrepareAndExecute($conn, 'SELECT FirstThreshold, SecondThreshold FROM Stories ' .
+	' WHERE id = ?', array($storyId));
+    if (($row = $projectIdStmt->fetch(PDO::FETCH_ASSOC))) {
+	if (($row['FirstThreshold'] == null && $count / $totalReq > .5) ||
+	    ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ))
+        {  // Thresold reached, email user
+            $From = "Story Producer Adv <noreply@techteam.org>";
+            $Pct = strval($count) . " of " . strval($totalReq);
+            $Message = "$Pct required audio files have been uploaded";
+            $Subject = "Audio file upload status";
+            $To = getConsultantInfo($conn, $androidId);
+            SendMailRoccUser($From, $To, $Subject, $Message);
+        }
+        $dt = date('Y-m-d H:i:s');
+	if ($row['FirstThreshold'] == null && $count / $totalReq > .5) // save timestamp
+	{
+            $sql = "UPDATE Stories SET FirstThreshold = ?  WHERE id = ?"; 
+            $stmt = PrepareAndExecute($conn, $sql, array($dt, $storyId));
+	}
+	if ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ) // save timestamp
+	{
+            $sql = "UPDATE Stories SET SecondThreshold = ?  WHERE id = ?"; 
+            $stmt = PrepareAndExecute($conn, $sql, array($dt, $storyId));
+	}
+    }
+}
+
+function getConsultantInfo($conn, $androidId) {
+    $projectIdStmt = PrepareAndExecute($conn, 'SELECT Consultants.name, Consultants.email ' .
+	' FROM Projects LEFT JOIN Assigned ON Projects.id = Assigned.ProjectId ' .
+	' LEFT JOIN Consultants ON Assigned.ConsultantId = Consultants.id ' .
+	' WHERE androidId = ?', array($androidId));
+    if (($row = $projectIdStmt->fetch(PDO::FETCH_ASSOC))) {
+      $email = $row['name'] . '<' . $row['email'] . '>';
+    }
+    return $email;
+}
+
+function SlideAudioExists($slideNum, $storyId, $androidId) {
+    $directory = "Projects/$androidId/$storyId";
+    $file = "{$GLOBALS['filesRoot']}/$directory/" . $slideNum . ".m4a";
+    return file_exists($file);
+}
+
+function CountReqAudioFiles($total, $storyId, $androidId) {
+    $count = 0;
+    for ($idx = 1; $idx < $total - 2; $idx++) {
+        if (SlideAudioExists($idx, $storyId, $androidId))
+            $count++;
+    }
+    return $count;
+}
 
 $androidId = $_POST['PhoneId'];
 $templateTitle = htmlspecialchars(trim($_POST['TemplateTitle']));
@@ -97,14 +154,19 @@ if (array_key_exists('StoryId', $_POST)) {
 }
 
 $directory = "Projects/$androidId/$storyId";
+$sendEmail = false;
 
 if (array_key_exists('IsWholeStory', $_POST) && $_POST['IsWholeStory'] === "true") {
     PutFile($directory, "wholeStory.m4a", $audioData);
 } else if (array_key_exists('SlideNumber', $_POST)){
     $slideNumber = $_POST['SlideNumber'];
     PutFile($directory, "$slideNumber.m4a", $audioData);
+    $sendEmail = true;
 } else {
     RespondWithError(400, "Either IsWholeStory or SlideNumber is required to be in the request");
 }
 
 echo json_encode(array('StoryId' => $storyId));
+if ($sendEmail == true) {
+    CheckEmailNotify($conn, $storyId, $androidId);
+}

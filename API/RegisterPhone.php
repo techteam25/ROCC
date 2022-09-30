@@ -41,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                  trainerEmail = ?,
                  email = ?,
                  phone = ?,
-                 spokenLanguage = ?
+                 spokenLanguage = ?,
+                 fcmToken = ?
              WHERE androidId = ?",
         array(&$_POST['ProjectEthnoCode'],
               &$_POST['ProjectLanguage'],
@@ -51,14 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
               &$_POST['TranslatorEmail'],
               &$_POST['TranslatorPhone'],
               &$_POST['TranslatorLanguage'],
+              &$_POST['FirebaseToken'],
               &$_POST['PhoneId']));
     } else {
         PrepareAndExecute($conn,
-            "INSERT INTO Projects (androidId, ethnoCode, language, country,
+            "INSERT INTO Projects (androidId, fcmToken, ethnoCode, language, country,
                                    majorityLanguage, trainerEmail,
                                    email, phone, spokenLanguage)
              VALUES (?,?,?,?,?,?,?,?,?)",
             array(&$_POST['PhoneId'],
+                  &$_POST['FirebaseToken'],
                   &$_POST['ProjectEthnoCode'],
                   &$_POST['ProjectLanguage'],
                   &$_POST['ProjectCountry'],
