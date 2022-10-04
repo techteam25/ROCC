@@ -280,6 +280,9 @@ function sendMessage() {
             'text': sendMessageInput.value,
         }));
         sendMessageInput.value = '';
+        // this does not work... it was supposed to refresh just the div tag
+        //$( "#msgMaster" ).load(window.location.href + " #msgMaster" );
+        location.reload();
     }
 }
 

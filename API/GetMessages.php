@@ -24,17 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $index++;
     }
 
-    $stmt = PrepareAndExecute($conn,
+    $stmt2 = PrepareAndExecute($conn,
         'SELECT storyId, slideNumber, isApproved
          FROM Slide, Stories, Projects
          WHERE Slide.storyId = Stories.id
            AND Stories.projectId = Projects.id
            AND Projects.androidId = ?', array($phoneId));
-    $index = 0;
+    $index2 = 0;
     $approvals = array();
-    while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
-        $approvals[$index] = $row;
-        $index++;
+    while (($row2 = $stmt2->fetch(PDO::FETCH_ASSOC))) {
+        $approvals[$index2] = $row2;
+        $index2++;
     }
 
     echo json_encode(array(

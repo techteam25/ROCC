@@ -253,7 +253,7 @@ if (array_key_exists('story', $_GET)) {
                     </div>
                 </div>
 
-                <div class="messages">
+                <div class="messages" id="msgMaster">
                     <div id="m-t"> Messages </div>
                     <div id="messagesContainer">
                     </div>
@@ -282,11 +282,6 @@ if (array_key_exists('story', $_GET)) {
                                         src="<?=$storyRoot?>/wholeStory.m4a" 
                                         type="audio/x-m4a">
                             </audio>
-			<!-- Removing the save button becuase it is not necessary anymore:::
-                            <button id="saveButton2" onclick="saveWholeNotes()" 
-                                    type="button" 
-				    value="Save">Save Whole Story Notes</button>
--->
                         </div>
                     </div>
                 </div>

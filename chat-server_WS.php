@@ -43,6 +43,7 @@ class MessageHandler implements MessageComponentInterface {
         $currentClient = $this->clients[$conn->resourceId];
 
         $messageData = json_decode($messageString);
+        error_log("Tmp2: $messageString");
         $type = $messageData->type;
         if ($type === "text") {
             $storyId = intval($messageData->storyId);
@@ -71,10 +72,19 @@ class MessageHandler implements MessageComponentInterface {
                 'text' => $text,
             ));
 
+            $prevMsg = "qyqyq";
+
             foreach($this->clients as $client) {
                 if ($client->projectId === $currentClient->projectId && 
                     (!$client->isConsultant || $client->storyId === $storyId)) {
-                    $client->conn->send($message);
+                    if ($message != $prevMsg) {
+                        error_log("Tmp: $message");
+                        error_log("Prj: $client->projectId");
+                        error_log("Cns: $client->isConsultant");
+                        error_log("Sty: $client->storyId");
+                        $client->conn->send($message);
+                        $prevMsg = $message;
+                    }
                 }
             }
         } else if ($type === "catchup") {
