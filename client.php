@@ -17,10 +17,11 @@ if (array_key_exists('story', $_GET)) {
 
     $storyId = $_GET['story'];
     $storyStmt = PrepareAndExecute($conn, 
-        'SELECT androidId, title FROM Stories, Projects WHERE Projects.id = projectId AND Stories.id = ?', 
+        'SELECT androidId, title, Stories.language AS language FROM Stories, Projects WHERE Projects.id = projectId AND Stories.id = ?', 
         array($storyId));
     if (($row = $storyStmt->fetch(PDO::FETCH_ASSOC))) {
         $projectId = $row['androidId'];
+        $language = $row['language'];
         $templateTitle = $row['title'];
     } else {
         RespondWithError(404, 'Story Not Found');
@@ -74,7 +75,12 @@ if (array_key_exists('story', $_GET)) {
         <script>
 
         <?php
-        $templateRoot = "Files/Templates/$templateTitle";
+        $templateRoot = "Files/Templates/";
+        if ($language !== "") {
+            $templateRoot = $templateRoot . $language . "/";
+        }
+        $templateRoot = $templateRoot . $templateTitle;
+	
         $storyRoot = "Files/Projects/$projectId/$storyId";
         $files = scandir($templateRoot);
         $slideFiles = [];
@@ -84,6 +90,9 @@ if (array_key_exists('story', $_GET)) {
         //sort files in numeric order instead of alphabetical order
         $image_extensions = [];
         $slideFiles[$slideCount] = '../../../images/TitleSlide.jpg';
+        if ($language !== "") {
+            $slideFiles[$slideCount] = '../' . $slideFiles[$slideCount];
+        }
         $filename = pathinfo($slideFiles[$slideCount]);
         array_push($image_extensions, $filename['extension']);
         $slideCount++;
@@ -106,6 +115,9 @@ if (array_key_exists('story', $_GET)) {
 	  $slideCount--;
 	}
         $slideFiles[$slideCount] = '../../../images/SongSlide.jpg';
+        if ($language !== "") {
+            $slideFiles[$slideCount] = '../' . $slideFiles[$slideCount];
+        }
         $filename = pathinfo($slideFiles[$slideCount]);
         array_push($image_extensions, $filename['extension']);
         $slideCount++;
@@ -253,7 +265,7 @@ if (array_key_exists('story', $_GET)) {
                     </div>
                 </div>
 
-                <div class="messages" id="msgMaster">
+                <div class="messages">
                     <div id="m-t"> Messages </div>
                     <div id="messagesContainer">
                     </div>
@@ -282,6 +294,11 @@ if (array_key_exists('story', $_GET)) {
                                         src="<?=$storyRoot?>/wholeStory.m4a" 
                                         type="audio/x-m4a">
                             </audio>
+			<!-- Removing the save button becuase it is not necessary anymore:::
+                            <button id="saveButton2" onclick="saveWholeNotes()" 
+                                    type="button" 
+				    value="Save">Save Whole Story Notes</button>
+-->
                         </div>
                     </div>
                 </div>
@@ -312,12 +329,8 @@ if (array_key_exists('story', $_GET)) {
         function readProperties(slideNumber)
         {
             document.getElementById("storyTitle").innerHTML = json_a.title;
-	    let currSlide = json_a.slides[slideNumber]
-		    if(currSlide.reference == ""){
-            		document.getElementById("lf-t").innerHTML = "&nbsp;";
-		    } else{
-            		document.getElementById("lf-t").innerHTML = currSlide.reference;
-		    }
+            let currSlide = json_a.slides[slideNumber]
+            document.getElementById("lf-t").innerHTML = currSlide.reference;
             fileDisplayArea = document.getElementById("mainText");
             fileDisplayArea.innerHTML = currSlide.content;
         }

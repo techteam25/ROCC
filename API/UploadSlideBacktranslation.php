@@ -36,12 +36,21 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
         return $row['id'];
     }
 
-    PrepareAndExecute($conn, 'INSERT INTO Stories (title, projectId, note) SELECT ?,?,""', array($templateTitle, $projectId));
+    if (array_key_exists('Language', $_POST)) {
+        $language = $_POST['Language'];
+    } else {
+        $language = "";
+    }
+    PrepareAndExecute($conn, 'INSERT INTO Stories (title, language, projectId, note) SELECT ?,?,?,""', array($templateTitle, $language, $projectId));
     $storyId = $conn->lastInsertId();
 
     error_log("Parsing template project file");
     //$templateDirectory = "../Files/Templates/$templateTitle";
-    $templateDirectory = "{$GLOBALS['filesRoot']}/Templates/$templateTitle";
+    $templateDirectory = "{$GLOBALS['filesRoot']}/Templates/";
+    if ($language !== "") {
+        $templateDirectory = $templateDirectory . $language . "/";
+    }
+    $templateDirectory = $templateDirectory . $templateTitle;
     echo $templateDirectory;
     if (!file_exists($templateDirectory) || !is_dir($templateDirectory)) {
         RespondWithError(400, "Server does not contain requested template.");
@@ -81,7 +90,7 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
 
 function CheckEmailNotify($conn, $storyId, $androidId) {
     $total = GetNumberOfSlides($conn, $storyId);
-    $totalReq = $total - 3;
+    $totalReq = $total - 2;
     $count = CountReqAudioFiles($total, $storyId, $androidId);
     $projectIdStmt = PrepareAndExecute($conn, 'SELECT FirstThreshold, SecondThreshold FROM Stories ' .
 	' WHERE id = ?', array($storyId));

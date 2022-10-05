@@ -139,9 +139,9 @@ function reloadStoryTitle(titleArray) {
 		index ++;
 	}
 	var img = document.getElementById("img_thumb");  
-	img.src ='Files/Templates/' + keyData.currProjId + "/" + keyData.storyId + '/1.jpg'; 
+	img.src ='Files/Templates/' + keyData.language + "/" + keyData.currProjId + "/" + keyData.storyId + '/1.jpg'; 
 	img.onerror = function() {
-		img.src ='Files/Templates/' + keyData.currProjId + "/" + keyData.storyId + '/1.png'; 
+		img.src ='Files/Templates/' + keyData.language + "/" + keyData.currProjId + "/" + keyData.storyId + '/1.png'; 
 		img.onerror = function() {
 			document.getElementById('img_link').src = "images/noimg.png"; 
 		}	
@@ -156,9 +156,9 @@ function reloadStoryImg(titleArray) {
 	if (typeof keyData !== 'undefined'){
 		csRightLink.innerHTML = keyData.title;
 		var img = document.getElementById("img_thumb");  
-		img.src =`Files/Templates/${keyData.title}/1.jpg`; 
+		img.src =`Files/Templates/${keyData.language}/${keyData.title}/1.jpg`; 
 		img.onerror = function() {
-			img.src =`Files/Templates/${keyData.title}/1.png`; 
+			img.src =`Files/Templates/${keyData.language}/${keyData.title}/1.png`; 
 			img.onerror = function() {
 				img.src = "images/noimg.png";
 			}
@@ -240,9 +240,9 @@ function reloadPage(data) {
 			var imgLink = document.getElementById("img_link");
 			csRightLink.innerHTML = '';
 			csRightLink.innerHTML = storyTitle; 
-        		img.src =`Files/Templates/${keyData.title}/1.jpg`; 
+        		img.src =`Files/Templates/${keyData.language}/${keyData.title}/1.jpg`; 
 			img.onerror = function() { 
-        			img.src =`Files/Templates/${keyData.title}/1.png`; 
+        			img.src =`Files/Templates/${keyData.language}/${keyData.title}/1.png`; 
 				img.onerror = function() { 
 					document.getElementById('img_thumb').src = "images/noimg.png"; 
 				}
