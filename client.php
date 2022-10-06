@@ -80,47 +80,45 @@ if (array_key_exists('story', $_GET)) {
             $templateRoot = $templateRoot . $language . "/";
         }
         $templateRoot = $templateRoot . $templateTitle;
-	
+        $storyjsonfile = $templateRoot . "/project/story.json";
+        if (file_exists($storyjsonfile))
+        {
+            $storyjsonstring = file_get_contents($storyjsonfile);
+            $storyjsonobj = json_decode($storyjsonstring);
+        }
         $storyRoot = "Files/Projects/$projectId/$storyId";
-        $files = scandir($templateRoot);
         $slideFiles = [];
-        natsort($files);
         $slideCount = 0;
 
         //sort files in numeric order instead of alphabetical order
         $image_extensions = [];
-        $slideFiles[$slideCount] = '../../../images/TitleSlide.jpg';
-        if ($language !== "") {
-            $slideFiles[$slideCount] = '../' . $slideFiles[$slideCount];
-        }
-        $filename = pathinfo($slideFiles[$slideCount]);
-        array_push($image_extensions, $filename['extension']);
-        $slideCount++;
-        $BloomFiles = true;
-        foreach ($files as $file) {
-        if (strcmp($file, "license.png") <> 0
-		&& strcmp($file, "placeHolder.png") <> 0) 
-	  {
-            if (strpos(basename($file), ".jpg") || strpos(basename($file), ".png")) {
+        $length = count($storyjsonobj->slides);
+        for ($i = 0; $i <= $length - 1; $i++)
+        {
+            $slide = $storyjsonobj->slides[$i];
+            if (strcmp($slide->slideType, "COPYRIGHT"))  // totally skip copyright slide
+            {
+                if (!strcmp($slide->slideType, "FRONTCOVER")) {
+                    $file = '../../../images/TitleSlide.jpg';
+                    if ($language !== "") {
+                        $file = '../' . $file;
+                    }
+                }
+                else if (!strcmp($slide->slideType, "NUMBEREDPAGE")) {
+                    $file = $slide->imageFile;
+                }
+                else if (!strcmp($slide->slideType, "LOCALSONG")) {
+                    $file = '../../../images/SongSlide.jpg';
+                    if ($language !== "") {
+                         $file = '../' . $file;
+                    }
+                }
                 $slideFiles[$slideCount] = $file;
                 $filename = pathinfo($file);
                 array_push($image_extensions, $filename['extension']);
                 $slideCount++;
             }
-	  }
         }
-	if ($BloomFiles == false)
-	{ // Remove last slide (license slide)
-	  array_pop($image_extensions);
-	  $slideCount--;
-	}
-        $slideFiles[$slideCount] = '../../../images/SongSlide.jpg';
-        if ($language !== "") {
-            $slideFiles[$slideCount] = '../' . $slideFiles[$slideCount];
-        }
-        $filename = pathinfo($slideFiles[$slideCount]);
-        array_push($image_extensions, $filename['extension']);
-        $slideCount++;
         ?>
 
 
@@ -175,13 +173,13 @@ if (array_key_exists('story', $_GET)) {
 			//"Creating" the song slide!!!
 				if($numberOfSlide == $amountOfSlides){
 		?>
-					<script>let songSlideNumber = <?=$amountOfSlides?></script>
+					<script>songSlideNumber = <?=$amountOfSlides?></script>
 <?php
 					//$name = 'Song';
 					$file = '../../../images/SongSlide.jpg';
 				}
 			}else{
-				?><script>let songSlideNumber = (-1)</script><?php
+				?><script>songSlideNumber = (-1)</script><?php
 			}
 
 			?>
@@ -318,12 +316,10 @@ if (array_key_exists('story', $_GET)) {
 
         <script>
 <?php
-        $file1 = $templateRoot . "/project/story.json";
-    if (file_exists($file1))
+    if (file_exists($storyjsonfile))
     {
-        $string1 = file_get_contents($file1);
             // newlines cause parser to fail
-        $string = str_replace('\n', "<BR>", $string1);
+        $string = str_replace('\n', "<BR>", $storyjsonstring);
 ?>
         let json_a = JSON.parse('<?php echo $string; ?>');
         function readProperties(slideNumber)
@@ -331,11 +327,10 @@ if (array_key_exists('story', $_GET)) {
             document.getElementById("storyTitle").innerHTML = json_a.title;
             let currSlide = json_a.slides[slideNumber]
             if(currSlide.reference == ""){
-                    document.getElementById("lf-t").innerHTML = "&nbsp;";
+                document.getElementById("lf-t").innerHTML = "&nbsp;";
             } else{
-                    document.getElementById("lf-t").innerHTML = currSlide.reference;
+                document.getElementById("lf-t").innerHTML = currSlide.reference;
             }
-
             fileDisplayArea = document.getElementById("mainText");
             fileDisplayArea.innerHTML = currSlide.content;
         }
@@ -382,7 +377,7 @@ if (array_key_exists('story', $_GET)) {
         function setProperties(slideNumber)
         {
             console.log("in setProperties");
-<?php           if (file_exists($file1)) { ?>
+<?php           if (file_exists($storyjsonfile)) { ?>
             readProperties(slideNumber);
 <?php           } else {?>
             readTextFile(`${templateRoot}/${slideNumber}.txt`);
