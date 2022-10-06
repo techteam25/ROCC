@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
             "INSERT INTO Projects (androidId, fcmToken, ethnoCode, language, country,
                                    majorityLanguage, trainerEmail,
                                    email, phone, spokenLanguage)
-             VALUES (?,?,?,?,?,?,?,?,?)",
+             VALUES (?,?,?,?,?,?,?,?,?,?)",
             array(&$_POST['PhoneId'],
                   &$_POST['FirebaseToken'],
                   &$_POST['ProjectEthnoCode'],

@@ -330,7 +330,12 @@ if (array_key_exists('story', $_GET)) {
         {
             document.getElementById("storyTitle").innerHTML = json_a.title;
             let currSlide = json_a.slides[slideNumber]
-            document.getElementById("lf-t").innerHTML = currSlide.reference;
+            if(currSlide.reference == ""){
+                    document.getElementById("lf-t").innerHTML = "&nbsp;";
+            } else{
+                    document.getElementById("lf-t").innerHTML = currSlide.reference;
+            }
+
             fileDisplayArea = document.getElementById("mainText");
             fileDisplayArea.innerHTML = currSlide.content;
         }
