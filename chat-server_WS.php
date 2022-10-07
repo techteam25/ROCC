@@ -164,7 +164,7 @@ class MessageHandler implements MessageComponentInterface {
                     $client->conn->send($message);
                 }
             }
-	    FCMSend($storyId, $currentClient->projectId);
+            FCMSend($storyId, $currentClient->projectId);
         }
     }
 
@@ -197,6 +197,7 @@ function FCMSend(int $storyId, $projectId) {
 	    $fcmToken = $row['fcmToken'];
 	}
         if ($fcmToken != "") {
+            time_nanosleep(0, 250000000);
             $cmd = 'curl -X POST --header "Authorization: key=AAAAU8MDzIQ:APA91bEm-Xskg66XnJXnUe5MvFs60eHiq-14eCiZ3n7atak-mbYcz7idkWQ7OB1IDDsQV0TPWhixEX_StNGCZUemP805qd4vzKndmvuAMcvfmr35gZZTzN3qVeXsBnmB3lGHZB-9QdVT "     --Header "Content-Type: application/json"     https://fcm.googleapis.com/fcm/send -d "{\"to\":\"' . $fcmToken . '\",\"notification\":{\"title\":\"Story Producer Adv\",\"body\":\"Story - ' . $Title . ' - ' . $PctApproved . '% audio files approved.\"}}"';
             $result = shell_exec($cmd);
             error_log("100% approved, notification: " . $result);

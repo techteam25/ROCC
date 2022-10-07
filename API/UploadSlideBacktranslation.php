@@ -90,7 +90,8 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
 
 function CheckEmailNotify($conn, $storyId, $androidId) {
     $total = GetNumberOfSlides($conn, $storyId);
-    $totalReq = $total - 2;
+    // number of non-required slides is also in function SlideAudioExists below
+    $totalReq = $total - 1;
     $count = CountReqAudioFiles($total, $storyId, $androidId);
     $projectIdStmt = PrepareAndExecute($conn, 'SELECT FirstThreshold, SecondThreshold FROM Stories ' .
 	' WHERE id = ?', array($storyId));
@@ -138,7 +139,7 @@ function SlideAudioExists($slideNum, $storyId, $androidId) {
 
 function CountReqAudioFiles($total, $storyId, $androidId) {
     $count = 0;
-    for ($idx = 1; $idx < $total - 2; $idx++) {
+    for ($idx = 0; $idx < $total - 1; $idx++) {
         if (SlideAudioExists($idx, $storyId, $androidId))
             $count++;
     }
