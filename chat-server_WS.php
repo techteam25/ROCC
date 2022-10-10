@@ -185,7 +185,8 @@ function FCMSend(int $storyId, $projectId) {
 	    'LEFT JOIN Slide ON Stories.id = Slide.storyId WHERE Stories.id = ' . $storyId;
     $Pct = PrepareAndExecute($conn, $SQL, array());
     while (($row = $Pct->fetch(PDO::FETCH_ASSOC))) {
-	$PctApproved = (int)($row['Approved'] / ($row['Total'] - 1) * 100);
+        // according to Robin... the ROCC user needs to approve the song slide even if it is blank - 10/7/22
+	$PctApproved = (int)($row['Approved'] / ($row['Total'] - 0) * 100);
 	$Title = $row['title'];
     }
     if ($PctApproved == 100) {   // 100% of slides approved
