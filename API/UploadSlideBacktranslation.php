@@ -96,7 +96,7 @@ function CheckEmailNotify($conn, $storyId, $androidId) {
     $projectIdStmt = PrepareAndExecute($conn, 'SELECT FirstThreshold, SecondThreshold FROM Stories ' .
 	' WHERE id = ?', array($storyId));
     if (($row = $projectIdStmt->fetch(PDO::FETCH_ASSOC))) {
-	if (($row['FirstThreshold'] == null && $count / $totalReq > .5) ||
+	if (($row['FirstThreshold'] == null && $count / $totalReq >= .5) ||
 	    ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ))
         {  // Thresold reached, email user
             $From = "Story Producer Adv <noreply@techteam.org>";
