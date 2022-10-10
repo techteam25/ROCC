@@ -107,7 +107,7 @@ function CheckEmailNotify($conn, $storyId, $androidId) {
             SendMailRoccUser($From, $To, $Subject, $Message);
         }
         $dt = date('Y-m-d H:i:s');
-	if ($row['FirstThreshold'] == null && $count / $totalReq > .5) // save timestamp
+	if ($row['FirstThreshold'] == null && $count / $totalReq >= .5) // save timestamp
 	{
             $sql = "UPDATE Stories SET FirstThreshold = ?  WHERE id = ?"; 
             $stmt = PrepareAndExecute($conn, $sql, array($dt, $storyId));
