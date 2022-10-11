@@ -208,8 +208,8 @@ function addMessage(message) {
     } else if (message.isTranscript === true) {
         messageClass = 'transcriptMessage';
     }
+    messagesContainer.height = messagesContainer.height + 75;
     messagesContainer.innerHTML += `<div class='${messageClass}'>${message.text}</div>`;
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function saveNotes(slideNumber) {
@@ -280,9 +280,6 @@ function sendMessage() {
             'text': sendMessageInput.value,
         }));
         sendMessageInput.value = '';
-        // this does not work... it was supposed to refresh just the div tag
-        //$( "#msgMaster" ).load(window.location.href + " #msgMaster" );
-        location.reload();
     }
 }
 
