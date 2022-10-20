@@ -472,14 +472,15 @@ function email($email) {
 
 // Remove any non-numeric characters
 // and ensure it is only 10 digits
+// Do not check length - user may not be in USA
 function phone($phone) {
 	$result = trim($phone);
-	$result = preg_replace('/[^0-9]/', '', $result);
-	$isValid = preg_match('/^[0-9]{10}$/', $result);
-	if (!$isValid) {
-		Respond\error("Invalid phone number");
-		throw new InputException();
-	}
+	//$result = preg_replace('/[^0-9]/', '', $result);
+	//$isValid = preg_match('/^[0-9]{10}$/', $result);
+	//if (!$isValid) {
+		//Respond\error("Invalid phone number");
+		//throw new InputException();
+	//}
 	checkNullOrEmpty($result);
 	return $result;
 }
