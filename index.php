@@ -16,6 +16,7 @@ if (!isset($_SESSION['email'])) {
   $isAdmin = false;
 } else {
   $isAdmin = $_SESSION['admin'];
+}
 
 require_once('API/utils/Model.php');
 ?>
@@ -115,6 +116,8 @@ require_once('API/utils/Model.php');
 
 
 			<?php
+				     $projects = [];
+                                     $consultantId = 0;
 				     $conn = GetDatabaseConnection();
 				     //get consultantId from email
 				     $sql = "SELECT id FROM Consultants WHERE email = ?";
