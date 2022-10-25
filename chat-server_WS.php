@@ -81,7 +81,8 @@ class MessageHandler implements MessageComponentInterface {
                         error_log("Tmp: $message");
                         error_log("Prj: $client->projectId");
                         error_log("Cns: $client->isConsultant");
-                        error_log("Sty: $client->storyId");
+			if (!empty($client->storyId))
+                            error_log("Sty: $client->storyId");
                         $client->conn->send($message);
                         $prevMsg = $message;
                     }

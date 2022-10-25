@@ -73,15 +73,18 @@ function reloadStoryInfo(storyId){
 				}
 			}
 
-			var bar=new RadialProgress(document.getElementById("bar"),{colorBg: "#FFFFFF", colorFg:"#212238",thick:2.8,fixedTextSize:0.2});
 			var perc = ap / total;
 			if(isNaN(perc)){
 				perc = 0;
 			}
+			barControl = document.getElementById("bar");
+			if (barControl != null) {
+			    var bar=new RadialProgress(barControl,{colorBg: "#FFFFFF", colorFg:"#212238",thick:2.8,fixedTextSize:0.2});
 			
-			bar.setValue(perc);
-			bar.round = true;
-			bar.animationSpeed = 3;
+			    bar.setValue(perc);
+			    bar.round = true;
+			    bar.animationSpeed = 3;
+			}
 
 			totalSlide.innerHTML = "Total Slides: " + total; 
 			totalSlide.id = "totalSlide";
@@ -250,7 +253,6 @@ function reloadPage(data) {
 			vs.href=  "client.php?story="+ keyData.storyId;
 			imgLink.href=  "client.php?story="+ keyData.storyId;
 			document.getElementById("csRightLink").href=  "client.php?story="+ keyData.storyId;
-			console.log(img.href);
 		}
 	}); 
 }

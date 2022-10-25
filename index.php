@@ -3,6 +3,7 @@ session_start();
 
 //make sure the user is logged in
 if (!isset($_SESSION['email'])) {
+$consultantEmail = "";
 header("Location: login.php");
 }
 
@@ -11,7 +12,10 @@ else {
 $consultantEmail = $_SESSION['email'];
 }
 
-$isAdmin = $_SESSION['admin'];
+if (!isset($_SESSION['email'])) {
+  $isAdmin = false;
+} else {
+  $isAdmin = $_SESSION['admin'];
 
 require_once('API/utils/Model.php');
 ?>
@@ -115,30 +119,27 @@ require_once('API/utils/Model.php');
 				     //get consultantId from email
 				     $sql = "SELECT id FROM Consultants WHERE email = ?";
 				     $stmt = PrepareAndExecute($conn, $sql, array($consultantEmail));
-				     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-				     $consultantId = $row['id'];
+				     if ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+			             {
+				         $consultantId = $row['id'];
 
-				     $stmt = PrepareAndExecute($conn, 
+				         $stmt = PrepareAndExecute($conn, 
 					     'SELECT DISTINCT Projects.language, Projects.id AS projectId, ConsultantID  
 					     FROM Projects, Assigned WHERE Assigned.consultantId = ? AND Assigned.ProjectID = Projects.id', array($consultantId));
 
-				     $lastProj = -1;
-				     $projects = [];
+				         $lastProj = -1;
 
-				     //get all projects assocaited with curr_consultant
-				     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				         //get all projects assocaited with curr_consultant
+				         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 					     //new project
 					     if ($lastProj !== $row['projectId']) {
 						     array_push($projects, $row['language']);
 					     }
-				     }
-				     $storyId = $row['storyId'];
-				     $currProjId = $row['androidId'];
+				         }
+			             }
 			?>
 
-				     var storyId = <?=json_encode($storyId)?>;
-				     var currProjId = <?=json_encode($currProjId)?>;
 				     var projects = <?=json_encode($projects)?>; 
 				     var consultantId = <?=json_encode($consultantId)?>;
 

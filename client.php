@@ -321,7 +321,8 @@ if (array_key_exists('story', $_GET)) {
             // newlines cause parser to fail
         $string = str_replace('\n', "<BR>", $storyjsonstring);
 ?>
-        let json_a = JSON.parse('<?php echo $string; ?>');
+        //when transferring from php to json just output the string, otherwise escaped charcacters are not handled properly
+        let json_a = <?php echo $storyjsonstring ?>;
         function readProperties(slideNumber)
         {
             document.getElementById("storyTitle").innerHTML = json_a.title;

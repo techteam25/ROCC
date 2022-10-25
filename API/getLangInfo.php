@@ -22,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->rowCount() > 0) {
         while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+	    if ($row['language'] == null) {
+		$row['language'] = "";
+	    }
             array_push($data_arr, array("title" => $row['title'], "currProjId" => $row['currProjId'], "storyId" => $row['storyId'], "language" => $row['language'], "approved" => $row['approved']));
         }
     } else {
