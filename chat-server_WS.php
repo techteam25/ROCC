@@ -31,9 +31,23 @@ class MessageHandler implements MessageComponentInterface {
         $client->projectId = $path_elements[2];
         if ($client->isConsultant) {
             $client->storyId = intval($path_elements[3]);
-        }
+	} else {
+	    $client->storyId = 0;
+	}
         error_log(json_encode($client));
 
+        //Check to see if there is already a connection to this phone ($isConsultant = false). If so, remove from list
+	if ($client->isConsultant == false) {
+            foreach($this->clients as $tmpClient) {
+                if ($tmpClient->projectId === $client->projectId && 
+		        $tmpClient->isConsultant === $client->isConsultant &&
+                        $tmpClient->storyId === $client->storyId) {
+                    unset($this->clients[$tmpClient->conn->resourceId]);
+	            $tmpClient->conn->close();
+		    error_log("Removed duplicate connection to phone " . $client->projectId);
+	        }
+	    }
+	}
         $this->clients[$conn->resourceId] = $client;
         error_log("got new connection {$conn->httpRequest->getUri()}");
     }
@@ -47,12 +61,13 @@ class MessageHandler implements MessageComponentInterface {
         $type = $messageData->type;
         if ($type === "text") {
             $storyId = intval($messageData->storyId);
-            if ($storyId === null) {
-                $storyId = 0;
-            }
             $slideNumber = $messageData->slideNumber;
             $isConsultant = $currentClient->isConsultant;
-            $isTranscript = $messageData->isTranscript === true;
+            if (!empty($messageData->isTranscript)) {
+                $isTranscript = $messageData->isTranscript === true;
+	    } else {
+		$isTranscript = false;
+	    }
             $text = $messageData->text;
 
             $currentTimestamp = date('Y-m-d H:i:s');
@@ -72,24 +87,22 @@ class MessageHandler implements MessageComponentInterface {
                 'text' => $text,
             ));
 
-            $prevMsg = "qyqyq";
-
             foreach($this->clients as $client) {
                 if ($client->projectId === $currentClient->projectId && 
                     (!$client->isConsultant || $client->storyId === $storyId)) {
-                    if ($message != $prevMsg) {
-                        error_log("Tmp: $message");
-                        error_log("Prj: $client->projectId");
-                        error_log("Cns: $client->isConsultant");
-			if (!empty($client->storyId))
-                            error_log("Sty: $client->storyId");
-                        $client->conn->send($message);
-                        $prevMsg = $message;
-                    }
+                    error_log("Tmp: $message");
+                    error_log("Prj: $client->projectId");
+                    error_log("Cns: $client->isConsultant");
+                    error_log("Sty: $client->storyId");
+                    $client->conn->send($message);
                 }
             }
         } else if ($type === "catchup") {
-            $since = $messageData->since;
+	    if (!empty($messageData->since)) {
+		$since = $messageData->since;
+	    } else {
+		$since = 0;
+	    }
             if (!$since) {
                 $since = '1970-01-01 00:00:00';
             }
@@ -170,6 +183,7 @@ class MessageHandler implements MessageComponentInterface {
     }
 
     public function onClose(ConnectionInterface $conn) {
+	error_log("onClose: projectId = " . $this->clients[$conn->resourceId]->projectId . " isConsultant = " . $this->clients[$conn->resourceId]->isConsultant);
         unset($this->clients[$conn->resourceId]);
         error_log("Connection to {$conn->resourceId} has closed");
     }

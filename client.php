@@ -7,7 +7,11 @@ if (!isset($_SESSION['email'])) {
     header("Location: login.php");
 }
 
-$isAdmin = $_SESSION['admin'];
+if (!isset($_SESSION['admin'])) {
+	$isAdmin = $_SESSION['admin'];
+} else {
+	$isAdmin = false;
+}
 require_once('API/utils/Model.php');
 
 $conn = GetDatabaseConnection();

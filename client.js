@@ -96,6 +96,10 @@ function connect() {
             syncApprovalSwitch(slideNumber);
         }
     };
+    conn.onclose = () => {
+	console.log("closed connection");
+	connection = connect(); // Reconnect
+    }
     return conn;
 };
 
@@ -208,8 +212,8 @@ function addMessage(message) {
     } else if (message.isTranscript === true) {
         messageClass = 'transcriptMessage';
     }
-    messagesContainer.height = messagesContainer.height + 75;
     messagesContainer.innerHTML += `<div class='${messageClass}'>${message.text}</div>`;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function saveNotes(slideNumber) {
