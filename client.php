@@ -7,7 +7,7 @@ if (!isset($_SESSION['email'])) {
     header("Location: login.php");
 }
 
-if (!isset($_SESSION['admin'])) {
+if (isset($_SESSION['admin'])) {
 	$isAdmin = $_SESSION['admin'];
 } else {
 	$isAdmin = false;

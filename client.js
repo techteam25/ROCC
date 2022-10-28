@@ -142,6 +142,7 @@ function changeSlide(slideNumber, oldSlideNumber) {
             success: function (data) {
                 editor = document.getElementById('editor-container');
                 editor.firstChild.innerHTML = data;
+                lastNotes = data;
             }
         });
 
@@ -221,17 +222,19 @@ function saveNotes(slideNumber) {
     let notes = myEditor.children[0].innerHTML;
     if (notes != lastNotes)
     {
-      console.log("in saveNotes");
-      $.ajax({
-        data: "notes=" + notes +
-        "&slideNumber=" + slideNumber +
-        "&storyId=" + storyId,
-        url: "/API/submitNote.php",
-        url: "API/submitNote.php",
-        type: "POST",
-        success: function () { 
-        }
-      });
+      if (lastNotes != "") // Don't save before field is first set
+      {
+        console.log("in saveNotes: " + slideNumber + " " + notes + "!" + lastNotes);
+        $.ajax({
+          data: "notes=" + notes +
+          "&slideNumber=" + slideNumber +
+          "&storyId=" + storyId,
+          url: "API/submitNote.php",
+          type: "POST",
+          success: function () { 
+          }
+        });
+      }
       lastNotes = notes;
     }
 }
