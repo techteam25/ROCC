@@ -73,9 +73,9 @@ class MessageHandler implements MessageComponentInterface {
             $currentTimestamp = date('Y-m-d H:i:s');
             error_log("from {$conn->resourceId}: $currentTimestamp");
             $stmt = PrepareAndExecute($this->conn,
-                'INSERT INTO Messages (storyId, slideNumber, isConsultant, isUnread, isTranscript, timeSent, text)
-                VALUES (?,?,?,true,?,?,?)',
-                array($storyId, $slideNumber, (int)$isConsultant, (int)$isTranscript, $currentTimestamp, $text));
+                'INSERT INTO Messages (storyId, slideNumber, isConsultant, isUnread, isTranscript, text)
+                VALUES (?,?,?,true,?,?)',
+                array($storyId, $slideNumber, (int)$isConsultant, (int)$isTranscript, $text));
 
             $message = json_encode(array(
                 'type' => 'text',
