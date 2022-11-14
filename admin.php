@@ -294,7 +294,51 @@
     </table>
     </div>
 
+    <div class="current">
+    <div><BR><h2>Clean Registration (Remove all stories, slides, messages, audio files for a phone)</h2></div>
+    <input type="text" id="searchForLanReg" onkeyup="SearchLanReg()" placeholder="Search by language...">
+    <div class="scroll_assign">
+    <table class="users-tableReg" id="users-tableReg">
+        <tr>
+            <th>Ethno</th>
+            <th>Language</th>
+            <th>Country</th>
+            <th>Major Lang</th>
+            <th>Trainer</th>
+            <th>Spoken Lang</th>
+            <th>Clean</th>
+        </tr>
+        
+      <?php
 
+        require_once('API/utils/Model.php');
+
+        $conn = GetDatabaseConnection();
+        $stmt = PrepareAndExecute($conn, 'select id, ethnoCode, language, country, majorityLanguage, trainerEmail, spokenLanguage from Projects', array());
+
+        while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+            $ethnoCode = $row['ethnoCode'];
+            $country = $row['country'];
+            $language = $row['language'];
+            $majorityLanguage = $row['majorityLanguage'];
+            $trainerEmail = $row['trainerEmail'];
+            $spokenLanguage = $row['spokenLanguage'];
+            $projectId = $row['id'];
+            
+            echo "<tr>";
+                echo "<td>$ethnoCode</td>";
+                echo "<td>$language</td>";
+                echo "<td>$country</td>";
+                echo "<td>$majorityLanguage</td>";
+                echo "<td>$trainerEmail</td>";
+                echo "<td>$spokenLanguage</td>";
+                echo sprintf("<td><button class=\"remove-consultant\" onclick=\"removeRegistration('$projectId')\">Clean</button></td>");
+            echo "</tr>";
+        }
+
+    ?>
+    </table>
+    </div>
     </div>
 <?php
   }

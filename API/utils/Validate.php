@@ -251,6 +251,16 @@ function removeConsultant($input) {
 	return $result;
 }
 
+
+function removeRegistration($input) {
+	ensureAdmin();
+
+	$result = array();
+	$result['id'] = number(access($input, 'id'));
+
+	return $result;
+}
+
 function setPassword($input) {
 	ensureLoggedIn();
 

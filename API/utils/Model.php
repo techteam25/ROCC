@@ -672,6 +672,75 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
+    function CleanConsultant($ConsultantId) {
+        $sql = "DELETE FROM Assigned WHERE ConsultantId = ?;";
+
+        $stmt = $this->PrepareAndExecute($sql, array($ConsultantId));
+        $this->FreeStmt($stmt);
+	// get list of androidIds before we delete all the info
+	$projectIds = $model->GetConsultantProjects($ConsultantId);
+	$this->SQLCleanup(2);
+        $projDir = "{$GLOBALS['filesRoot']}/Projects/";
+        foreach ($projectIds as &$androidId) {
+            recursiveDelete($projDir . $androidId);
+	}
+    }
+
+    function RemoveProject($projectId) {
+        $sql = "DELETE FROM Assigned WHERE projectId = ?;";
+
+        $stmt = $this->PrepareAndExecute($sql, array($projectId));
+        $this->FreeStmt($stmt);
+	$androidId = GetAndroidId($projectId);
+	$this->SQLCleanup(2);
+        $projDir = "{$GLOBALS['filesRoot']}/Projects/";
+        recursiveDelete($projDir . $androidId);
+    }
+
+    function GetAndroidId($projectId)
+    {
+        $sql = "SELECT androidId FROM Projects
+				WHERE id = ?;";
+        $stmt = $this->PrepareAndExecute($sql, array($projectId));
+
+        $result = array();
+        if ($project = $this->FetchArray($stmt)) {
+            $this->FreeStmt($stmt);
+            return project['androidId'];
+        }
+        return "error"; // this is used as a folder, don't return empty or recursive delete will do more than you want
+    }
+
+    // called after deleting/cleaning a consultant, project (phone) or story.  Get rid of any unlinked rows
+    function SQLCleanup($level) {
+	$sql = "";
+	if ($level == 1)
+	    $sql = $sql . "delete FROM Assigned WHERE ConsultantId not in (select id from Consultants);";
+	if ($level <= 2)
+	    $sql = $sql . "delete FROM Projects WHERE id not in (select Distinct ProjectId from Assigned);";
+	if ($level <= 3)
+	    $sql = $sql . "delete FROM Stories WHERE projectId not in (select id from Projects);";
+	$sql = $sql . "delete FROM Slide WHERE storyId not in (select id from Stories);";
+	$sql = $sql . "delete FROM Messages WHERE storyId not in (select id from Stories);";
+
+        $stmt = $this->PrepareAndExecute($sql, array());
+        $this->FreeStmt($stmt);
+    }
+
+    function recursiveDelete($dir)
+    {
+	foreach (new \DirectoryIterator($dir) as $fileInfo) {
+            if (!$fileInfo->isDot()) {
+                if ($fileInfo->isDir()) {
+                    recursiveDelete($fileInfo->getPathname());
+                } else {
+                    unlink($fileInfo->getPathname());
+                }
+            }
+	}
+	rmdir($dir);
+    }
+
     // Check if an email address is already registered to an existing consultant
     function IsAlreadyConsultant($email) {
         $sql = "SELECT *
