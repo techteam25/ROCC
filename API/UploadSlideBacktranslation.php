@@ -93,15 +93,23 @@ function CheckEmailNotify($conn, $storyId, $androidId) {
     // number of non-required slides is also in function SlideAudioExists below
     $totalReq = $total - 1;
     $count = CountReqAudioFiles($total, $storyId, $androidId);
-    $projectIdStmt = PrepareAndExecute($conn, 'SELECT FirstThreshold, SecondThreshold FROM Stories ' .
-	' WHERE id = ?', array($storyId));
+
+    $stmt = "SELECT title, FirstThreshold, SecondThreshold, Projects.language FROM Stories ";
+    $stmt = $stmt . "LEFT JOIN Projects on Stories.ProjectId =  Projects.id ";
+    $stmt = $stmt . "WHERE Stories.id = ?";
+
+    $projectIdStmt = PrepareAndExecute($conn, $stmt, array($storyId));
+	
     if (($row = $projectIdStmt->fetch(PDO::FETCH_ASSOC))) {
 	if (($row['FirstThreshold'] == null && $count / $totalReq >= .5) ||
 	    ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ))
         {  // Thresold reached, email user
             $From = "Story Producer Adv <noreply@techteam.org>";
             $Pct = strval($count) . " of " . strval($totalReq);
-            $Message = "$Pct required audio files have been uploaded";
+            $Message = "$Pct required audio files have been uploaded for ";
+            $Message = $Message . "Language: " . $row['language'] . " ";
+            $Message = $Message . "Story: " . $row['title'];
+
             $Subject = "Audio file upload status";
             $To = getConsultantInfo($conn, $androidId);
             SendMailRoccUser($From, $To, $Subject, $Message);

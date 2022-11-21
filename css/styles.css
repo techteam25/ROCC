@@ -276,7 +276,7 @@ for the client.php page.
 }
 
 /*New stuff for admin page: search by language for consultants*/
-#searchForLan, #searchForName {
+#searchForLan, #searchForName, #searchForLanReg{
     background-image: url('/css/searchicon.png');
     background-position: 10px 12px;
     background-repeat: no-repeat;
@@ -287,22 +287,22 @@ for the client.php page.
     margin-bottom: 12px;
 }
 
-#users-table, #assign-table {
+#users-table, #assign-table, #users-tableReg{
     border-collapse: collapse;
     width: 100%;
     border: 1px solid #ddd;
     font-size: 19px;
 }
 
-#users-table th, #users-table td, #assign-table th, #assign-table td{
+#users-table th, #users-table td, #assign-table th, #assign-table td, #users-tableReg th, #users-tableReg td{
     text-align: left;
     padding: 12px;
 }
 
-#users-table tr, #assign-table tr {
+#users-table tr, #assign-table tr, #users-tableReg tr{
     border-bottom: 1px solid #ddd;
 }
 
-#users-table tr.header, #users-table tr:hover, #assign-table tr.header, #assign-table tr:hover {
+#users-table tr.header, #users-table tr:hover, #assign-table tr.header, #assign-table tr:hover, #users-tableReg tr.header, #users-tableReg tr:hover {
     background-color: #f1f1f1;
 }

@@ -37,17 +37,21 @@ class MessageHandler implements MessageComponentInterface {
         error_log(json_encode($client));
 
         //Check to see if there is already a connection to this phone ($isConsultant = false). If so, remove from list
+/*
 	if ($client->isConsultant == false) {
             foreach($this->clients as $tmpClient) {
                 if ($tmpClient->projectId === $client->projectId && 
 		        $tmpClient->isConsultant === $client->isConsultant &&
                         $tmpClient->storyId === $client->storyId) {
-		    error_log("Duplicate connection " . $tmpClient->conn->resourceId . " to phone " . $client->projectId);
+                    unset($this->clients[$tmpClient->conn->resourceId]);
+	            $tmpClient->conn->close();
+		    error_log("Removed duplicate connection " . $tmpClient->conn->resourceId . " to phone " . $client->projectId);
 	        }
 	    }
 	}
+ */	
         $this->clients[$conn->resourceId] = $client;
-        error_log($conn->resourceId . ": got new connection {$conn->httpRequest->getUri()}");
+        error_log("got new connection {$conn->httpRequest->getUri()}");
     }
 
     public function onMessage(ConnectionInterface $conn, $messageString) {
@@ -55,6 +59,7 @@ class MessageHandler implements MessageComponentInterface {
         $currentClient = $this->clients[$conn->resourceId];
 
         $messageData = json_decode($messageString);
+        error_log("Tmp2: $messageString");
         $type = $messageData->type;
         if ($type === "text") {
             $storyId = intval($messageData->storyId);
@@ -87,7 +92,7 @@ class MessageHandler implements MessageComponentInterface {
             foreach($this->clients as $client) {
                 if ($client->projectId === $currentClient->projectId && 
                     (!$client->isConsultant || $client->storyId === $storyId)) {
-                    error_log("To(1): " . $client->conn->resourceId);
+                    error_log("To: " . $client->conn->resourceId);
                     error_log("Tmp: $message");
                     error_log("Prj: $client->projectId");
                     error_log("Cns: $client->isConsultant");
@@ -138,7 +143,7 @@ class MessageHandler implements MessageComponentInterface {
                     'timeSent' => $row['timeSent'],
                     'text' => $row['text']
                 ));
-                error_log("To(2): " . $currentClient->conn->resourceId);
+                error_log("To: " . $currentClient->conn->resourceId);
                 error_log($message);
                 $currentClient->conn->send($message);
             }
@@ -150,7 +155,7 @@ class MessageHandler implements MessageComponentInterface {
                     'approvalStatus' => $row['isApproved'] == '1' ? true : false,
                     'timeSent' => $row['lastApprovalChangeTime'],
                 ));
-                error_log("To(3): " . $currentClient->conn->resourceId);
+                error_log("To: " . $currentClient->conn->resourceId);
                 error_log($message);
                 $currentClient->conn->send($message);
             }
@@ -175,7 +180,7 @@ class MessageHandler implements MessageComponentInterface {
             foreach($this->clients as $client) {
                 if ($client->projectId === $currentClient->projectId && 
                     (!$client->isConsultant || $client->storyId === $storyId)) {
-                    error_log("To(4): " . $client->conn->resourceId);
+                    error_log("To: " . $client->conn->resourceId);
                     error_log($message);
                     $client->conn->send($message);
                 }
@@ -185,6 +190,7 @@ class MessageHandler implements MessageComponentInterface {
     }
 
     public function onClose(ConnectionInterface $conn) {
+	error_log("onClose: projectId = " . $this->clients[$conn->resourceId]->projectId . " isConsultant = " . $this->clients[$conn->resourceId]->isConsultant);
         unset($this->clients[$conn->resourceId]);
         error_log("Connection to {$conn->resourceId} has closed");
     }

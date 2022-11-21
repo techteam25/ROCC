@@ -339,6 +339,7 @@
     ?>
     </table>
     </div>
+    <div class="banner"></div>
     </div>
 <?php
   }
