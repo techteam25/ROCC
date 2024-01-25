@@ -1,0 +1,13 @@
+actor: AcceptanceTester
+modules:
+  enabled:
+    - PhpBrowser:
+        url: &url http://localhost:8899/
+    - Asserts
+    - Db:
+    - Filesystem:
+    -  Tests\Helper\AcceptanceTester
+
+  config:
+    PhpBrowser:
+      url: *url

@@ -6,6 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     RespondWithError(405, "Request must be a POST");
 }
 
+error_log(var_dump($_SERVER, true));
+error_log(var_dump($_POST, true));
+
 if (!(array_key_exists('Key', $_POST) &&
     array_key_exists('PhoneId', $_POST) &&
     array_key_exists('TemplateTitle', $_POST) &&
@@ -158,6 +161,60 @@ $androidId = $_POST['PhoneId'];
 $templateTitle = htmlspecialchars(trim($_POST['TemplateTitle']));
 $audioData = base64_decode($_POST['Data']);
 
+//
+//try {
+//
+//    // Define your MySQL connection parameters
+//    $host = 'localhost';
+//    $dbName = 'StoryProducer11';
+//    $username = 'StoryP';
+//    $password = 'StoryProducer';
+//
+//    error_log(__DIR__. '/../StoryProducer');
+//
+//    $dbFile = __DIR__. '/../StoryProducer';
+//
+////    $c = new PDO("sqlite:/Users/sp.singh@contino.io/workspace/up/ROCC/StoryProducer.sqlite" , $username, $password);
+//
+//
+//    $dbPath = ROOT_PATH . 'StoryProducer.db';
+//
+//
+//    $dns = "sqlite:$dbPath";
+//
+//
+//
+//    // Create a new PDO instance
+//    $pdo = new PDO($dns);
+//
+//    // Set PDO attributes to enable exceptions and fetch associative arrays
+//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+//
+//
+//    $stmt = $pdo->query('SELECT SQLITE_VERSION() as version');
+//    $result = $stmt->fetch();
+//
+//    error_log('SQLite version: ' . $result['version']);
+//
+//
+//    error_log( "Connected to MySQL successfully");
+//
+//
+//    $q = $pdo->query('SELECT * FROM Stories;');
+//
+//    $rows = $q->fetchAll(PDO::FETCH_ASSOC);
+//
+//    foreach ($rows as $row) {
+//        error_log("data: " . print_r($row, true));
+//    }
+//
+//
+//
+//} catch (\Exception $e) {
+//    error_log($e);
+//    return null;
+//}
 $conn = GetDatabaseConnection();
 
 if (array_key_exists('StoryId', $_POST)) {

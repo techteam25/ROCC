@@ -1,8 +1,17 @@
 {
-    "require" : {
-        "microsoft/azure-storage": "*",
+    "require": {
         "cboden/ratchet": "^0.4.1",
         "textalk/websocket": "1.0.*",
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+        "microsoft/azure-storage": "^0.19.1",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-phpbrowser": "^1.0",
+        "codeception/phpbuiltinserver": "^1.2",
+        "codeception/module-db": "^2.1",
+        "codeception/module-filesystem": "^2.0",
+        "codeception/module-asserts": "^2.0"
     }
 }

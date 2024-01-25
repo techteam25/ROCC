@@ -11,3 +11,9 @@ composer.phar
 /nbproject/private/
 *~
 Files/
+
+
+
+# test db file
+StoryProducer.db
+.idea

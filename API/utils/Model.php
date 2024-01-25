@@ -17,8 +17,10 @@ function GetDatabaseConnection() {
         // variable referenced within a function is locally scoped, the value
         // of $serverName and the other variables is null. To access the
         // global variables, we must use the $GLOBALS associative array.
-        $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
-            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+        $cn = new PDO($GLOBALS['dns'], $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+//        $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
+//            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+
         $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$lastConnectionTime = time();
         return $cn;
