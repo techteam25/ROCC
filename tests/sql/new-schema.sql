@@ -49,6 +49,7 @@ CREATE TABLE Assigned (
 CREATE TABLE Stories (
   id INTEGER PRIMARY KEY,
   title VARCHAR(256),
+  language VARCHAR(256),
   projectId INTEGER NOT NULL,
   note TEXT NOT NULL,
   UNIQUE (title, projectId)
