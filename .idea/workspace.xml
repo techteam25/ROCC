@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb90b9d0-17cc-412c-9382-447a37bfb125" name="Changes" comment="" />
+    <list default="true" id="fb90b9d0-17cc-412c-9382-447a37bfb125" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Support/Helper/AcceptanceTester.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Support/Helper/AcceptanceTester.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/_bootstrap.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/_bootstrap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/acceptance/MyTestCest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/acceptance/MyTestCest.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -18,12 +26,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
-    <property name="cidr.known.project.marker" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "feature/integraton-for-UploadSlideBacktranslation",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -34,5 +42,9 @@
       <updated>1658766282929</updated>
     </task>
     <servers />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
