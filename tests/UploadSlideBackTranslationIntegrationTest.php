@@ -2,22 +2,19 @@
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use GuzzleHttp\Client;
-use Tests\AcceptanceTester;
 
-// https://medium.com/@peter.lafferty/start-phps-built-in-web-server-from-phpunit-9571f38c5045
-
-class ExampleTest extends TestCase
+class UploadSlideBackTranslationIntegrationTest extends TestCase
 {
     protected $db;
 
     /** @var Process */
-    private static $process;
+    private static Process $process;
 
-    private static $host = "localhost:8899";
+    private static string $host = "localhost:8899";
 
-    private  $storyTemplate = 'test_story';
+    private string $storyTemplate = 'test_story';
 
-    private $uri = '/API/uploadSlideBacktranslation.php';
+    private string $uri = '/API/uploadSlideBacktranslation.php';
 
     public static function setUpBeforeClass(): void
     {
@@ -80,43 +77,44 @@ class ExampleTest extends TestCase
         ];
 
         $response = $client->request("POST", self::$host . $this->uri, ['form_params' =>$payload]);
-
-        $res = $response->getBody()->getContents();
-        echo PHP_EOL;
-        echo  PHP_EOL.$response->getStatusCode();
-        echo  PHP_EOL. $res;
-
+        $jsonRes = $response->getBody()->getContents();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('{"StoryId":"1"}', $res);
+        $this->assertEquals('{"StoryId":"1"}', $jsonRes);
 
 
-        $result = $this->db->query('SELECT * FROM Stories');
-        $story = $result->fetch(PDO::FETCH_ASSOC);
-        $this->assertNotEmpty($story);
+        $arrRes = json_decode($jsonRes, true);
+
+        $createdStoryId = $arrRes['StoryId'];
+
+        # verify story is created correctly in the database
+        $q = $this->db->query('SELECT * FROM Stories where id = ?');
+        $q->execute([$createdStoryId]);
+        $stories = $q->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertCount(1, $stories);
 
         $this->assertEquals([
-            "id" => 1,
+            "id" =>$createdStoryId,
             "title" => "test_story",
             "language"=> "",
             "projectId" => 2, // TODO fetch project using PhoneId
             "note" => ""
-        ], $story);
+        ], $stories[0]);
 
 
+        # verify slides are all created correctly in the database
         $q = $this->db->prepare('SELECT * FROM Slide WHERE storyId = ?');
-        $q->execute([1]);
-
+        $q->execute([$createdStoryId]);
         $rows = $q->fetchAll(PDO::FETCH_ASSOC);
         $this->assertCount(3, $rows);
 
-        foreach ($rows as $row) {
-            $this->assertEquals(1, $row['storyId']);
-        }
 
+        $this->assertEquals(0, $rows[0]['slideNumber']);
+        $this->assertEquals(1, $rows[1]['slideNumber']);
+        # In test `stroy.json`, third slide type is `COPYRIGHT` which is skipped as per implementation
         $this->assertEquals(3, $rows[2]['slideNumber']);
 
-        $storyFile = sprintf("%sFiles/Projects/%s/%s/wholeStory.m4a", ROOT_PATH, $payload['PhoneId'], $story['id']);
+        $storyFile = sprintf("%sFiles/Projects/%s/%s/wholeStory.m4a", ROOT_PATH, $payload['PhoneId'], $createdStoryId);
 
         $this->assertFileExists($storyFile);
         $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
