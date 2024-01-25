@@ -15,6 +15,10 @@ define('ROOT_PATH', dirname(__DIR__) . '/../');
 
 
 $dbPath = ROOT_PATH . $databaseName . '.db';
+
+// TODO duplicate variable, restructure into test config
+$filesRoot = ROOT_PATH . 'Files';
+
 $dns = "sqlite:$dbPath";
 
 define('DB_FILE_PATH', $dbPath);
