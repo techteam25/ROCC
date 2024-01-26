@@ -20,3 +20,4 @@ StoryProducer.db
 .phpunit.result.cache
 coverage.xml
 phpunit.xml.dist
+.phpunit.cache

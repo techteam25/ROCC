@@ -119,3 +119,12 @@ usage, but rather an auto-saved JSON file.
 MySQL database holds user, template, and project info. Web application intended 
 to be run on Apache Web Server. HTML/CSS/JS frontend with PHP api and backend 
 and MySQL DB
+
+
+## Testing
+
+To execute integration run below commands:
+
+* Run `php composer.phar install` to make sure all dependencies are installed
+* `./vendor/bin/phpunit --testdox --no-coverage` to execute tests
+
