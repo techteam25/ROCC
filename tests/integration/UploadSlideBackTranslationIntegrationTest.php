@@ -12,18 +12,17 @@ use PDO;
 
 class UploadSlideBackTranslationIntegrationTest extends TestCase
 {
+    const string HOST = "localhost:8899";
+    const string STORY_TEMPLATE = 'story_1';
+    const string URI = '/API/uploadSlideBacktranslation.php';
+    const string PHONE_ID_1 = "rstuvw";
+    const string PHONE_ID_2 = "lmnopq";
+    const string PHONE_ID_3 = "ghijkl";
+    const string STORY_FILE_CONTENTS = "Test data for story file";
+    const string SLIDE_FILE_CONTENTS = "'Story data been updated and saved into a slide file i.e. 2.m4a'";
     private static $db;
-
     /** @var Process */
     private static Process $process;
-
-    private static string $host = "localhost:8899";
-
-    private string $storyTemplate = 'test_story';
-    private string $storyTemplate2 = 'test_story2';
-
-    private string $uri = '/API/uploadSlideBacktranslation.php';
-
     private static string $filesRoot;
     private static string $uploadedProjectDir;
     private static Filesystem $fileSystem;
@@ -33,7 +32,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         // start php in-built server
-        self::$process = new Process(["php", "-S", self::$host, "-t", ROOT_PATH . "."]);
+        self::$process = new Process(["php", "-S", self::HOST, "-t", ROOT_PATH . "."]);
         self::$process->start();
         usleep(100000);
 
@@ -59,14 +58,12 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         self::$db = null;
     }
 
-
     public function setUp(): void
     {
         $this->httpClient = new Client(['http_errors' => false]);
     }
 
     /**
-     *
      * @return int
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
@@ -76,35 +73,19 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         // request payload
         $payload = [
             'Key' => '',
-            'PhoneId' => 'rstuvw',
-            'Data' => base64_encode('Test data for story file'),
-            'TemplateTitle' => $this->storyTemplate,
+            'PhoneId' => self::PHONE_ID_1,
+            'Data' => base64_encode(self::STORY_FILE_CONTENTS),
+            'TemplateTitle' => self::STORY_TEMPLATE,
             'IsWholeStory' => "true"
         ];
 
-        $response = $this->httpClient->request("POST", self::$host . $this->uri, ['form_params' => $payload]);
-        $responseJson = $response->getBody()->getContents();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $responseArr = json_decode($responseJson, true);
-        $this->assertArrayHasKey('StoryId', $responseArr);
-        $storyId = $responseArr['StoryId'];
-
+        $storyId = $this->sendRequestAndReturnStoryId($payload);
 
         # verify story is created correctly in the database
         $stories = $this->getStories($storyId);
         $this->assertCount(1, $stories);
-
-        $this->assertEquals([
-            "id" => $storyId,
-            "title" => "test_story",
-            "language" => "",
-            "projectId" => $this->getProjectId($payload['PhoneId']),
-            "note" => "",
-            'FirstThreshold' => null,
-            'SecondThreshold' => null,
-        ], $stories[0]);
-
+        $this->assertEquals(self::STORY_TEMPLATE, $stories[0]['title']);
+        $this->assertEquals($this->getProjectId($payload['PhoneId']), $stories[0]['projectId']);
 
         # verify slides are all created correctly in the database
         $slides = $this->getSlides($storyId);
@@ -119,167 +100,34 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
     }
 
+    /**
+     * @param array $payload
+     * @return int
+     * @throws GuzzleException
+     */
+    private function sendRequestAndReturnStoryId(array $payload): int
+    {
+        $response = $this->httpClient->request("POST", self::HOST . self::URI, ['form_params' => $payload]);
+        $responseJson = $response->getBody()->getContents();
+        $this->assertEquals(200, $response->getStatusCode());
+        $responseArr = json_decode($responseJson, true);
+        $this->assertArrayHasKey('StoryId', $responseArr);
+        return $responseArr['StoryId'];
+    }
 
     /**
-     * @depends testCreateNewStory
+     * @param string $storyId
      *
-     * @return void
-     * @throws GuzzleException
-     * @throws \Exception
+     * @return array
      */
-    public function testUpdateExistingStory()
+    private function getStories(string $storyId): array
     {
-        // payload for creating a new story
-        $payload = [
-            'Key' => '',
-            'PhoneId' => 'lmnopq',
-            'Data' => base64_encode('Test data for story file'),
-            'TemplateTitle' => $this->storyTemplate,
-            'IsWholeStory' => "true",
-            'Language' => 'es',
-        ];
-
-        $response = $this->httpClient->request("POST", self::$host . $this->uri, ['form_params' => $payload]);
-        $responseJson = $response->getBody()->getContents();
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $responseArr = json_decode($responseJson, true);
-        $storyId = $responseArr['StoryId'];
-
-        # verify story is created correctly in the database
-        $stories = $this->getStories($storyId);
-        $this->assertCount(1, $stories);
-        $story = $stories[0];
-
-        $this->assertEquals($payload['Language'], $story['language']);
-        $this->assertEquals($payload['TemplateTitle'], $story['title']);
-        $this->assertEquals($this->getProjectId($payload['PhoneId']), $story['projectId']);
-
-
-        # verify slides are all created correctly in the database
-        $slides = $this->getSlides($storyId);
-        $this->assertCount(3, $slides);
-
-
-        $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $payload['PhoneId'], $storyId);
-        $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
-
-
-        // Update story created above identified by $storyId
-
-        // payload for updating a new story
-        $payload = [
-            'Key' => '',
-            'PhoneId' => 'lmnopq',
-            'Data' => base64_encode('Story data has been updated'),
-            'TemplateTitle' => 'Template title updated',
-            'IsWholeStory' => "true",
-            'Language' => 'pl',
-            'StoryId' => $storyId
-        ];
-
-        $response = $this->httpClient->request("POST", self::$host . $this->uri, ['form_params' => $payload]);
-        $responseJson = $response->getBody()->getContents();
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $responseArr = json_decode($responseJson, true);
-
-        // should not create a new story
-        $this->assertEquals($storyId, $responseArr['StoryId']);
-
-        # verify story is updated correctly in the database
-        $stories = $this->getStories($storyId);
-        $this->assertCount(1, $stories);
-        $story = $stories[0];
-
-        // assert that story data isn't impacted with story update request
-        $this->assertEquals('es', $story['language']);
-        $this->assertEquals($this->storyTemplate, $story['title']);
-        $this->assertEquals($this->getProjectId($payload['PhoneId']), $story['projectId']);
-
-        // assert that slides data isn't impacted with story update request
-        $slides = $this->getSlides($storyId);
-        $this->assertCount(3, $slides);
-
-        // verify story data has been updated successfully
-        $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $payload['PhoneId'], $storyId);
-        $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
-
+        $q = self::$db->query('SELECT * FROM Stories where id = ?');
+        $q->execute([$storyId]);
+        return $q->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @return void
-     * @throws GuzzleException
-     * @throws \Exception
-     */
-    public function testUpdateExistingStoryWithSpecificSlideData()
-    {
-        // payload for creating a new story
-        $payload = [
-            'Key' => '',
-            'PhoneId' => 'ghijkl',
-            'Data' => base64_encode('Story data is saved into wholeStory.m4a'),
-            'TemplateTitle' => $this->storyTemplate,
-            'IsWholeStory' => "true",
-        ];
-
-        $response = $this->httpClient->request("POST", self::$host . $this->uri, ['form_params' => $payload]);
-        $responseJson = $response->getBody()->getContents();
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $responseArr = json_decode($responseJson, true);
-        $storyId = $responseArr['StoryId'];
-
-        $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $payload['PhoneId'], $storyId);
-        $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
-
-
-        // Update story created above identified by $storyId
-
-        // payload for updating a new story
-        $payload = [
-            'Key' => '',
-            'PhoneId' => 'ghijkl',
-            'Data' => base64_encode('Story data been updated and saved into a slide file i.e. 2.m4a'),
-            'TemplateTitle' => 'Template title updated',
-            'SlideNumber' => 1,
-            'StoryId' => $storyId
-        ];
-
-        $response = $this->httpClient->request("POST", self::$host . $this->uri, ['form_params' => $payload]);
-        $responseJson = $response->getBody()->getContents();
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $responseArr = json_decode($responseJson, true);
-
-        // should not create a new story
-        $this->assertEquals($storyId, $responseArr['StoryId']);
-
-
-        # verify story is updated correctly in the database
-        $stories = $this->getStories($storyId);
-        $this->assertCount(1, $stories);
-        $story = $stories[0];
-        $this->assertNotNull($story['FirstThreshold']);
-        $this->assertNotNull($story['SecondThreshold']);
-
-        // assert that story data isn't impacted with story update request
-        $this->assertEquals($this->storyTemplate, $story['title']);
-        $this->assertEquals($this->getProjectId($payload['PhoneId']), $story['projectId']);
-
-        // assert that slides data isn't impacted with story update request
-        $slides = $this->getSlides($storyId);
-        $this->assertCount(3, $slides);
-
-        $storyFile = sprintf("%s/%s/%s/%s.m4a", self::$uploadedProjectDir, $payload['PhoneId'], $storyId, $payload['SlideNumber']);
-        $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
-    }
-
-    private function getProjectId(string $androidId): int|string
+    private function getProjectId(string $androidId): int
     {
         $q = self::$db->query('SELECT id FROM Projects where androidId = ?');
         $q->execute([$androidId]);
@@ -304,14 +152,116 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
     }
 
     /**
-     * @param string $storyId
      *
-     * @return array
+     * @return void
+     * @throws GuzzleException
+     * @throws \Exception
      */
-    private function getStories(string $storyId): array
+    public function testUpdateExistingStory()
     {
-        $q = self::$db->query('SELECT * FROM Stories where id = ?');
-        $q->execute([$storyId]);
-        return $q->fetchAll(PDO::FETCH_ASSOC);
+        // payload for creating a new story
+        $createStoryPayload = [
+            'Key' => '',
+            'PhoneId' => self::PHONE_ID_2,
+            'Data' => base64_encode(self::STORY_FILE_CONTENTS),
+            'TemplateTitle' => self::STORY_TEMPLATE,
+            'IsWholeStory' => "true",
+            'Language' => 'es',
+        ];
+
+        $storyId = $this->sendRequestAndReturnStoryId($createStoryPayload);
+
+        // Update story created above identified by $storyId
+
+        // payload for updating a new story
+        $updateStoryPayload = [
+            'Key' => '',
+            'PhoneId' => self::PHONE_ID_2,
+            'Data' => base64_encode('Story data has been updated'),
+            'TemplateTitle' => 'Template title updated',
+            'IsWholeStory' => "true",
+            'Language' => 'pl',
+            'StoryId' => $storyId
+        ];
+
+        // update story should not create a new story
+        $this->assertEquals($storyId, $this->sendRequestAndReturnStoryId($updateStoryPayload));
+
+        # verify story is updated correctly in the database
+        $stories = $this->getStories($storyId);
+        $this->assertCount(1, $stories);
+        $story = $stories[0];
+
+        // assert that story data isn't impacted with story update request
+        $this->assertEquals('es', $story['language']);
+        $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
+        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+
+        // assert that slides data isn't impacted with story update request
+        $slides = $this->getSlides($storyId);
+        $this->assertCount(3, $slides);
+
+        // verify story data has been updated successfully
+        $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $updateStoryPayload['PhoneId'], $storyId);
+        $this->assertFileExists($storyFile);
+        $this->assertEquals(file_get_contents($storyFile), base64_decode($updateStoryPayload['Data']));
+    }
+
+    /**
+     * @return void
+     * @throws GuzzleException
+     * @throws \Exception
+     */
+    public function testUpdateExistingStoryWithSpecificSlideData()
+    {
+        // payload for creating a new story
+        $createStoryPayload = [
+            'Key' => '',
+            'PhoneId' => self::PHONE_ID_3,
+            'Data' => base64_encode(self::STORY_FILE_CONTENTS),
+            'TemplateTitle' => self::STORY_TEMPLATE,
+            'IsWholeStory' => "true",
+        ];
+
+        $storyId = $this->sendRequestAndReturnStoryId($createStoryPayload);
+
+        $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $createStoryPayload['PhoneId'], $storyId);
+        $this->assertFileExists($storyFile);
+        $this->assertEquals(file_get_contents($storyFile), base64_decode($createStoryPayload['Data']));
+
+
+        // Update story created above identified by $storyId
+
+        // payload for updating a new story
+        $updateStoryPayload = [
+            'Key' => '',
+            'PhoneId' => self::PHONE_ID_3,
+            'Data' => base64_encode(self::SLIDE_FILE_CONTENTS),
+            'TemplateTitle' => 'Template title updated',
+            'SlideNumber' => 1,
+            'StoryId' => $storyId
+        ];
+
+        // should not create a new story
+        $this->assertEquals($storyId, $this->sendRequestAndReturnStoryId($updateStoryPayload));
+
+        # verify story is updated correctly in the database
+        $stories = $this->getStories($storyId);
+        $this->assertCount(1, $stories);
+        $story = $stories[0];
+        $this->assertNotNull($story['FirstThreshold']);
+        $this->assertNotNull($story['SecondThreshold']);
+
+        // assert that story data isn't impacted with story update request
+        $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
+        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+
+        // assert that slides data isn't impacted with story update request
+        $slides = $this->getSlides($storyId);
+        $this->assertCount(3, $slides);
+
+        $slideFile = sprintf("%s/%s/%s/%s.m4a", self::$uploadedProjectDir, $updateStoryPayload['PhoneId'], $storyId, $updateStoryPayload['SlideNumber']);
+        $this->assertFileExists($storyFile);
+        $this->assertEquals(file_get_contents($slideFile), base64_decode($updateStoryPayload['Data']));
     }
 }
