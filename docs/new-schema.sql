@@ -37,6 +37,9 @@ CREATE TABLE Assigned (
 CREATE TABLE Stories (
   id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(256),
+  `FirstThreshold` datetime DEFAULT NULL,
+  `SecondThreshold` datetime DEFAULT NULL,
+  language VARCHAR(256),
   projectId INT NOT NULL REFERENCES Projects(id),
   note TEXT NOT NULL,
   UNIQUE (title, projectId)
