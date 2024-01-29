@@ -122,9 +122,51 @@ and MySQL DB
 
 
 ## Testing
+The end-to-end tests in this project support both MySQL and SQLite databases.
+However, there are differences in table creation when using SQLite. 
+To facilitate SQLite database testing, a separate SQL file named `new-schema.sql` has been created under the `tests/sql folder.
 
-To execute integration run below commands:
+### Prerequisite
 
-* Run `php composer.phar install` to make sure all dependencies are installed
-* `./vendor/bin/phpunit --testdox --no-coverage` to execute tests
+Before running the tests, ensure that the following prerequisites are met:
 
+#### SQL Files:
+* The tests rely on the `docs/new-schema.sql` and `docs/seed.sql` files.
+* Any changes made to `docs/new-schema.sql` should also be incorporated into `tests/sql/new-schema.sql` to ensure proper SQLite database support.
+* The `docs/seed.sql` file contains test data used by the tests. If tests are failing due to changes in the data, update the relevant data inside the test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php`.
+
+#### Test Story Template: 
+* Inside the `tests` directory, a test story template is located in the `tests/data/templates` directory.
+* If tests are failing  due to any changes in this directory, make the necessary adjustments in the test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php`.
+
+
+### Running Tests:
+* Ensure that all dependencies are installed by running:
+  ```php
+  php composer.phar install
+  ```
+* Execute tests using the following command:
+  ```php
+  ./vendor/bin/phpunit --testdox --no-coverage
+  ```
+
+
+Follow the steps below to configure testing with an SQLite database:
+
+### Update Connection Settings
+
+* Open the `API/utils/ConnectionSettings.php` file.
+* Update the $dsn variable to the following:
+```php
+$dns = "sqlite:" . ROOT_PATH . $databaseName . '.db';
+```
+
+### Update tests settings:
+* Open the `tests/bootstrap.php` file.
+* Update the `$sqlFile` variable to use the SQLite schema file:
+```php
+$sqlFile = __DIR__ . '/sql/new-schema.sql';
+```
+
+> PS: There is no additional change required to use mysql database except general settings like database connections and
+file root directory inside `API/utils/ConnectionSettings.php` file.
