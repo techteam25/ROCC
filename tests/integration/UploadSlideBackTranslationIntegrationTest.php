@@ -45,8 +45,8 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         self::$fileSystem->mirror(dirname(__DIR__) . "/data/templates", $templateDir);
         self::$uploadedProjectDir = self::$filesRoot . "/Projects";
 
-        self::$db = new PDO(DB_DNS);
-        self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        self::$db = new PDO(DB_DNS,
+            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
     }
 
     public static function tearDownAfterClass(): void
@@ -122,14 +122,14 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
      */
     private function getStories(string $storyId): array
     {
-        $q = self::$db->query('SELECT * FROM Stories where id = ?');
+        $q = self::$db->prepare('SELECT * FROM Stories where id = ?');
         $q->execute([$storyId]);
         return $q->fetchAll(PDO::FETCH_ASSOC);
     }
 
     private function getProjectId(string $androidId): int
     {
-        $q = self::$db->query('SELECT id FROM Projects where androidId = ?');
+        $q = self::$db->prepare('SELECT id FROM Projects where androidId = ?');
         $q->execute([$androidId]);
         $project = $q->fetch(PDO::FETCH_ASSOC);
 

@@ -4,16 +4,15 @@ require_once 'vendor/autoload.php';
 require_once(__DIR__ . '/../API/utils/ConnectionSettings.php');
 
 try {
-    $conn = new PDO(DB_DNS);
+    $conn = new PDO(DB_DNS, $databaseUser, $databasePassword);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected to MySQL successfully\n";
 
     // Execute the SQL queries to create tables
-    $sqlFile = __DIR__ . '/sql/new-schema.sql';
+    $sqlFile = __DIR__ . '/../docs/new-schema.sql';
     $sqlQueries = file_get_contents($sqlFile);
     $conn->exec($sqlQueries);
     echo "Data tables created successfully\n";
-
 
 
     // Execute the SQL queries to seed data
@@ -21,11 +20,6 @@ try {
     $sqlQueries = file_get_contents($sqlFile);
     $conn->exec($sqlQueries);
     echo "Data seed queries executed successfully\n";
-
-
-    // Fetch list of tables
-    $q = $conn->query("SELECT name FROM sqlite_master WHERE type='table';");
-    $tables = $q->fetchAll(PDO::FETCH_COLUMN);
 } catch (PDOException $e) {
     die("MySQL Connection failed: " . $e->getMessage() . "\n");
 } catch (Exception $e) {
