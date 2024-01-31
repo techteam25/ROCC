@@ -122,22 +122,41 @@ and MySQL DB
 
 
 ## Testing
-The end-to-end tests in this project support both MySQL and SQLite databases.
-However, there are differences in table creation when using SQLite. 
-To facilitate SQLite database testing, a separate SQL file named `new-schema.sql` has been created under the `tests/sql folder.
 
 ### Prerequisite
 
 Before running the tests, ensure that the following prerequisites are met:
 
+The tests on specific values retrieved from the `API/utils/ConnectionSettings.php` file:
+* Utilize the `DB_DNS` constant in the file for the database name and server host information in the database connection.
+* Access the global variables `$databaseUser` and `$databasePassword` for authentication.
+* `$filesRoot` variable for Root file location in order to write story data
+
+#### Database connection:
+
+Tests used the database connection settings `API/utils/ConnectionSettings.php` file.
+
+#### Root files
+Tests also 
+`$filesRoot` variable from `API/utils/ConnectionSettings.php` file is used by tests
 #### SQL Files:
 * The tests rely on the `docs/new-schema.sql` and `docs/seed.sql` files.
-* Any changes made to `docs/new-schema.sql` should also be incorporated into `tests/sql/new-schema.sql` to ensure proper SQLite database support.
-* The `docs/seed.sql` file contains test data used by the tests. If tests are failing due to changes in the data, update the relevant data inside the test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php`.
+* In particular, the `docs/seed.sql` file contains essential data for the `Projects` table, utilized by the tests.
+  * If tests encounter failures due to changes in the data, ensure that the `PHONE_ID_#` in test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php` corresponds to the `androidId` column value in the `Projects` table.
+* The current `androidId` values used in the test file are:
+  * `lmnopq`
+  * `ghijkl`
+  * `rstuvw`
 
-#### Test Story Template: 
-* Inside the `tests` directory, a test story template is located in the `tests/data/templates` directory.
-* If tests are failing  due to any changes in this directory, make the necessary adjustments in the test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php`.
+
+#### Test Story Template:
+Navigate to the test story template within the project structure:
+* Located within the `tests` directory, the test story template resides in the `tests/data/templates` directory.
+* The structure of the story template is as follows:
+  * `story_1` serves as the story template in the test file. Ensure its alignment with the `STORY_TEMPLATE` constant declared in the test file.
+  * Within the `story_1/project` directory, find a file named `story.json` containing information about the story slide. Note: Do not alter the filename.
+  * The `slideType` set to `COPYRIGHT` is not processed by `UploadSlideBacktranslation.php`.
+* Language-specific data for the template can be found in the `tests/data/templates/es` directory, maintaining the same overall structure.
 
 
 ### Running Tests:
@@ -151,22 +170,3 @@ Before running the tests, ensure that the following prerequisites are met:
   ```
 
 
-Follow the steps below to configure testing with an SQLite database:
-
-### Update Connection Settings
-
-* Open the `API/utils/ConnectionSettings.php` file.
-* Update the $dsn variable to the following:
-```php
-$dns = "sqlite:" . ROOT_PATH . $databaseName . '.db';
-```
-
-### Update tests settings:
-* Open the `tests/bootstrap.php` file.
-* Update the `$sqlFile` variable to use the SQLite schema file:
-```php
-$sqlFile = __DIR__ . '/sql/new-schema.sql';
-```
-
-> PS: There is no additional change required to use mysql database except general settings like database connections and
-file root directory inside `API/utils/ConnectionSettings.php` file.

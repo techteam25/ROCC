@@ -1,5 +1,5 @@
 <?php
-$serverName = '127.0.0.1';
+$serverName = 'localhost';
 $databaseName = 'StoryProducer';
 #  This is for rocc.ttapps.org server
 $databaseUser = 'StoryP';
@@ -21,6 +21,9 @@ $filesRoot = ROOT_PATH . 'Files';
 #$websocketPort = '8082';
 #$externalWebsocketPort = '8082';
 #$externalWebsocketHost = '10.10.10.248';
+
+# ------- dev server setting end here --------
+
 
 $dns = "mysql:host={$serverName};dbname={$databaseName}";
 define('DB_DNS', $dns);
