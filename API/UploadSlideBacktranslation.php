@@ -71,24 +71,16 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
     $slideIndex = 0;
 
     error_log("Copying template '$templateTitle' folder to new project directory and creating slides");
+    foreach ($slideEntries as $slideEntry) {
 
-    // Check if storyId already exists in Slide
-    $existingStoryId = PrepareAndExecute($conn, 'SELECT COUNT(*) FROM Slide WHERE storyId = ?', array($storyId))->fetchColumn();
-
-    if ($existingStoryId > 0) {
-        error_log("Founding existing slides linked to the given story");
-    } else {
-        foreach ($slideEntries as $slideEntry) {
-            if ($slideEntry['slideType'] !== 'COPYRIGHT') {
-                error_log("Got slide number $slideIndex");
-                PrepareAndExecute($conn,
-                    'INSERT INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)',
-                    array($storyId, $slideIndex));
-            }
-            $slideIndex++;
+        if ($slideEntry['slideType'] !== 'COPYRIGHT') {
+            error_log("Got slide number $slideIndex");
+            PrepareAndExecute($conn,
+                'INSERT IGNORE INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)',
+                array($storyId, $slideIndex));
         }
+        $slideIndex++;
     }
-
     if (!$conn->commit()) {
         RespondWithError(500, "Failed to commit database transaction");
     }
