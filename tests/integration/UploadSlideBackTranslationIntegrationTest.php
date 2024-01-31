@@ -11,15 +11,15 @@ use PDO;
 
 class UploadSlideBackTranslationIntegrationTest extends TestCase
 {
-    const string HOST = "localhost:8899";
-    const string STORY_TEMPLATE = 'story_1';
-    const string URI = '/API/uploadSlideBacktranslation.php';
-    const string PHONE_ID_1 = "rstuvw";
-    const string PHONE_ID_2 = "lmnopq";
-    const string PHONE_ID_3 = "ghijkl";
-    const string STORY_FILE_CONTENTS = "Test data for story file";
-    const string STORY_FILE_CONTENTS_UPDATED = "Story data has been updated";
-    const string SLIDE_FILE_CONTENTS = "'Story data been updated and saved into a slide file i.e. 2.m4a'";
+    const HOST = "localhost:8899";
+    const STORY_TEMPLATE = 'story_1';
+    const URI = '/API/uploadSlideBacktranslation.php';
+    const PHONE_ID_1 = "rstuvw";
+    const PHONE_ID_2 = "lmnopq";
+    const PHONE_ID_3 = "ghijkl";
+    const STORY_FILE_CONTENTS = "Test data for story file";
+    const STORY_FILE_CONTENTS_UPDATED = "Story data has been updated";
+    const SLIDE_FILE_CONTENTS = "'Story data been updated and saved into a slide file i.e. 2.m4a'";
     private static $db;
     /** @var Process */
     private static Process $process;
