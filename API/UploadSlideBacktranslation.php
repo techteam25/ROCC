@@ -5,6 +5,7 @@ require_once('utils/MailROCC.php');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     RespondWithError(405, "Request must be a POST");
 }
+
 if (!(array_key_exists('Key', $_POST) &&
     array_key_exists('PhoneId', $_POST) &&
     array_key_exists('TemplateTitle', $_POST) &&
@@ -156,6 +157,7 @@ function CountReqAudioFiles($total, $storyId, $androidId) {
 $androidId = $_POST['PhoneId'];
 $templateTitle = htmlspecialchars(trim($_POST['TemplateTitle']));
 $audioData = base64_decode($_POST['Data']);
+
 $conn = GetDatabaseConnection();
 
 if (array_key_exists('StoryId', $_POST)) {
