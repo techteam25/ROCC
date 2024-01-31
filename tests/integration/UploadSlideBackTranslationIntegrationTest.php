@@ -5,7 +5,6 @@ namespace integration;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\TextUI\XmlConfiguration\File;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use PDO;
@@ -19,6 +18,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
     const string PHONE_ID_2 = "lmnopq";
     const string PHONE_ID_3 = "ghijkl";
     const string STORY_FILE_CONTENTS = "Test data for story file";
+    const string STORY_FILE_CONTENTS_UPDATED = "Story data has been updated";
     const string SLIDE_FILE_CONTENTS = "'Story data been updated and saved into a slide file i.e. 2.m4a'";
     private static $db;
     /** @var Process */
@@ -97,7 +97,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
 
         $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $payload['PhoneId'], $storyId);
         $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($payload['Data']));
+        $this->assertEquals(file_get_contents($storyFile), self::STORY_FILE_CONTENTS);
     }
 
     /**
@@ -193,7 +193,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         $story = $stories[0];
 
         // assert that story data isn't impacted with story update request
-        $this->assertEquals('es', $story['language']);
+        $this->assertEquals($createStoryPayload['Language'], $story['language']);
         $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
         $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
 
@@ -204,7 +204,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         // verify story data has been updated successfully
         $storyFile = sprintf("%s/%s/%s/wholeStory.m4a", self::$uploadedProjectDir, $updateStoryPayload['PhoneId'], $storyId);
         $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($storyFile), base64_decode($updateStoryPayload['Data']));
+        $this->assertEquals(file_get_contents($storyFile), self::STORY_FILE_CONTENTS_UPDATED);
     }
 
     /**
@@ -262,6 +262,6 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
 
         $slideFile = sprintf("%s/%s/%s/%s.m4a", self::$uploadedProjectDir, $updateStoryPayload['PhoneId'], $storyId, $updateStoryPayload['SlideNumber']);
         $this->assertFileExists($storyFile);
-        $this->assertEquals(file_get_contents($slideFile), base64_decode($updateStoryPayload['Data']));
+        $this->assertEquals(file_get_contents($slideFile), self::SLIDE_FILE_CONTENTS);
     }
 }
