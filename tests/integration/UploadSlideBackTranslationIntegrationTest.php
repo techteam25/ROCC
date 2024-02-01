@@ -31,8 +31,9 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+
         // start php in-built server
-        self::$process = new Process(["php", "-S", self::HOST, "-t", ROOT_PATH . "."]);
+        self::$process = new Process(["php", "-S", self::HOST, "-t", dirname(__DIR__) . '/../.']);
         self::$process->start();
         usleep(100000);
 
