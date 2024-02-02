@@ -127,7 +127,7 @@ and MySQL DB
 
 Before running the tests, ensure that the following prerequisites are met:
 
-The tests depends on specific values retrieved from the `API/utils/ConnectionSettings.php` file:
+The tests depend on specific values retrieved from the `API/utils/ConnectionSettings.php` file:
 * Utilize the `DB_DNS` constant in the file for the database name and server host information in the database connection.
 * Access the global variables `$databaseUser` and `$databasePassword` for authentication.
 * `$filesRoot` variable for Root file location in order to write story data
@@ -137,8 +137,8 @@ The tests depends on specific values retrieved from the `API/utils/ConnectionSet
 Tests used the database connection settings `API/utils/ConnectionSettings.php` file.
 
 #### Root files
-Tests also 
 `$filesRoot` variable from `API/utils/ConnectionSettings.php` file is used by tests
+
 #### SQL Files:
 * The tests rely on the `docs/new-schema.sql` and `docs/seed.sql` files.
 * In particular, the `docs/seed.sql` file contains essential data for the `Projects` table, utilized by the tests.
