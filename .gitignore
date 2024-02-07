@@ -11,3 +11,13 @@ composer.phar
 /nbproject/private/
 *~
 Files/
+
+
+
+# test db file
+StoryProducer.db
+.idea
+.phpunit.result.cache
+coverage.xml
+phpunit.xml.dist
+.phpunit.cache

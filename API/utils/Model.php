@@ -17,8 +17,7 @@ function GetDatabaseConnection() {
         // variable referenced within a function is locally scoped, the value
         // of $serverName and the other variables is null. To access the
         // global variables, we must use the $GLOBALS associative array.
-        $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
-            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+        $cn = new PDO(DB_DNS, $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
         $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$lastConnectionTime = time();
         return $cn;
@@ -126,8 +125,8 @@ class Model {
           // variable referenced within a function is locally scoped, the value
           // of $serverName and the other variables is null. To access the
           // global variables, we must use the $GLOBALS associative array.
-            $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
-                $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+
+            $cn = new PDO(DB_DNS, $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
             $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Exception $e) {
             Respond\error("Unable to connect to database");
