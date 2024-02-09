@@ -811,6 +811,121 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
+
+    /**
+     * @param int $projectId
+     * @param string $androidId
+     * @param string $term
+     * @param string $textBackTranslation
+     * @param string $audioRecordingFilename
+     * @param string $audioData
+     * @return int
+     */
+    public function CreateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData) {
+        try {
+            $this->conn->beginTransaction();
+
+            $generatedFileName = $this->GenerateRecordingFileName($audioRecordingFilename);
+
+            // create record entry
+            $sql = "INSERT INTO WordLinkRecordings(term, projectId, textBackTranslation, fileName)
+				VALUES (?, ?, ?, ?);";
+            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation, $generatedFileName));
+            $this->FreeStmt($stmt);
+
+            $recordingId = $this->conn->lastInsertId();
+            $this->conn->commit();
+
+            # save recording file content
+            $directory = "Projects/$androidId/WordLinks";
+            PutFile($directory, $generatedFileName, $audioData);
+
+            return $recordingId;
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            RespondWithError(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * @param int $recordingId
+     * @param int $projectId
+     * @param string $androidId
+     * @param string $term
+     * @param string $textBackTranslation
+     * @param string $audioRecordingFilename
+     * @param string $audioData
+     * @return int
+     */
+    public function UpdateWordLinkRecording($recordingId, $projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData)
+    {
+         try {
+             # check a recording exists for given recordingId, term & projectId
+             $sql = "SELECT id, fileName FROM WordLinkRecordings WHERE id = ? AND term = ? AND projectId = ?;";
+             $stmt = $this->PrepareAndExecute($sql, array($recordingId, $term, $projectId));
+
+             $recording = $this->FetchArray($stmt);
+             $this->FreeStmt($stmt);
+
+             if (!is_array($recording)) {
+                 RespondWithError(400, "No WordLinkRecordings found for given recordingID: '$recordingId', term: '$term' and androidId: '$androidId'");
+             }
+
+             $existingRecodingFileName = $recording['fileName'];
+
+             # generate random file for saving uploaded recording file content
+             $generatedFileName = $this->GenerateRecordingFileName($audioRecordingFilename);
+
+             # update WordLinkRecordings
+             $this->conn->beginTransaction();
+             $updateSql =  "UPDATE WordLinkRecordings
+                            SET textBackTranslation = ?, fileName = ? WHERE id = ?";
+
+             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $generatedFileName, $recordingId));
+             $this->FreeStmt($stmt);
+
+             $this->conn->commit();
+             $directory = "Projects/$androidId/WordLinks";
+             PutFile($directory, $generatedFileName, $audioData);
+
+             # delete existing recording file
+             $existingRecodingFilepath = "{$GLOBALS['filesRoot']}/$directory/$existingRecodingFileName";
+
+             error_log(sprintf("Deleting old recording file '%s'", $existingRecodingFilepath));
+             if(!unlink($existingRecodingFilepath)) {
+                 throw new \Exception("Failed to deleted existing recording file: $existingRecodingFilepath");
+             }
+
+             return $recordingId;
+         } catch (\Exception $e) {
+             error_log($e->getMessage());
+             $this->conn->rollBack();
+             RespondWithError(500, $e->getMessage());
+         }
+    }
+
+    /**
+     * @throws DBException
+     */
+    function GetProjectIdId($androidId) {
+        $sql = "SELECT id FROM Projects WHERE androidId = ?";
+        $stmt = $this->PrepareAndExecute($sql, array($androidId));
+
+        if ($project = $this->FetchArray($stmt)) {
+            $this->FreeStmt($stmt);
+            return $project['id'];
+        }
+        return null;
+    }
+
+    function GenerateRecordingFileName($audioRecordingFilename): string
+    {
+        # extract file extension and verify if it's a valid one
+        $recordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);
+        # generate random file name for saving uploaded recording file content
+        return  sprintf("%s.%s", bin2hex(random_bytes(20)), $recordingFileExtension);
+    }
 }
 
 class DBException extends \Exception {
