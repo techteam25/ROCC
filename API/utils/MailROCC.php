@@ -1,7 +1,7 @@
 <?php
 require '../classes/class.phpmailer.php';
 require '../classes/class.smtp.php';
-require '../../classes/class.mailsettings.php';
+require '../classes/class.mailsettings.php';
 
 function SendMailROCCUser($from, $to, $subject, $message) {
     $Headers = "MIME-Version: 1.0" . "\r\n";
