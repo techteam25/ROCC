@@ -70,7 +70,6 @@ CREATE TABLE Messages (
 
 CREATE TABLE WordLinkRecordings (
   id int PRIMARY KEY AUTO_INCREMENT,
---   androidId CHAR(16) NOT NULL,
   projectId INT NOT NULL REFERENCES Projects(id),
   term VARCHAR(256) NOT NULL,
   textBackTranslation TEXT,

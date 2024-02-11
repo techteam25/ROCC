@@ -833,14 +833,12 @@ class Model {
             $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation, $generatedFileName));
             $this->FreeStmt($stmt);
 
-            $recordingId = $this->conn->lastInsertId();
-            $this->conn->commit();
-
             # save recording file content
             $directory = "Projects/$androidId/WordLinks";
             PutFile($directory, $generatedFileName, $audioData);
 
-            return $recordingId;
+            $this->conn->commit();
+            return $this->conn->lastInsertId();
         } catch (\Exception $e) {
             error_log($e->getMessage());
             $this->conn->rollBack();
@@ -885,23 +883,25 @@ class Model {
              $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $generatedFileName, $recordingId));
              $this->FreeStmt($stmt);
 
-             $this->conn->commit();
+             # save new recording file
              $directory = "Projects/$androidId/WordLinks";
              PutFile($directory, $generatedFileName, $audioData);
+
+             $this->conn->commit();
 
              # delete existing recording file
              $existingRecodingFilepath = "{$GLOBALS['filesRoot']}/$directory/$existingRecodingFileName";
 
              error_log(sprintf("Deleting old recording file '%s'", $existingRecodingFilepath));
              if(!unlink($existingRecodingFilepath)) {
-                 throw new \Exception("Failed to deleted existing recording file: $existingRecodingFilepath");
+                 error_log("Failed to deleted existing recording file: $existingRecodingFilepath");
              }
 
              return $recordingId;
          } catch (\Exception $e) {
              error_log($e->getMessage());
              $this->conn->rollBack();
-             RespondWithError(500, $e->getMessage());
+             RespondWithError(500, 'There was an exception while creating the world link recording.');
          }
     }
 
@@ -924,7 +924,7 @@ class Model {
         # extract file extension and verify if it's a valid one
         $recordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);
         # generate random file name for saving uploaded recording file content
-        return  sprintf("%s.%s", bin2hex(random_bytes(20)), $recordingFileExtension);
+        return sprintf("%s.%s", bin2hex(random_bytes(30)), $recordingFileExtension);
     }
 }
 
