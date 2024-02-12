@@ -82,7 +82,6 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
                 'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
             ],
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
-            'RecordingId' => $recordingId
         ];
 
 
@@ -139,9 +138,9 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
             'RecordingId' => $recordingId
         ];
 
-        // update should not create a new recording
-        $this->sendRequestAndExpect400Response($updateRecordingPayload);
-
+        // should create a new recording
+        $updatedRecordingId = $this->sendRequestAndReturnRecordingId($updateRecordingPayload);
+        $this->assertNotEquals($createdRecording['id'], $updatedRecordingId);
 
         # verify exiting recording data isn't changed
         $this->assertEquals($createRecordingPayload['term'], $createdRecording['term']);
@@ -186,9 +185,9 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
             'RecordingId' => $recordingId
         ];
 
-        // update should not create a new recording
-        $this->sendRequestAndExpect400Response($updateRecordingPayload);
-
+        // should create a new recording
+        $updatedRecordingId = $this->sendRequestAndReturnRecordingId($updateRecordingPayload);
+        $this->assertNotEquals($createdRecording['id'], $updatedRecordingId);
 
         # verify exiting recording data isn't changed
         $this->assertEquals($createRecordingPayload['term'], $createdRecording['term']);
@@ -216,16 +215,6 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $responseArr = json_decode($responseJson, true);
         $this->assertArrayHasKey('RecordingId', $responseArr);
         return $responseArr['RecordingId'];
-    }
-
-
-    /**
-     * @throws GuzzleException
-     */
-    private function sendRequestAndExpect400Response(array $payload): void
-    {
-        $response = $this->httpClient->request("POST", self::HOST . self::URI, ['form_params' => $payload]);
-        $this->assertEquals(400, $response->getStatusCode());
     }
 
     private function getRecording(int $recordingId): array

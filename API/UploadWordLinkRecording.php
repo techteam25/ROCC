@@ -24,37 +24,26 @@ $term = trim($_POST['term']);
 $audioRecordingFilename = htmlspecialchars(trim($_POST['wordLinkRecording']['audioRecordingFilename']));
 $textBackTranslation = htmlspecialchars(trim($_POST['wordLinkRecording']['textBackTranslation']));
 
-// validate audio recording file extension
-if (strlen(pathinfo($audioRecordingFilename, PATHINFO_EXTENSION)) == 0)
+// extract & validate audio recording file extension
+$audioRecordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);
+if (!preg_match('/^[A-Za-z0-9]{1,100}$/', $audioRecordingFileExtension))
 {
-    RespondWithError(400, "File extension missing in the audioRecordingFilename");
+    RespondWithError(400, "File extension is not valid in the audioRecordingFilename");
 }
-
 
 $model = new Model();
 # check if project exists for the given androidId
-$projectId = $model->GetProjectIdId($androidId);
+$projectId = $model->GetProjectId($androidId);
 if (!$projectId) {
-    RespondWithError(400, "Project must be registered before audio can be uploaded");
+    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadWordLinkRecording.php");
 }
 
-if (array_key_exists('RecordingId', $_POST)) {
-    $recordingId = $model->UpdateWordLinkRecording(
-        $_POST['RecordingId'],
+$recordingId = $model->CreateOrUpdateWordLinkRecording(
         $projectId,
         $androidId,
         $term,
         $textBackTranslation,
         $audioRecordingFilename,
         base64_decode($_POST['Data']));
-} else {
-    $recordingId = $model->CreateWordLinkRecording(
-        $projectId,
-        $androidId,
-        $term,
-        $textBackTranslation,
-        $audioRecordingFilename,
-        base64_decode($_POST['Data']));
-}
 
 echo json_encode(['RecordingId' => $recordingId]);

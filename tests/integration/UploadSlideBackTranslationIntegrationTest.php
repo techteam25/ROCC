@@ -4,9 +4,6 @@ namespace integration;
 use GuzzleHttp\Exception\GuzzleException;
 use PDO;
 
-/**
- * @group skip
- */
 class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
 {
     const STORY_TEMPLATE = 'story_1';
