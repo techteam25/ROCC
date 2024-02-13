@@ -19,6 +19,9 @@ abstract class BaseIntegrationTest extends TestCase
     private static Filesystem $fileSystem;
     protected Client $httpClient;
 
+    /** @var \Model Data model class */
+    protected static \Model $model;
+
     public static function setUpBeforeClass(): void
     {
         // start php in-built server
@@ -35,6 +38,7 @@ abstract class BaseIntegrationTest extends TestCase
         self::$fileSystem->mirror(dirname(__DIR__) . "/data/templates", $templateDir);
         self::$uploadedProjectDir = self::$filesRoot . "/Projects";
         self::$db = new PDO(DB_DNS, $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+        self::$model = new \Model();
     }
 
     public static function tearDownAfterClass(): void
@@ -50,21 +54,5 @@ abstract class BaseIntegrationTest extends TestCase
     public function setUp(): void
     {
         $this->httpClient = new Client(['http_errors' => false]);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function getProjectId(string $androidId): int
-    {
-        $q = self::$db->prepare('SELECT id FROM Projects where androidId = ?');
-        $q->execute([$androidId]);
-        $project = $q->fetch(PDO::FETCH_ASSOC);
-
-        if ($project) {
-            return $project['id'];
-        }
-
-        throw new \Exception('Project not found in the database');
     }
 }

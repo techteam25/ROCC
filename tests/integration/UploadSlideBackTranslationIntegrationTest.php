@@ -37,7 +37,7 @@ class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
         $stories = $this->getStories($storyId);
         $this->assertCount(1, $stories);
         $this->assertEquals(self::STORY_TEMPLATE, $stories[0]['title']);
-        $this->assertEquals($this->getProjectId($payload['PhoneId']), $stories[0]['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($payload['PhoneId']), $stories[0]['projectId']);
 
         # verify slides are all created correctly in the database
         $slides = $this->getSlides($storyId);
@@ -134,7 +134,7 @@ class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
         // assert that story data isn't impacted with story update request
         $this->assertEquals($createStoryPayload['Language'], $story['language']);
         $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
-        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
 
         // assert that slides data isn't impacted with story update request
         $slides = $this->getSlides($storyId);
@@ -193,7 +193,7 @@ class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
 
         // assert that story data isn't impacted with story update request
         $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
-        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
 
         // assert that slides data isn't impacted with story update request
         $slides = $this->getSlides($storyId);
