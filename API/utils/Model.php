@@ -811,23 +811,6 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
-    /**
-     * @param $projectId
-     * @param $term
-     * @return bool
-     */
-    public function IsRecordingExists($projectId, $term)
-    {
-        # check a recording exists for given recordingId, term & projectId
-        $sql = "SELECT id, fileName FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
-        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
-
-        $recording = $this->FetchArray($stmt);
-        $this->FreeStmt($stmt);
-
-        return is_array($recording);
-    }
-
     public function CreateOrUpdateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData)
     {
         # check if a recording exists for given term & projectId
@@ -845,7 +828,6 @@ class Model {
             return  $this->CreateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData);
         }
     }
-
 
     /**
      * @param int $projectId

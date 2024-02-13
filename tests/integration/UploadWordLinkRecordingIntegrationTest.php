@@ -19,7 +19,7 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
     const TEXT_BACK_TRANSLATION_CONTENT_UPDATED = "Updated test data for text back translation";
     const RECORDING_FILE_EXTENSION = "m4a";
     const RECORDING_FILE_NAME_1 = "WordLinks 1." . self::RECORDING_FILE_EXTENSION;
-    const RECORDING_FILE_NAME_2 = "WordLinks 2.." . self::RECORDING_FILE_EXTENSION;
+    const RECORDING_FILE_NAME_2 = "WordLinks 2." . self::RECORDING_FILE_EXTENSION;
 
     /**
      * @throws \Exception
@@ -122,8 +122,7 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
-        $recordingId = $this->sendRequestAndReturnRecordingId($createRecordingPayload);
-        $createdRecording = $this->getRecording($recordingId);
+        $createdRecordingId = $this->sendRequestAndReturnRecordingId($createRecordingPayload);
 
         // request payload
         $updateRecordingPayload = [
@@ -134,21 +133,21 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
                 'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
             ],
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
-            'RecordingId' => $recordingId
         ];
 
         // should create a new recording
         $updatedRecordingId = $this->sendRequestAndReturnRecordingId($updateRecordingPayload);
-        $this->assertNotEquals($createdRecording['id'], $updatedRecordingId);
+        $this->assertNotEquals($createdRecordingId, $updatedRecordingId);
 
         # verify exiting recording data isn't changed
+        $createdRecording = $this->getRecording($createdRecordingId);
         $this->assertEquals($createRecordingPayload['term'], $createdRecording['term']);
         $this->assertNotEmpty($createdRecording['fileName']);
         $this->assertEquals(self::RECORDING_FILE_EXTENSION, pathinfo($createdRecording['fileName'], PATHINFO_EXTENSION));
         $this->assertEquals(self::TEXT_BACK_TRANSLATION_CONTENT, $createdRecording['textBackTranslation']);
         $this->assertEquals(self::$model->GetProjectId($createRecordingPayload['PhoneId']), $createdRecording['projectId']);
 
-        // verify auto recording is uploaded successfully
+        // verify created recording content is intact with update request
         $uploadedRecordingFile = sprintf("%s/%s/WordLinks/%s", self::$uploadedProjectDir, $createRecordingPayload['PhoneId'], $createdRecording['fileName']);
         $this->assertFileExists($uploadedRecordingFile);
         $this->assertEquals(self::AUDIO_FILE_CONTENT, file_get_contents($uploadedRecordingFile));
@@ -169,9 +168,7 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
-        $recordingId = $this->sendRequestAndReturnRecordingId($createRecordingPayload);
-        $createdRecording = $this->getRecording($recordingId);
-
+        $createdRecordingId = $this->sendRequestAndReturnRecordingId($createRecordingPayload);
         // request payload
         $updateRecordingPayload = [
             'PhoneId' => self::PHONE_ID_2,
@@ -181,21 +178,21 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
                 'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
             ],
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
-            'RecordingId' => $recordingId
         ];
 
         // should create a new recording
         $updatedRecordingId = $this->sendRequestAndReturnRecordingId($updateRecordingPayload);
-        $this->assertNotEquals($createdRecording['id'], $updatedRecordingId);
+        $this->assertNotEquals($createdRecordingId, $updatedRecordingId);
 
         # verify exiting recording data isn't changed
+        $createdRecording = $this->getRecording($createdRecordingId);
         $this->assertEquals($createRecordingPayload['term'], $createdRecording['term']);
         $this->assertNotEmpty($createdRecording['fileName']);
         $this->assertEquals(self::RECORDING_FILE_EXTENSION, pathinfo($createdRecording['fileName'], PATHINFO_EXTENSION));
         $this->assertEquals(self::TEXT_BACK_TRANSLATION_CONTENT, $createdRecording['textBackTranslation']);
         $this->assertEquals(self::$model->GetProjectId($createRecordingPayload['PhoneId']), $createdRecording['projectId']);
 
-        // verify audio recording is uploaded successfully
+        // verify created recording content is intact with update request
         $uploadedRecordingFile = sprintf("%s/%s/WordLinks/%s", self::$uploadedProjectDir, $createRecordingPayload['PhoneId'], $createdRecording['fileName']);
         $this->assertFileExists($uploadedRecordingFile);
         $this->assertEquals(self::AUDIO_FILE_CONTENT, file_get_contents($uploadedRecordingFile));
