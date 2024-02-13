@@ -28,7 +28,7 @@ $textBackTranslation = htmlspecialchars(trim($_POST['wordLinkRecording']['textBa
 $audioRecordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);
 if (!preg_match('/^[A-Za-z0-9]{1,100}$/', $audioRecordingFileExtension))
 {
-    RespondWithError(400, "File extension is not valid in the audioRecordingFilename");
+    RespondWithError(400, "File extension should match /^[A-Za-z0-9]{1,100}$/");
 }
 
 $model = new Model();
