@@ -46,7 +46,7 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $this->assertEquals(self::TEXT_BACK_TRANSLATION_CONTENT, $recording['textBackTranslation']);
         $this->assertEquals(self::$model->GetProjectId($payload['PhoneId']), $recording['projectId']);
 
-        // verify auto recording is uploaded successfully
+        // verify audio recording is uploaded successfully
         $uploadedRecordingFile = sprintf("%s/%s/WordLinks/%s", self::$uploadedProjectDir, $payload['PhoneId'], $recording['fileName']);
         $this->assertFileExists($uploadedRecordingFile);
         $this->assertEquals(self::AUDIO_FILE_CONTENT, file_get_contents($uploadedRecordingFile));
