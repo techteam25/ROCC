@@ -11,18 +11,16 @@ if (!(
     array_key_exists('PhoneId', $_POST) &&
     array_key_exists('term', $_POST) &&
     array_key_exists('Data', $_POST) &&
-    array_key_exists('wordLinkRecording', $_POST) &&
-    array_key_exists('audioRecordingFilename', $_POST['wordLinkRecording']) &&
-    array_key_exists('textBackTranslation', $_POST['wordLinkRecording']))
+    array_key_exists('audioRecordingFilename', $_POST) &&
+    array_key_exists('textBackTranslation', $_POST))
 ) {
-
     RespondWithError(400, 'This endpoint requires PhoneId, term, Data, audioRecordingFilename, textBackTranslation.');
 }
 
 $androidId = trim($_POST['PhoneId']);
 $term = trim($_POST['term']);
-$audioRecordingFilename = htmlspecialchars(trim($_POST['wordLinkRecording']['audioRecordingFilename']));
-$textBackTranslation = htmlspecialchars(trim($_POST['wordLinkRecording']['textBackTranslation']));
+$audioRecordingFilename = htmlspecialchars(trim($_POST['audioRecordingFilename']));
+$textBackTranslation = htmlspecialchars(trim($_POST['textBackTranslation']));
 
 // extract & validate audio recording file extension
 $audioRecordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);

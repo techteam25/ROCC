@@ -31,10 +31,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $payload = [
             'PhoneId' => self::PHONE_ID_1,
             'term' =>  self::TERM_1,
-            'wordLinkRecording' => [
-              'audioRecordingFilename' => self::RECORDING_FILE_NAME_1,
-              'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT
-            ],
+            'audioRecordingFilename' => self::RECORDING_FILE_NAME_1,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
@@ -62,10 +60,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $createRecordingPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_1,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT
-            ],
+            'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
@@ -76,10 +72,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $updateRecordingPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_1,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
-            ],
+            'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
         ];
 
@@ -115,10 +109,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $createRecordingPayload = [
             'PhoneId' => self::PHONE_ID_3,
             'term' => self::TERM_1,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT
-            ],
+            'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
@@ -128,10 +120,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $updateRecordingPayload = [
             'PhoneId' => self::PHONE_ID_3,
             'term' => self::TERM_2,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
-            ],
+            'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
         ];
 
@@ -161,10 +151,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $createRecordingPayload = [
             'PhoneId' => self::PHONE_ID_1,
             'term' => self::TERM_2,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT
-            ],
+            'audioRecordingFilename' =>self::RECORDING_FILE_NAME_1,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT),
         ];
 
@@ -173,10 +161,8 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
         $updateRecordingPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_2,
-            'wordLinkRecording' => [
-                'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
-                'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED
-            ],
+            'audioRecordingFilename' => self::RECORDING_FILE_NAME_2,
+            'textBackTranslation' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
             'Data' => base64_encode(self::AUDIO_FILE_CONTENT_UPDATED),
         ];
 
