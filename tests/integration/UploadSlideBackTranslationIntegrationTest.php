@@ -7,7 +7,7 @@ use PDO;
 class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
 {
     const STORY_TEMPLATE = 'story_1';
-    const URI = '/API/uploadSlideBacktranslation.php';
+    const URI = '/API/UploadSlideBacktranslation.php';
     const PHONE_ID_1 = "rstuvw";
     const PHONE_ID_2 = "lmnopq";
     const PHONE_ID_3 = "ghijkl";
