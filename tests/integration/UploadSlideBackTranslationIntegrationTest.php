@@ -1,17 +1,11 @@
 <?php
 
 namespace integration;
-
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 use PDO;
 
-class UploadSlideBackTranslationIntegrationTest extends TestCase
+class UploadSlideBackTranslationIntegrationTest extends BaseIntegrationTest
 {
-    const HOST = "localhost:8899";
     const STORY_TEMPLATE = 'story_1';
     const URI = '/API/uploadSlideBacktranslation.php';
     const PHONE_ID_1 = "rstuvw";
@@ -20,49 +14,6 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
     const STORY_FILE_CONTENTS = "Test data for story file";
     const STORY_FILE_CONTENTS_UPDATED = "Story data has been updated";
     const SLIDE_FILE_CONTENTS = "'Story data been updated and saved into a slide file i.e. 2.m4a'";
-    private static $db;
-    /** @var Process */
-    private static Process $process;
-    private static string $filesRoot;
-    private static string $uploadedProjectDir;
-    private static Filesystem $fileSystem;
-
-    private Client $httpClient;
-
-    public static function setUpBeforeClass(): void
-    {
-
-        // start php in-built server
-        self::$process = new Process(["php", "-S", self::HOST, "-t", dirname(__DIR__) . '/../.']);
-        self::$process->start();
-        usleep(100000);
-
-        // create required directory for test data
-        self::$fileSystem = new Filesystem();
-        self::$filesRoot = $GLOBALS['filesRoot'];
-        $templateDir = self::$filesRoot . "/Templates";
-        self::$fileSystem->mkdir($templateDir);
-        // copy test story template files to files root
-        self::$fileSystem->mirror(dirname(__DIR__) . "/data/templates", $templateDir);
-        self::$uploadedProjectDir = self::$filesRoot . "/Projects";
-
-        self::$db = new PDO(DB_DNS,
-            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$fileSystem->remove(self::$filesRoot);
-        self::$process->stop();
-        self::$db->query('DELETE FROM Slide');
-        self::$db->query('DELETE FROM Stories');
-        self::$db = null;
-    }
-
-    public function setUp(): void
-    {
-        $this->httpClient = new Client(['http_errors' => false]);
-    }
 
     /**
      * @return int
@@ -86,7 +37,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         $stories = $this->getStories($storyId);
         $this->assertCount(1, $stories);
         $this->assertEquals(self::STORY_TEMPLATE, $stories[0]['title']);
-        $this->assertEquals($this->getProjectId($payload['PhoneId']), $stories[0]['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($payload['PhoneId']), $stories[0]['projectId']);
 
         # verify slides are all created correctly in the database
         $slides = $this->getSlides($storyId);
@@ -126,19 +77,6 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         $q = self::$db->prepare('SELECT * FROM Stories where id = ?');
         $q->execute([$storyId]);
         return $q->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    private function getProjectId(string $androidId): int
-    {
-        $q = self::$db->prepare('SELECT id FROM Projects where androidId = ?');
-        $q->execute([$androidId]);
-        $project = $q->fetch(PDO::FETCH_ASSOC);
-
-        if ($project) {
-            return $project['id'];
-        }
-
-        throw new \Exception('Project not found in the database');
     }
 
     /**
@@ -196,7 +134,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
         // assert that story data isn't impacted with story update request
         $this->assertEquals($createStoryPayload['Language'], $story['language']);
         $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
-        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
 
         // assert that slides data isn't impacted with story update request
         $slides = $this->getSlides($storyId);
@@ -255,7 +193,7 @@ class UploadSlideBackTranslationIntegrationTest extends TestCase
 
         // assert that story data isn't impacted with story update request
         $this->assertEquals(self::STORY_TEMPLATE, $story['title']);
-        $this->assertEquals($this->getProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
+        $this->assertEquals(self::$model->GetProjectId($updateStoryPayload['PhoneId']), $story['projectId']);
 
         // assert that slides data isn't impacted with story update request
         $slides = $this->getSlides($storyId);

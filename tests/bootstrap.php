@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 require_once(__DIR__ . '/../API/utils/ConnectionSettings.php');
+require_once(__DIR__ . '/../API/utils/Model.php');
 
 try {
     $conn = new PDO(DB_DNS, $databaseUser, $databasePassword);

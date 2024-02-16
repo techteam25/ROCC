@@ -142,7 +142,9 @@ Tests used the database connection settings `API/utils/ConnectionSettings.php` f
 #### SQL Files:
 * The tests rely on the `docs/new-schema.sql` and `docs/seed.sql` files.
 * In particular, the `docs/seed.sql` file contains essential data for the `Projects` table, utilized by the tests.
-  * If tests encounter failures due to changes in the data, ensure that the `PHONE_ID_#` in test file `tests/integration/UploadSlideBackTranslationIntegrationTest.php` corresponds to the `androidId` column value in the `Projects` table.
+* If tests encounter failures due to changes in the data, ensure that the `PHONE_ID_#` in following test files corresponds to the `androidId` column value in the `Projects` table: 
+    * `tests/integration/UploadSlideBackTranslationIntegrationTest.php` .
+    * `tests/integration/UploadWordLinkRecordingIntegrationTest.php`.
 * The current `androidId` values used in the test file are:
   * `lmnopq`
   * `ghijkl`
