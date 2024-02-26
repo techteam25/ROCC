@@ -402,3 +402,52 @@ let connection = connect();
 for (let i in approvals) {
     syncApprovalSwitch(i);
 }
+
+const searchInput = document.getElementById("termListSearchBox");
+const listContainer = document.getElementById("termList");
+
+// Bind search input change event to filter function
+searchInput.addEventListener("input", (event) => {
+    const searchTerm = event.target.value;
+    filterList(searchTerm);
+});
+
+function filterList(searchTerm) {
+    const searchTermLowerCase = searchTerm.toLowerCase();
+    var searchItermFound = false;
+    listContainer.querySelectorAll("button").forEach(listItem => {
+      const itemText = listItem.textContent.toLowerCase();
+      const isMatch = itemText.includes(searchTermLowerCase);
+
+      if(listItem.id === "noTermFound"){
+        return;
+      }
+
+      listItem.style.display = isMatch ? "block" : "none";
+
+      if (isMatch){
+        searchItermFound = true;
+      }
+    });
+
+    // display no term found element if no item is visibles
+    if(searchItermFound){
+        document.getElementById("noTermFound").classList.add("hide");
+    } else {
+        document.getElementById("noTermFound").classList.remove("hide");
+    }
+}
+
+
+function showTermDetails(evt, term){
+    document.getElementById("termHeader").innerHTML = term;
+    document.getElementById("termList").classList.toggle("hide");
+    document.getElementById("termDetails").classList.toggle("hide");
+}
+
+function showTermList(evt){
+    document.getElementById("termList").classList.toggle("hide");
+    document.getElementById("termDetails").classList.toggle("hide");
+    filterList("");
+    searchInput.value = "";
+}

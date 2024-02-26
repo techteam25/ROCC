@@ -638,3 +638,54 @@ input:checked + .slider:before {
 .tabHeader {
     background: var(--medDark);
 }
+
+/* style for wordlinks */
+.term-header {
+    display: flex;
+    align-items: center;
+}
+
+.term-header  a {
+    margin:0 10px 10px;
+    color: var(--medDark);
+}
+.term-header  a:hover {
+    color: #337ab7;
+}
+
+.term-explanation {
+    max-height: 190px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    scrollbar-gutter: unset;
+}
+
+.term-list .list-group {
+    max-height: 236px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    scrollbar-gutter: unset;
+    height: 100%;
+    border-top: .5px solid #ddd;
+    border-bottom: .5px solid #ddd;
+}
+
+.list-group-item {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#termList {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    max-height: 310px;
+}
+
+.term-list .form-control {
+    margin: 10px 0 15px;
+    height: 35px;
+    line-height: 35px;
+}

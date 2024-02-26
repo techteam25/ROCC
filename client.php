@@ -310,10 +310,60 @@ if (array_key_exists('story', $_GET)) {
                         <button class="tablinks" onclick="openTab(event, 'bible-t')"> Bible Text Lookup </button>
                         <button class="tablinks" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                     </div>
-
                     <div id="bible-t" class="tabcontent"><p>Bible text lookup plugin here</p></div>
-                    <div id="WordLinks" class="tabcontent"><p>WordLinks here eventually</p></div>
-
+                    <div id="WordLinks" class="tabcontent active">
+                        <div id="termList" class="term-list hide1">
+                            <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
+                            <div class="list-group">
+                                <button id="noTermFound" type="button" class="hide list-group-item">Search term not matched</button>
+                                <?php for ($i = 1; $i < 10; $i++): ?>
+                                <button onclick="showTermDetails(event, 'Item <?= $i ?>')" type="button" class="list-group-item">
+                                    Item
+                                    <?= $i ?>
+                                </button>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                        <div id="termDetails" class="hide">
+                            <div class="term-header">
+                                <a href="javascript:void(0)" onclick="showTermList()" class="closebtn">
+                                    <span class="glyphicon glyphicon-arrow-left"></span>
+                                </a>
+                                <h2 id="termHeader" style="margin-top:auto;">DEMON</h2>
+                            </div>
+                            <div class="w-audio" style="margin-left:0px; display:flow;">
+                                <audio controls id="wholeAudio">
+                                    <source id="wholeAudio" src="<?=$storyRoot?>/wholeStory.m4a" type="audio/x-m4a">
+                                </audio>
+                            </div>
+                            <span class="alternate-terms" style="color:#2e6d89">
+                                <a style="color:#2e6d89" href="#">alliances</a>&nbsp;/&nbsp;<a style="color:#2e6d89"
+                                    href="#">ally</a>&nbsp;/&nbsp;<a style="color:#2e6d89" href="#">allies</a>&nbsp;/&nbsp;<a
+                                    style="color:#2e6d89" href="#">allied</a></span>
+                            <br />
+                            <div class="term-explanation">
+                                <p>Around 4000 years before Jesus, Adam's and Eve's first two sons were named Cain and Abel. Cain did not
+                                    honour God, but Abel did. After God reproved Cain, Cain grew angry and killed his brother Abel.</p>
+                                <p><b>BACK TRANSLATION:</b> binding talk; promise how to act; his words were not different from (were the
+                                    same as) the other’s words (G);</p>
+                                <div><b>Related (but different) terms:</b>
+                                    <ul>
+                                        <li>Ceasar</li>
+                                        <li>Cesar</li>
+                                        <li>Pharaoh</li>
+                                        <li>king</li>
+                                    </ul>
+                                </div>
+                                <div><b>Other language examples:</b>
+                                    <ul>
+                                        <li>Ceasar</li>
+                                        <li>Cesar</li>
+                                        <li>Pharaoh</li>
+                                        <li>king</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
