@@ -33,6 +33,80 @@ if (array_key_exists('story', $_GET)) {
 } else {
     RespondWithError(400, 'No Story Requested');
 }
+
+// TODO:  Confirm wordlink file & story relatioinship
+// TODO: confirm wordlink file locatoin
+// TODO: confirm backtranlation field in the csv file
+$wordLinkFilePath =  __DIR__ . '/data/' . ($language ?: "en")     . '/wordlinks.csv';
+
+
+$handle = fopen($wordLinkFilePath, 'r');
+
+$wordLinkTerms = [];
+
+// Read the file line by line
+while (($line = fgets($handle)) !== false) {
+    // Skip empty lines and lines starting with "#" (comments)
+    if (trim($line) === "" || trim($line)[0] === "#") {
+        continue;
+    }
+
+    // Parse the line using fgetcsv
+    $row = fgetcsv($handle, 0, ",");
+
+    // Check if parsing was successful and the row is not empty
+    if ($row !== false && !empty($row)) {
+        // Add the parsed row to the data array
+
+        // CSV template contains
+        // ,term,Alternate forms and synonyms.,Other language examples (back translations),Meaning notes. Definitions.,Related (but different) terms,other consultant suggestions / comments / entries,Galen's rationale,Galen's notes/drafts,,,,,,,,,,,,,,,,,,,,,,,
+        if (!empty($row[1])) {
+
+            $term = trim($row[1]);
+            if ($term === 'demon') {
+                // echo "<pre>"; print_r($row);
+            }
+
+            $alternateForms = "";
+            $backTranslations = "";
+            $relatedTerms = "";
+
+            if (!empty($row[2])) {
+                $alternateForms =  explode(",", $row[2]);
+            }
+
+            if (!empty($row[3])) {
+                $backTranslations =  explode(";", $row[3]);
+            }
+
+
+            if (!empty($row[5])) {
+                $relatedTerms =  explode(",", $row[5]);
+            }
+
+            $wordLinkTerms[strtolower(trim($row[1]))] = [
+                "alternateTerms" => $alternateForms,
+                // "backTranslations" => $backTranslations,
+                "backTranslations" => "No back translation has been uploaded",
+                "otherLanguageExamples" => $backTranslations,
+                "notes" => trim($row[4] ?? ""),
+                "relatedTerms" => $relatedTerms,
+                "otherComments" => trim($row[6] ?? ""),
+                "galensRationale" => trim($row[7] ?? ""),
+                "galensNotes" => trim($row[8] ?? ""),
+                "otherConsultantComments" => trim($row[9] ?? ""),
+                "otherConsultantSuggestions" => trim($row[10] ?? ""),
+            ];
+        }
+    }
+}
+
+// Close the file handle
+fclose($handle);
+ksort($wordLinkTerms);
+
+// echo "<pre>"; print_r($wordLinkTerms["demon"]);
+// exit;
 ?>
 
 
@@ -135,6 +209,7 @@ if (array_key_exists('story', $_GET)) {
         var externalWebsocketPort = <?=json_encode($GLOBALS['externalWebsocketPort'])?>;
         var externalWebsocketHost = <?=json_encode($GLOBALS['externalWebsocketHost'])?>;
 
+        var wordLinkTerms = <?= json_encode($wordLinkTerms) ?>;
         </script>
 
     </head>
@@ -316,54 +391,14 @@ if (array_key_exists('story', $_GET)) {
                             <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
                             <div class="list-group">
                                 <button id="noTermFound" type="button" class="hide list-group-item">Search term not matched</button>
-                                <?php for ($i = 1; $i < 10; $i++): ?>
-                                <button onclick="showTermDetails(event, 'Item <?= $i ?>')" type="button" class="list-group-item">
-                                    Item
-                                    <?= $i ?>
+                                <?php foreach ($wordLinkTerms as $key => $value): ?>
+                                <button onclick="showTermDetails(event, '<?= rawurlencode($key) ?>')" type="button" class="list-group-item">
+                                    <?= $key ?>
                                 </button>
-                                <?php endfor; ?>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        <div id="termDetails" class="hide">
-                            <div class="term-header">
-                                <a href="javascript:void(0)" onclick="showTermList()" class="closebtn">
-                                    <span class="glyphicon glyphicon-arrow-left"></span>
-                                </a>
-                                <h2 id="termHeader" style="margin-top:auto;">DEMON</h2>
-                            </div>
-                            <div class="w-audio" style="margin-left:0px; display:flow;">
-                                <audio controls id="wholeAudio">
-                                    <source id="wholeAudio" src="<?=$storyRoot?>/wholeStory.m4a" type="audio/x-m4a">
-                                </audio>
-                            </div>
-                            <span class="alternate-terms" style="color:#2e6d89">
-                                <a style="color:#2e6d89" href="#">alliances</a>&nbsp;/&nbsp;<a style="color:#2e6d89"
-                                    href="#">ally</a>&nbsp;/&nbsp;<a style="color:#2e6d89" href="#">allies</a>&nbsp;/&nbsp;<a
-                                    style="color:#2e6d89" href="#">allied</a></span>
-                            <br />
-                            <div class="term-explanation">
-                                <p>Around 4000 years before Jesus, Adam's and Eve's first two sons were named Cain and Abel. Cain did not
-                                    honour God, but Abel did. After God reproved Cain, Cain grew angry and killed his brother Abel.</p>
-                                <p><b>BACK TRANSLATION:</b> binding talk; promise how to act; his words were not different from (were the
-                                    same as) the other’s words (G);</p>
-                                <div><b>Related (but different) terms:</b>
-                                    <ul>
-                                        <li>Ceasar</li>
-                                        <li>Cesar</li>
-                                        <li>Pharaoh</li>
-                                        <li>king</li>
-                                    </ul>
-                                </div>
-                                <div><b>Other language examples:</b>
-                                    <ul>
-                                        <li>Ceasar</li>
-                                        <li>Cesar</li>
-                                        <li>Pharaoh</li>
-                                        <li>king</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="termDetails" class="hide"></div>
                 </div>
             </div>
         </div>
@@ -451,5 +486,30 @@ if (array_key_exists('story', $_GET)) {
             }
 
         </script>
+        <template id="termDetailTemplate">
+            <div class="termHeader">
+                <a href="javascript:void(0)" onclick="showTermList()" class="closeBtn">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <h2 style="margin-top:auto;"></h2>
+            </div>
+            <div class="w-audio">
+                <audio controls>
+                    <source class="wholeAudioSource" src="" type="audio/x-m4a">
+                </audio>
+            </div>
+            <div class="termExplanation">
+                <ul class="alternateTerms"></ul>
+                <div><p class="notes"></p></div>
+                <div><b>BACK TRANSLATION:</b><p class="backTranslation"></p>
+                <div>
+                <div class="relatedTerms"><b>Related (but different) terms:</b>
+                    <ul class="relatedTermsList"></ul>
+                </div>
+                <div class="otherLanguageExamples"><b>Other language examples:</b>
+                    <ul class="otherLanguageExamplesList"></ul>
+                </div>
+            </div>
+        </template>
     </body>
 </html>

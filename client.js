@@ -440,14 +440,77 @@ function filterList(searchTerm) {
 
 
 function showTermDetails(evt, term){
-    document.getElementById("termHeader").innerHTML = term;
-    document.getElementById("termList").classList.toggle("hide");
-    document.getElementById("termDetails").classList.toggle("hide");
+    evt.preventDefault();
+    const decodedTermlink = decodeURIComponent(term);
+    console.log("showTermDetails",term, wordLinkTerms[decodedTermlink]);
+    const tl = document.querySelector('#termDetailTemplate');
+
+    const template = tl.cloneNode(true);
+
+    const headerEl = template.content.querySelector('.termHeader h2');
+    headerEl.innerHTML = decodedTermlink;
+    template.content.querySelector('.notes').innerHTML = wordLinkTerms[decodedTermlink].notes;
+    template.content.querySelector('.backTranslation').innerHTML = wordLinkTerms[decodedTermlink].backTranslations;
+
+    const alternateTerms = wordLinkTerms[decodedTermlink].alternateTerms;
+    template.content.querySelector('ul').innerHTML = '';
+
+    if (alternateTerms.length > 0) {
+        alternateTerms.forEach(function(term) {
+            if(term.length > 0) {
+                template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term))
+            }
+        });
+    }
+
+    const relatedTerms  =   wordLinkTerms[decodedTermlink].relatedTerms;
+    if (relatedTerms.length > 0) {
+        relatedTerms.forEach(function(term) {
+            if(term.length > 0) {
+                template.content.querySelector('.relatedTermsList').appendChild(generateTermItem(term, true))
+            }
+        });
+    } else {
+        template.content.querySelector('.relatedTerms').classList.add('hide');
+    }
+
+    const otherLanguageExamples = wordLinkTerms[decodedTermlink].otherLanguageExamples;
+
+    if (otherLanguageExamples.length > 0) {
+        otherLanguageExamples.forEach(function(term) {
+            if(term.length > 0) {
+                template.content.querySelector('.otherLanguageExamplesList').appendChild(generateTermItem(term))
+            }
+        });
+    } else {
+        template.content.querySelector('.otherLanguageExamples').classList.add('hide');
+    }
+
+    document.getElementById("termDetails").innerHTML = template.innerHTML;
+    document.getElementById("termList").classList.add("hide");
+    document.getElementById("termDetails").classList.remove("hide");
+}
+
+function  generateTermItem(term, clickable = false) {
+  const li = document.createElement('li');
+
+  if (clickable) {
+    const a = document.createElement('a');
+    a.href = "#";
+    a.setAttribute("onclick", "showTermDetails(event, '"+term+"')");
+    a.innerText = term;
+    li.append(a);
+  } else {
+    li.innerHTML = term
+  }
+
+  console.log(term, wordLinkTerms[term]);
+  return li;
 }
 
 function showTermList(evt){
-    document.getElementById("termList").classList.toggle("hide");
-    document.getElementById("termDetails").classList.toggle("hide");
+    document.getElementById("termDetails").classList.add("hide");
+    document.getElementById("termList").classList.remove("hide");
     filterList("");
     searchInput.value = "";
 }

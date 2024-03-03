@@ -640,20 +640,28 @@ input:checked + .slider:before {
 }
 
 /* style for wordlinks */
-.term-header {
+.termHeader {
     display: flex;
     align-items: center;
 }
+.termHeader h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 38px;
+    text-transform: capitalize;
+}
 
-.term-header  a {
+.termHeader  a {
     margin:0 10px 10px;
     color: var(--medDark);
 }
-.term-header  a:hover {
+.termHeader a:hover {
     color: #337ab7;
 }
 
-.term-explanation {
+.termExplanation {
+    /* border: 1px solid #d3d3d3; */
     max-height: 190px;
     overflow-y: scroll;
     scroll-behavior: smooth;
@@ -675,16 +683,17 @@ input:checked + .slider:before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: capitalize;
 }
 
-#termList {
+.termList {
     display: flex;
     flex-direction: column;
     height: fit-content;
     max-height: 310px;
 }
 
-.term-list .form-control {
+.termList .form-control {
     margin: 10px 0 15px;
     height: 35px;
     line-height: 35px;
