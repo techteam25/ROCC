@@ -322,12 +322,14 @@ function openTab(evt, contentName){
     tabcontent = document.getElementsByClassName("tabcontent");
     for(i=0; i<tabcontent.length; i++){
         tabcontent[i].style.display = "none";
+        tabcontent[i].classList.remove('active')
     }
     tablinks = document.getElementsByClassName("tablinks");
     for(i=0; i<tablinks.length; i++){
         tablinks[i].className = tablinks[i].className.replace("active", "");
     }
     document.getElementById(contentName).style.display = "block";
+    document.getElementById(contentName).classList.add('active');
     evt.currentTarget.className += " active";
 }
 
@@ -441,6 +443,11 @@ function filterList(searchTerm) {
 
 function showTermDetails(evt, term){
     evt.preventDefault();
+    // show WordLinks tab if not visible
+    if(!document.getElementById('WordLinks').classList.contains('active')) {
+        openTab(event, 'WordLinks')
+    }
+
     const decodedTermlink = decodeURIComponent(term.toLowerCase());
     console.log("showTermDetails",decodedTermlink, wordLinkTerms[decodedTermlink]);
     const tl = document.querySelector('#termDetailTemplate');
@@ -457,7 +464,7 @@ function showTermDetails(evt, term){
 
     if (alternateTerms.length > 0) {
         alternateTerms.forEach(function(term) {
-            if(term.length > 0) {
+            if(term.trim().length > 0) {
                 template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term))
             }
         });
@@ -466,7 +473,7 @@ function showTermDetails(evt, term){
     const relatedTerms  =   wordLinkTerms[decodedTermlink].relatedTerms;
     if (relatedTerms.length > 0) {
         relatedTerms.forEach(function(term) {
-            if(term.length > 0) {
+            if(term.trim().length > 0) {
                 template.content.querySelector('.relatedTermsList').appendChild(generateTermItem(term, true))
             }
         });
@@ -478,7 +485,7 @@ function showTermDetails(evt, term){
 
     if (otherLanguageExamples.length > 0) {
         otherLanguageExamples.forEach(function(term) {
-            if(term.length > 0) {
+            if(term.trim().length > 1) {
                 template.content.querySelector('.otherLanguageExamplesList').appendChild(generateTermItem(term))
             }
         });

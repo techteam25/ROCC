@@ -44,68 +44,49 @@ $handle = fopen($wordLinkFilePath, 'r');
 
 $wordLinkTerms = [];
 
-
+// parse header row and ignore data
+fgetcsv($handle);
 // Read the file line by line
 while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
-    // Parse the line using fgetcsv
-    $row = fgetcsv($handle, 0, ",");
+    // skip empty row if there is any
+    if (isset($row[1]) && !empty($row[1])) {
+        $alternateForms = "";
+        $backTranslations = "";
+        $relatedTerms = "";
 
-    // Check if parsing was successful and the row is not empty
-    if ($row !== false && !empty($row)) {
-        // Add the parsed row to the data array
-
-        // CSV template contains
-        // ,term,Alternate forms and synonyms.,Other language examples (back translations),Meaning notes. Definitions.,Related (but different) terms,other consultant suggestions / comments / entries,Galen's rationale,Galen's notes/drafts,,,,,,,,,,,,,,,,,,,,,,,
-        if (!empty($row[1])) {
-
-            $term = trim($row[1]);
-            if ($term === 'demon') {
-                // echo "<pre>"; print_r($row);
-            }
-
-            $alternateForms = "";
-            $backTranslations = "";
-            $relatedTerms = "";
-
-            if (!empty($row[2])) {
-                $alternateForms =  explode(",", $row[2]);
-            }
-
-            if (!empty($row[3])) {
-                $backTranslations =  explode(";", $row[3]);
-            }
-
-
-            if (!empty($row[5])) {
-                $relatedTerms =  explode(",", $row[5]);
-            }
-
-            $wordLinkTerms[strtolower(trim($row[1]))] = [
-                "alternateTerms" => $alternateForms,
-                // "backTranslations" => $backTranslations,
-                "backTranslations" => "No back translation has been uploaded",
-                "otherLanguageExamples" => $backTranslations,
-                "notes" => trim($row[4] ?? ""),
-                "relatedTerms" => $relatedTerms,
-                "otherComments" => trim($row[6] ?? ""),
-                "galensRationale" => trim($row[7] ?? ""),
-                "galensNotes" => trim($row[8] ?? ""),
-                "otherConsultantComments" => trim($row[9] ?? ""),
-                "otherConsultantSuggestions" => trim($row[10] ?? ""),
-            ];
+        if (!empty($row[2])) {
+            $alternateForms =  explode(",", $row[2]);
         }
+
+        if (!empty($row[3])) {
+            $backTranslations =  explode(";", $row[3]);
+        }
+
+
+        if (!empty($row[5])) {
+            $relatedTerms =  explode(",", $row[5]);
+        }
+
+        $wordLinkTerms[strtolower(trim($row[1]))] = [
+            "alternateTerms" => $alternateForms,
+            // "backTranslations" => $backTranslations,
+            "backTranslations" => "No back translation has been uploaded",
+            "otherLanguageExamples" => $backTranslations,
+            "notes" => trim($row[4] ?? ""),
+            "relatedTerms" => $relatedTerms,
+            "otherComments" => trim($row[6] ?? ""),
+            "galensRationale" => trim($row[7] ?? ""),
+            "galensNotes" => trim($row[8] ?? ""),
+            "otherConsultantComments" => trim($row[9] ?? ""),
+            "otherConsultantSuggestions" => trim($row[10] ?? ""),
+        ];
     }
 }
 
 // Close the file handle
 fclose($handle);
 ksort($wordLinkTerms);
-
-// echo "<pre>"; print_r($wordLinkTerms["demon"]);
-// exit;
 ?>
-
-
 <!doctype html>
 <html lang = "en-US">
 
@@ -205,7 +186,7 @@ ksort($wordLinkTerms);
         var externalWebsocketPort = <?=json_encode($GLOBALS['externalWebsocketPort'])?>;
         var externalWebsocketHost = <?=json_encode($GLOBALS['externalWebsocketHost'])?>;
 
-        var wordLinkTerms = <?= json_encode($wordLinkTerms) ?>;
+        const wordLinkTerms = <?= json_encode($wordLinkTerms) ?>;
         </script>
 
     </head>
@@ -381,9 +362,9 @@ ksort($wordLinkTerms);
                         <button class="tablinks" onclick="openTab(event, 'bible-t')"> Bible Text Lookup </button>
                         <button class="tablinks" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                     </div>
-                    <div id="bible-t" class="tabcontent"><p>Bible text lookup plugin here</p></div>
-                    <div id="WordLinks" class="tabcontent active">
-                        <div id="termList" class="term-list hide1">
+                    <div id="bible-t" class="tabcontent active"><p>Bible text lookup plugin here</p></div>
+                    <div id="WordLinks" class="tabcontent">
+                        <div id="termList" class="term-list">
                             <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
                             <div class="list-group">
                                 <button id="noTermFound" type="button" class="hide list-group-item">Search term not matched</button>
@@ -398,7 +379,7 @@ ksort($wordLinkTerms);
                 </div>
             </div>
         </div>
-
+        <script src="wordlink-search-tree.js"></script>
         <script>
 <?php
     if (file_exists($storyjsonfile))
@@ -418,7 +399,18 @@ ksort($wordLinkTerms);
                 document.getElementById("lf-t").innerHTML = currSlide.reference;
             }
             fileDisplayArea = document.getElementById("mainText");
-            fileDisplayArea.innerHTML = currSlide.content;
+
+            const wordLinkPhrases = window.WSL.splitOnWordLinks(currSlide.content);
+            let enrichedContent = '';
+            wordLinkPhrases.forEach(word => {
+                if (wordLinkTerms.hasOwnProperty(word.toLowerCase())) {
+                    enrichedContent += `<a href='#' onclick="showTermDetails(event, '${word}')">${word}</a>`;
+                } else {
+                    enrichedContent += word;
+                }
+            });
+
+            fileDisplayArea.innerHTML = enrichedContent.trim();
         }
 <?php
     }
