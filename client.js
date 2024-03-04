@@ -441,8 +441,8 @@ function filterList(searchTerm) {
 
 function showTermDetails(evt, term){
     evt.preventDefault();
-    const decodedTermlink = decodeURIComponent(term);
-    console.log("showTermDetails",term, wordLinkTerms[decodedTermlink]);
+    const decodedTermlink = decodeURIComponent(term.toLowerCase());
+    console.log("showTermDetails",decodedTermlink, wordLinkTerms[decodedTermlink]);
     const tl = document.querySelector('#termDetailTemplate');
 
     const template = tl.cloneNode(true);
@@ -495,6 +495,7 @@ function  generateTermItem(term, clickable = false) {
   const li = document.createElement('li');
 
   if (clickable) {
+    console.log("term for link", term)
     const a = document.createElement('a');
     a.href = "#";
     a.setAttribute("onclick", "showTermDetails(event, '"+term+"')");

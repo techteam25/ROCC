@@ -44,13 +44,9 @@ $handle = fopen($wordLinkFilePath, 'r');
 
 $wordLinkTerms = [];
 
-// Read the file line by line
-while (($line = fgets($handle)) !== false) {
-    // Skip empty lines and lines starting with "#" (comments)
-    if (trim($line) === "" || trim($line)[0] === "#") {
-        continue;
-    }
 
+// Read the file line by line
+while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
     // Parse the line using fgetcsv
     $row = fgetcsv($handle, 0, ",");
 
