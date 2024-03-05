@@ -667,6 +667,9 @@ input:checked + .slider:before {
     scroll-behavior: smooth;
     scrollbar-gutter: unset;
 }
+.termExplanation b {
+    text-transform: uppercase;
+}
 
 .term-list .list-group {
     max-height: 236px;
@@ -676,6 +679,7 @@ input:checked + .slider:before {
     height: 100%;
     border-top: .5px solid #ddd;
     border-bottom: .5px solid #ddd;
+    margin-top: 15px;
 }
 
 .list-group-item {
@@ -697,4 +701,33 @@ input:checked + .slider:before {
     margin: 10px 0 15px;
     height: 35px;
     line-height: 35px;
+}
+.relatedTermsList {
+    padding-left: 10px;
+    list-style: none;
+}
+.relatedTermsList li {
+    display: inline;
+    padding: 0 2px;
+}
+
+.alternateTerms {
+    padding-left: 5px;
+    list-style: none;
+    font-weight: 500;
+}
+.alternateTerms li {
+    display: inline;
+}
+.relatedTermsList li:after,
+.alternateTerms li:after {
+    content: ", ";
+}
+
+.relatedTermsList li:last-child:after,
+.alternateTerms li:last-child:after {
+    content: "";
+}
+.otherLanguageExamplesList {
+    padding-left: 20px;
 }

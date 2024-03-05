@@ -34,14 +34,8 @@ if (array_key_exists('story', $_GET)) {
     RespondWithError(400, 'No Story Requested');
 }
 
-// TODO:  Confirm wordlink file & story relatioinship
-// TODO: confirm wordlink file locatoin
-// TODO: confirm backtranlation field in the csv file
 $wordLinkFilePath =  __DIR__ . '/data/' . ($language ?: "en")     . '/wordlinks.csv';
-
-
 $handle = fopen($wordLinkFilePath, 'r');
-
 $wordLinkTerms = [];
 
 // parse header row and ignore data
@@ -62,14 +56,13 @@ while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
             $backTranslations =  explode(";", $row[3]);
         }
 
-
         if (!empty($row[5])) {
             $relatedTerms =  explode(",", $row[5]);
         }
 
         $wordLinkTerms[strtolower(trim($row[1]))] = [
             "alternateTerms" => $alternateForms,
-            // "backTranslations" => $backTranslations,
+            // "backTranslations" => $backTranslations, // TODO waiting for confirmation
             "backTranslations" => "No back translation has been uploaded",
             "otherLanguageExamples" => $backTranslations,
             "notes" => trim($row[4] ?? ""),
@@ -369,9 +362,7 @@ ksort($wordLinkTerms);
                             <div class="list-group">
                                 <button id="noTermFound" type="button" class="hide list-group-item">Search term not matched</button>
                                 <?php foreach ($wordLinkTerms as $key => $value): ?>
-                                <button onclick="showTermDetails(event, '<?= rawurlencode($key) ?>')" type="button" class="list-group-item">
-                                    <?= $key ?>
-                                </button>
+                                <button onclick="showTermDetails(event, '<?= rawurlencode($key) ?>')" type="button" class="list-group-item"><?= $key ?></button>
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -488,8 +479,8 @@ ksort($wordLinkTerms);
             </div>
             <div class="termExplanation">
                 <ul class="alternateTerms"></ul>
-                <div><p class="notes"></p></div>
-                <div><b>BACK TRANSLATION:</b><p class="backTranslation"></p>
+                <div><b>Meaning notes. Definitions:</b><p class="notes"></p></div>
+                <div><b>Back translation:</b><p class="backTranslation"></p>
                 <div>
                 <div class="relatedTerms"><b>Related (but different) terms:</b>
                     <ul class="relatedTermsList"></ul>

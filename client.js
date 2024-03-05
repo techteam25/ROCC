@@ -406,7 +406,6 @@ for (let i in approvals) {
 }
 
 const searchInput = document.getElementById("termListSearchBox");
-const listContainer = document.getElementById("termList");
 
 // Bind search input change event to filter function
 searchInput.addEventListener("input", (event) => {
@@ -417,10 +416,12 @@ searchInput.addEventListener("input", (event) => {
 function filterList(searchTerm) {
     const searchTermLowerCase = searchTerm.toLowerCase();
     var searchItermFound = false;
+    const listContainer = document.getElementById("termList");
     listContainer.querySelectorAll("button").forEach(listItem => {
       const itemText = listItem.textContent.toLowerCase();
-      const isMatch = itemText.includes(searchTermLowerCase);
+      const isMatch = itemText.startsWith(searchTermLowerCase);
 
+      // ignore no term found message item
       if(listItem.id === "noTermFound"){
         return;
       }
@@ -432,7 +433,7 @@ function filterList(searchTerm) {
       }
     });
 
-    // display no term found element if no item is visibles
+    // display no term found element if no item is visible
     if(searchItermFound){
         document.getElementById("noTermFound").classList.add("hide");
     } else {
@@ -449,7 +450,6 @@ function showTermDetails(evt, term){
     }
 
     const decodedTermlink = decodeURIComponent(term.toLowerCase());
-    console.log("showTermDetails",decodedTermlink, wordLinkTerms[decodedTermlink]);
     const tl = document.querySelector('#termDetailTemplate');
 
     const template = tl.cloneNode(true);
@@ -463,8 +463,9 @@ function showTermDetails(evt, term){
     template.content.querySelector('ul').innerHTML = '';
 
     if (alternateTerms.length > 0) {
-        alternateTerms.forEach(function(term) {
-            if(term.trim().length > 0) {
+        alternateTerms.forEach(function(t) {
+            const term = t.trim()
+            if(term.length > 0) {
                 template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term))
             }
         });
@@ -472,8 +473,9 @@ function showTermDetails(evt, term){
 
     const relatedTerms  =   wordLinkTerms[decodedTermlink].relatedTerms;
     if (relatedTerms.length > 0) {
-        relatedTerms.forEach(function(term) {
-            if(term.trim().length > 0) {
+        relatedTerms.forEach(function(t) {
+            const term = t.trim()
+            if(term.length > 0) {
                 template.content.querySelector('.relatedTermsList').appendChild(generateTermItem(term, true))
             }
         });
@@ -484,8 +486,9 @@ function showTermDetails(evt, term){
     const otherLanguageExamples = wordLinkTerms[decodedTermlink].otherLanguageExamples;
 
     if (otherLanguageExamples.length > 0) {
-        otherLanguageExamples.forEach(function(term) {
-            if(term.trim().length > 1) {
+        otherLanguageExamples.forEach(function(t) {
+            const term = t.trim()
+            if(term.length > 0) {
                 template.content.querySelector('.otherLanguageExamplesList').appendChild(generateTermItem(term))
             }
         });
@@ -500,9 +503,7 @@ function showTermDetails(evt, term){
 
 function  generateTermItem(term, clickable = false) {
   const li = document.createElement('li');
-
-  if (clickable) {
-    console.log("term for link", term)
+  if (clickable && wordLinkTerms.hasOwnProperty(term)) {
     const a = document.createElement('a');
     a.href = "#";
     a.setAttribute("onclick", "showTermDetails(event, '"+term+"')");
@@ -512,7 +513,6 @@ function  generateTermItem(term, clickable = false) {
     li.innerHTML = term
   }
 
-  console.log(term, wordLinkTerms[term]);
   return li;
 }
 
