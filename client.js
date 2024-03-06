@@ -493,6 +493,7 @@ function showTermDetails(evt, term) {
         }
     });
 
+    getWordLinkRecording(decodedTermlink);
     document.getElementById("termList").classList.add("hide");
     document.getElementById("termDetails").classList.remove("hide");
 }
@@ -516,4 +517,30 @@ function showTermList(evt) {
     document.getElementById("termList").classList.remove("hide");
     filterList("");
     searchInput.value = "";
+}
+
+function getWordLinkRecording(term) {
+       $.ajax({
+        url: "API/GetWordLinkRecording.php",
+        data: {
+            "term": term,
+            "PhoneId": projectId,
+        },
+        type: "POST",
+        success: function (data) {
+            if (data.Success)
+            {
+                document.querySelector('p.backTranslation').textContent = data.backTranslation;
+                if (data.audioFileLink.length > 0) {
+                    document.querySelector('.wordLinkAudio').src = `${data.audioFileLink}`;
+                    return
+                }
+            }
+
+            const noAudioFileMessage = document.createElement('p');
+            noAudioFileMessage.classList.add('noAudioFileMessage');
+            noAudioFileMessage.textContent = "No recording uploaded.";
+            document.querySelector('.wordLinkAudio').replaceWith(noAudioFileMessage)
+        },
+    });
 }

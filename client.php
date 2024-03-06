@@ -478,9 +478,8 @@ ksort($wordLinkTerms);
                 </a>
                 <h2 style="margin-top:auto;"></h2>
             </div>
-            <div class="w-audio">
-                <audio controls>
-                    <source class="wholeAudioSource" src="" type="audio/x-m4a">
+            <div class="w-audio wordLinkAudioCont">
+                <audio class="wordLinkAudio" controls>
                 </audio>
             </div>
             <div class="termExplanation">

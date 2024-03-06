@@ -703,16 +703,16 @@ input:checked + .slider:before {
     line-height: 35px;
 }
 .relatedTermsList {
-    padding-left: 10px;
+    padding-left: 0px;
     list-style: none;
 }
 .relatedTermsList li {
     display: inline;
-    padding: 0 2px;
+    padding: 0 1px;
 }
 
 .alternateTerms {
-    padding-left: 5px;
+    padding-left: 1px;
     list-style: none;
     font-weight: 500;
 }
@@ -730,4 +730,15 @@ input:checked + .slider:before {
 }
 .otherLanguageExamplesList {
     padding-left: 20px;
+}
+a {
+    cursor: pointer !important;
+}
+
+.wordLinkAudioCont {
+    margin: 5px 0;
+}
+p.noAudioFileMessage {
+    width: 100%;
+    margin: 0;
 }
