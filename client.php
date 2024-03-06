@@ -380,29 +380,35 @@ ksort($wordLinkTerms);
 ?>
         //when transferring from php to json just output the string, otherwise escaped charcacters are not handled properly
         let json_a = <?php echo $storyjsonstring ?>;
-        function readProperties(slideNumber)
-        {
+        function readProperties(slideNumber) {
             document.getElementById("storyTitle").innerHTML = json_a.title;
             let currSlide = json_a.slides[slideNumber]
-            if(currSlide.reference == ""){
+            if (currSlide.reference == "") {
                 document.getElementById("lf-t").innerHTML = "&nbsp;";
-            } else{
+            } else {
                 document.getElementById("lf-t").innerHTML = currSlide.reference;
             }
-            fileDisplayArea = document.getElementById("mainText");
 
             const wordLinkPhrases = window.WSL.splitOnWordLinks(currSlide.content);
-            let enrichedContent = '';
+            const slideContentContainer = document.createElement('p');
             wordLinkPhrases.forEach(word => {
                 if (wordLinkTerms.hasOwnProperty(word.toLowerCase())) {
-                    enrichedContent += `<a href='#' onclick="showTermDetails(event, '${word}')">${word}</a>`;
+                    const link = document.createElement('a');
+                    link.textContent = word;
+                    link.addEventListener('click', (event) => {
+                        showTermDetails(event, word);
+                    });
+
+                    // append word link to display term details
+                    slideContentContainer.append(link)
                 } else {
-                    enrichedContent += word;
+                    slideContentContainer.append(word);
                 }
             });
 
-            fileDisplayArea.innerHTML = enrichedContent.trim();
+            document.getElementById("mainText").replaceChildren(slideContentContainer);
         }
+
 <?php
     }
     else

@@ -406,7 +406,6 @@ for (let i in approvals) {
 }
 
 const searchInput = document.getElementById("termListSearchBox");
-
 // Bind search input change event to filter function
 searchInput.addEventListener("input", (event) => {
     const searchTerm = event.target.value;
@@ -418,23 +417,21 @@ function filterList(searchTerm) {
     var searchItermFound = false;
     const listContainer = document.getElementById("termList");
     listContainer.querySelectorAll("button").forEach(listItem => {
-      const itemText = listItem.textContent.toLowerCase();
-      const isMatch = itemText.startsWith(searchTermLowerCase);
+        // ignore no term found message item
+        if (listItem.id === "noTermFound") {
+            return;
+        }
+        const itemText = listItem.textContent.toLowerCase();
+        const isMatch = itemText.includes(searchTermLowerCase);
+        listItem.style.display = isMatch ? "block" : "none";
 
-      // ignore no term found message item
-      if(listItem.id === "noTermFound"){
-        return;
-      }
-
-      listItem.style.display = isMatch ? "block" : "none";
-
-      if (isMatch){
-        searchItermFound = true;
-      }
+        if (isMatch) {
+            searchItermFound = true;
+        }
     });
 
     // display no term found element if no item is visible
-    if(searchItermFound){
+    if (searchItermFound) {
         document.getElementById("noTermFound").classList.add("hide");
     } else {
         document.getElementById("noTermFound").classList.remove("hide");
@@ -442,40 +439,35 @@ function filterList(searchTerm) {
 }
 
 
-function showTermDetails(evt, term){
+function showTermDetails(evt, term) {
     evt.preventDefault();
     // show WordLinks tab if not visible
-    if(!document.getElementById('WordLinks').classList.contains('active')) {
-        openTab(event, 'WordLinks')
+    if (!document.getElementById('WordLinks').classList.contains('active')) {
+        openTab(event, 'WordLinks');
     }
 
     const decodedTermlink = decodeURIComponent(term.toLowerCase());
     const tl = document.querySelector('#termDetailTemplate');
-
+    // clone template and append available data
     const template = tl.cloneNode(true);
-
     const headerEl = template.content.querySelector('.termHeader h2');
     headerEl.innerHTML = decodedTermlink;
-    template.content.querySelector('.notes').innerHTML = wordLinkTerms[decodedTermlink].notes;
-    template.content.querySelector('.backTranslation').innerHTML = wordLinkTerms[decodedTermlink].backTranslations;
+    template.content.querySelector('.notes').textContent = wordLinkTerms[decodedTermlink].notes;
+    template.content.querySelector('.backTranslation').textContent = wordLinkTerms[decodedTermlink].backTranslations;
 
     const alternateTerms = wordLinkTerms[decodedTermlink].alternateTerms;
-    template.content.querySelector('ul').innerHTML = '';
-
     if (alternateTerms.length > 0) {
-        alternateTerms.forEach(function(t) {
-            const term = t.trim()
-            if(term.length > 0) {
-                template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term))
+        alternateTerms.forEach(function(term) {
+            if (term.length > 1) {
+                template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term));
             }
         });
     }
 
-    const relatedTerms  =   wordLinkTerms[decodedTermlink].relatedTerms;
+    const relatedTerms = wordLinkTerms[decodedTermlink].relatedTerms;
     if (relatedTerms.length > 0) {
-        relatedTerms.forEach(function(t) {
-            const term = t.trim()
-            if(term.length > 0) {
+        relatedTerms.forEach(function(term) {
+            if (term.length > 1) {
                 template.content.querySelector('.relatedTermsList').appendChild(generateTermItem(term, true))
             }
         });
@@ -484,11 +476,9 @@ function showTermDetails(evt, term){
     }
 
     const otherLanguageExamples = wordLinkTerms[decodedTermlink].otherLanguageExamples;
-
     if (otherLanguageExamples.length > 0) {
-        otherLanguageExamples.forEach(function(t) {
-            const term = t.trim()
-            if(term.length > 0) {
+        otherLanguageExamples.forEach(function(term) {
+            if (term.length > 1) {
                 template.content.querySelector('.otherLanguageExamplesList').appendChild(generateTermItem(term))
             }
         });
@@ -496,27 +486,32 @@ function showTermDetails(evt, term){
         template.content.querySelector('.otherLanguageExamples').classList.add('hide');
     }
 
-    document.getElementById("termDetails").innerHTML = template.innerHTML;
+    document.getElementById("termDetails").replaceChildren(template.content);
+    document.querySelector('ul.relatedTermsList').addEventListener("click", function(event) {
+        if (event.target.matches('a')) {
+            showTermDetails(event, event.target.textContent)
+        }
+    });
+
     document.getElementById("termList").classList.add("hide");
     document.getElementById("termDetails").classList.remove("hide");
 }
 
-function  generateTermItem(term, clickable = false) {
-  const li = document.createElement('li');
-  if (clickable && wordLinkTerms.hasOwnProperty(term)) {
-    const a = document.createElement('a');
-    a.href = "#";
-    a.setAttribute("onclick", "showTermDetails(event, '"+term+"')");
-    a.innerText = term;
-    li.append(a);
-  } else {
-    li.innerHTML = term
-  }
+function generateTermItem(t, clickable = false) {
+    let term = t.trim().toLowerCase();
+    const li = document.createElement('li');
+    if (clickable && wordLinkTerms.hasOwnProperty(term)) {
+        const a = document.createElement('a');
+        a.textContent = term;
+        li.append(a);
+    } else {
+        li.textContent = term
+    }
 
-  return li;
+    return li;
 }
 
-function showTermList(evt){
+function showTermList(evt) {
     document.getElementById("termDetails").classList.add("hide");
     document.getElementById("termList").classList.remove("hide");
     filterList("");
