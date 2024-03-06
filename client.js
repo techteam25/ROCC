@@ -539,7 +539,7 @@ function getWordLinkRecording(term) {
 
             const noAudioFileMessage = document.createElement('p');
             noAudioFileMessage.classList.add('noAudioFileMessage');
-            noAudioFileMessage.textContent = "No recording uploaded.";
+            noAudioFileMessage.textContent = "No recording uploaded";
             document.querySelector('.wordLinkAudio').replaceWith(noAudioFileMessage)
         },
     });
