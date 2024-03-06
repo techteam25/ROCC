@@ -662,7 +662,8 @@ input:checked + .slider:before {
 
 .termExplanation {
     /* border: 1px solid #d3d3d3; */
-    max-height: 190px;
+    max-height: 262px;
+    height: calc(100vh);
     overflow-y: scroll;
     scroll-behavior: smooth;
     scrollbar-gutter: unset;
@@ -741,4 +742,7 @@ a {
 p.noAudioFileMessage {
     width: 100%;
     margin: 0;
+}
+#WordLinks {
+    height: 323px;
 }

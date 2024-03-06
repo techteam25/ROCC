@@ -478,11 +478,10 @@ ksort($wordLinkTerms);
                 </a>
                 <h2 style="margin-top:auto;"></h2>
             </div>
-            <div class="w-audio wordLinkAudioCont">
-                <audio class="wordLinkAudio" controls>
-                </audio>
-            </div>
             <div class="termExplanation">
+                <div class="w-audio wordLinkAudioCont">
+                    <audio class="wordLinkAudio" controls></audio>
+                </div>
                 <ul class="alternateTerms"></ul>
                 <div><b>Meaning notes. Definitions:</b><p class="notes"></p></div>
                 <div><b>Back translation:</b><p class="backTranslation"></p>
