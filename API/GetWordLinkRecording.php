@@ -1,7 +1,9 @@
 <?php
 require_once('utils/Model.php');
 require_once('utils/Respond.php');
+
 use storyproducer\Respond;
+
 session_start();
 
 
@@ -19,30 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     # check if project exists for the given androidId
     $projectId = $model->GetProjectId($androidId);
     if (!$projectId) {
-        RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadWordLinkRecording.php");
+        RespondWithError(404, "The requested term has not been registered.");
     }
 
     // get wordlink recording
     $wordlinkRecoding = $model->GetWordLinkRecording($projectId, $term);
 
-    if(!$wordlinkRecoding) {
-        Respond\error("Word link recording not found.");
+    if (!$wordlinkRecoding) {
+        RespondWithError(404, "The requested term has not been uploaded from the requested PhoneId.");
         exit;
     }
-             
-    $audioFile = "Projects/". $androidId . "/WordLinks/" . $wordlinkRecoding['fileName'];
+
+    $audioFile = "Projects/" . $androidId . "/WordLinks/" . $wordlinkRecoding['fileName'];
 
     $audioFileLink = "";
     // return the audio file link if exists
-    if (file_exists($GLOBALS['filesRoot'] . "/" . $audioFile) ) {
-        $audioFileLink = "Files/". $audioFile;
+    if (file_exists($GLOBALS['filesRoot'] . "/" . $audioFile)) {
+        $audioFileLink = "Files/" . $audioFile;
     }
 
     $data = [
         'audioFileLink' => $audioFileLink,
         'backTranslation' => $wordlinkRecoding['textBackTranslation'],
     ];
-    
+
     Respond\successData($data);
 }
 
