@@ -414,7 +414,7 @@ searchInput.addEventListener("input", (event) => {
 
 function filterList(searchTerm) {
     const searchTermLowerCase = searchTerm.toLowerCase();
-    var searchItermFound = false;
+    var searchItemFound = false;
     const listContainer = document.getElementById("termList");
     listContainer.querySelectorAll("button").forEach(listItem => {
         // ignore no term found message item
@@ -426,12 +426,12 @@ function filterList(searchTerm) {
         listItem.style.display = isMatch ? "block" : "none";
 
         if (isMatch) {
-            searchItermFound = true;
+            searchItemFound = true;
         }
     });
 
     // display no term found element if no item is visible
-    if (searchItermFound) {
+    if (searchItemFound) {
         document.getElementById("noTermFound").classList.add("hide");
     } else {
         document.getElementById("noTermFound").classList.remove("hide");
@@ -527,20 +527,36 @@ function getWordLinkRecording(term) {
             "PhoneId": projectId,
         },
         type: "POST",
+        error: function() {
+            displayNoBackTranslationMessage();
+            displayNoRecordingMessage();
+        },
         success: function (data) {
-            if (data.Success)
-            {
+            if (data.backTranslation.length > 0){
                 document.querySelector('p.backTranslation').textContent = data.backTranslation;
-                if (data.audioFileLink.length > 0) {
-                    document.querySelector('.wordLinkAudio').src = `${data.audioFileLink}`;
-                    return
-                }
+            } else {
+                displayNoBackTranslationMessage();
             }
 
-            const noAudioFileMessage = document.createElement('p');
-            noAudioFileMessage.classList.add('noAudioFileMessage');
-            noAudioFileMessage.textContent = "No recording uploaded";
-            document.querySelector('.wordLinkAudio').replaceWith(noAudioFileMessage)
+            if (data.audioFileLink.length > 0) {
+                document.querySelector('.wordLinkAudio').src = `${data.audioFileLink}`;
+            } else {
+                displayNoRecordingMessage();
+            }
         },
     });
+}
+
+function displayNoRecordingMessage() {
+    const noAudioFileMessage = document.createElement('p');
+    noAudioFileMessage.classList.add('noAudioFileMessage');
+    noAudioFileMessage.textContent = "No recording uploaded.";
+    document.querySelector('.wordLinkAudio').replaceWith(noAudioFileMessage)
+}
+
+function displayNoBackTranslationMessage() {
+    const noBackTranslationMessage = document.createElement('p');
+    noBackTranslationMessage.classList.add('noBackTranslationMessage');
+    noBackTranslationMessage.textContent = "No back translation has been uploaded.";
+    document.querySelector('.backTranslation').replaceWith(noBackTranslationMessage);
 }

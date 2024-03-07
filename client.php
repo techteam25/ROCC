@@ -63,7 +63,6 @@ while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
 
         $wordLinkTerms[strtolower(trim($row[1]))] = [
             "alternateTerms" => $alternateForms,
-            "backTranslations" => "No back translation has been uploaded",
             "otherLanguageExamples" => $backTranslations,
             "notes" => trim($row[4] ?? ""),
             "relatedTerms" => $relatedTerms,
@@ -349,14 +348,13 @@ ksort($wordLinkTerms);
                         </div>
                     </div>
                 </div>
-
                 <div class ="bible">
                     <div class="tabHeader">
                         <button class="tablinks" onclick="openTab(event, 'bible-t')"> Bible Text Lookup </button>
                         <button class="tablinks" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                     </div>
                     <div id="bible-t" class="tabcontent active"><p>Bible text lookup plugin here</p></div>
-                    <div id="WordLinks" class="tabcontent">
+                    <div id="WordLinks" class="tabcontent wordlinks">
                         <div id="termList" class="term-list">
                             <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
                             <div class="list-group">
@@ -367,8 +365,8 @@ ksort($wordLinkTerms);
                             </div>
                         </div>
                         <div id="termDetails" class="hide"></div>
+                    </div>
                 </div>
-            </div>
         </div>
         <script src="wordlink-search-tree.js"></script>
         <script>
