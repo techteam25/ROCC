@@ -639,110 +639,140 @@ input:checked + .slider:before {
     background: var(--medDark);
 }
 
+.transcripts #mainText a {
+	cursor: pointer;
+}
+
 /* style for wordlinks */
-.termHeader {
-    display: flex;
-    align-items: center;
-}
-.termHeader h2 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 38px;
-    text-transform: capitalize;
+.wordlinks {
+	height: 323px;
 }
 
-.termHeader  a {
-    margin:0 10px 10px;
-    color: var(--medDark);
-}
-.termHeader a:hover {
-    color: #337ab7;
+.wordlinks .term-list .form-control {
+	margin: 8px 0 13px;
+	height: 35px;
+	line-height: 35px;
 }
 
-.termExplanation {
-    /* border: 1px solid #d3d3d3; */
-    max-height: 262px;
-    height: calc(100vh);
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    scrollbar-gutter: unset;
-}
-.termExplanation b {
-    text-transform: uppercase;
+.wordlinks .term-list .list-group {
+	max-height: 247px;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+	scrollbar-gutter: unset;
+	height: 100%;
+	border-top: .5px solid #ddd;
+	border-bottom: .5px solid #ddd;
 }
 
-.term-list .list-group {
-    max-height: 236px;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    scrollbar-gutter: unset;
-    height: 100%;
-    border-top: .5px solid #ddd;
-    border-bottom: .5px solid #ddd;
-    margin-top: 15px;
+.wordlinks .term-list .list-group-item {
+	flex: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-transform: capitalize;
 }
 
-.list-group-item {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-transform: capitalize;
+.wordlinks .termHeader {
+	display: flex;
+	align-items: center;
 }
 
-.termList {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    max-height: 310px;
+.wordlinks .termHeader h2 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 38px;
+	text-transform: capitalize;
+	margin: 0;
 }
 
-.termList .form-control {
-    margin: 10px 0 15px;
-    height: 35px;
-    line-height: 35px;
-}
-.relatedTermsList {
-    padding-left: 0px;
-    list-style: none;
-}
-.relatedTermsList li {
-    display: inline;
-    padding: 0 1px;
+.wordlinks .termHeader a {
+	margin: 0 10px 0 0;
+	color: var(--medDark);
 }
 
-.alternateTerms {
-    padding-left: 1px;
-    list-style: none;
-    font-weight: 500;
-}
-.alternateTerms li {
-    display: inline;
-}
-.relatedTermsList li:after,
-.alternateTerms li:after {
-    content: ", ";
+.wordlinks .termHeader a:hover {
+	color: #337ab7;
 }
 
-.relatedTermsList li:last-child:after,
-.alternateTerms li:last-child:after {
-    content: "";
-}
-.otherLanguageExamplesList {
-    padding-left: 20px;
-}
-a {
-    cursor: pointer !important;
+.wordlinks .termExplanation {
+	max-height: 262px;
+	height: calc(100vh);
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+	scrollbar-gutter: unset;
+	position: relative;
 }
 
-.wordLinkAudioCont {
-    margin: 5px 0;
+.wordlinks .termExplanation a {
+	cursor: pointer;
 }
-p.noAudioFileMessage {
-    width: 100%;
-    margin: 0;
+
+.wordlinks .termExplanation::before {
+	content: '';
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	display: block;
+	height: 1px;
+	z-index: 1;
+	background: rgba(0,0,0,.32);
 }
-#WordLinks {
-    height: 323px;
+
+.wordlinks .termExplanation::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	display: block;
+	width: 100%;
+	height: 1rem;
+	z-index: 1;
+	background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+}
+
+.wordlinks .termExplanation b {
+	text-transform: uppercase;
+}
+
+.wordlinks .relatedTermsList {
+	padding-left: 0px;
+	list-style: none;
+}
+
+.wordlinks .relatedTermsList li {
+	display: inline;
+	padding: 0 1px;
+}
+
+.wordlinks .alternateTerms {
+	padding-left: 1px;
+	list-style: none;
+	font-weight: 500;
+}
+
+.wordlinks .alternateTerms li {
+	display: inline;
+}
+
+.wordlinks .relatedTermsList li:after,
+.wordlinks .alternateTerms li:after {
+	content: ", ";
+}
+
+.wordlinks .relatedTermsList li:last-child:after,
+.wordlinks .alternateTerms li:last-child:after {
+	content: "";
+}
+
+.wordlinks .otherLanguageExamplesList {
+	padding-left: 20px;
+}
+
+.wordlinks .wordLinkAudioCont {
+	margin: 5px 0;
+}
+
+.wordlinks .noAudioFileMessage {
+	width: 100%;
+	margin: 0;
 }
