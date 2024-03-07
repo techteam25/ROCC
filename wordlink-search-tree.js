@@ -66,11 +66,8 @@
         return words;
     };
 
-
     // create an instance of WordLinkSearchTree and add to window object
     window.WSL  = new WordLinkSearchTree();
-
-    console.log(wordLinkTerms)
 
     for (let term in wordLinkTerms) {
         window.WSL.insertTerm(term)
