@@ -16,6 +16,7 @@ require_once('API/utils/Model.php');
 
 $conn = GetDatabaseConnection();
 
+
 //display currStory and currProjId, passed from index.php
 if (array_key_exists('story', $_GET)) {
 
@@ -34,7 +35,7 @@ if (array_key_exists('story', $_GET)) {
     RespondWithError(400, 'No Story Requested');
 }
 
-$wordLinkFilePath =  __DIR__ . '/data/' . ($language ?: "en")     . '/wordlinks.csv';
+$wordLinkFilePath = __DIR__ . '/data/' . ($language ?: "en") . '/wordlinks.csv';
 $handle = fopen($wordLinkFilePath, 'r');
 $wordLinkTerms = [];
 
@@ -42,27 +43,26 @@ $wordLinkTerms = [];
 fgetcsv($handle);
 // Read the file line by line
 while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
-    // skip empty row if there is any
+// skip empty row if there is any
     if (isset($row[1]) && !empty($row[1])) {
         $alternateForms = "";
         $backTranslations = "";
         $relatedTerms = "";
 
         if (!empty($row[2])) {
-            $alternateForms =  explode(",", $row[2]);
+            $alternateForms = explode(",", $row[2]);
         }
 
         if (!empty($row[3])) {
-            $backTranslations =  explode(";", $row[3]);
+            $backTranslations = explode(";", $row[3]);
         }
 
         if (!empty($row[5])) {
-            $relatedTerms =  explode(",", $row[5]);
+            $relatedTerms = explode(",", $row[5]);
         }
 
         $wordLinkTerms[strtolower(trim($row[1]))] = [
             "alternateTerms" => $alternateForms,
-            // "backTranslations" => $backTranslations, // TODO waiting for confirmation
             "backTranslations" => "No back translation has been uploaded",
             "otherLanguageExamples" => $backTranslations,
             "notes" => trim($row[4] ?? ""),
