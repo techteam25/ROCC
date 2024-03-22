@@ -811,6 +811,14 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
+    public function GetWordLinkRecording($projectId, $term): array|false {
+        $sql = "SELECT * FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+        $existingRecoding = $this->FetchArray($stmt);
+        $this->FreeStmt($stmt);
+        return $existingRecoding;
+    }
+
     public function CreateOrUpdateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData)
     {
         # check if a recording exists for given term & projectId
