@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     # check if project exists for the given androidId
     $projectId = $model->GetProjectId($androidId);
     if (!$projectId) {
-        RespondWithError(404, "The requested term has not been registered.");
+        RespondWithError(404, "The requested PhoneId has not been registered.");
     }
 
     // get wordlink recording
