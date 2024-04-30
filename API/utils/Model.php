@@ -905,8 +905,12 @@ class Model {
              $existingRecodingFilepath = "{$GLOBALS['filesRoot']}/$directory/$existingRecodingFileName";
              error_log(sprintf("Deleting old recording file '%s'", $existingRecodingFilepath));
 
-             if(!unlink($existingRecodingFilepath)) {
-                 error_log("Failed to delete existing recording file: $existingRecodingFilepath");
+             if(file_exists($existingRecodingFilepath)) {
+                 if(!unlink($existingRecodingFilepath)) {
+                     error_log("Failed to delete existing recording file: $existingRecodingFilepath");
+                 }
+             } else {
+                 error_log("Trying to delete, but couldn't find $existingRecodingFilepath");
              }
 
              return $recordingId;
