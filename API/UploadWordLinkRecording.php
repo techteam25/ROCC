@@ -19,7 +19,7 @@ if (!(
 
 $androidId = trim($_POST['PhoneId']);
 $term = trim($_POST['term']);
-$audioRecordingFilename = htmlspecialchars(trim($_POST['audioRecordingFilename']));
+$audioRecordingFilename = trim($_POST['audioRecordingFilename']);
 $textBackTranslation = trim($_POST['textBackTranslation']);
 
 // extract & validate audio recording file extension
