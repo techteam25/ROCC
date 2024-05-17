@@ -16,7 +16,7 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
     const TERM_1 = "prayed";
     const TERM_2 = "pray";
     const TEXT_BACK_TRANSLATION_CONTENT = "Test data for text back translation";
-    const TEXT_BACK_TRANSLATION_CONTENT_UPDATED = "Updated test data for text back translation";
+    const TEXT_BACK_TRANSLATION_CONTENT_UPDATED = "<b>Updated test data for text back translation</b>";
     const RECORDING_FILE_EXTENSION = "m4a";
     const RECORDING_FILE_NAME_1 = "WordLinks 1." . self::RECORDING_FILE_EXTENSION;
     const RECORDING_FILE_NAME_2 = "WordLinks 2." . self::RECORDING_FILE_EXTENSION;
