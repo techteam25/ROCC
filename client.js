@@ -322,7 +322,9 @@ function openTab(evt, contentName){
     tabcontent = document.getElementsByClassName("tabcontent");
     for(i=0; i<tabcontent.length; i++){
         tabcontent[i].style.display = "none";
+
         tabcontent[i].classList.remove('active')
+        tabcontent[i].classList.remove('show')
     }
     tablinks = document.getElementsByClassName("tablinks");
     for(i=0; i<tablinks.length; i++){
