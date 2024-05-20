@@ -641,6 +641,7 @@ input:checked + .slider:before {
 
 .transcripts #mainText a {
 	cursor: pointer;
+    text-decoration: underline;
 }
 
 /* style for wordlinks */
