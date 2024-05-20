@@ -537,21 +537,8 @@ function getWordLinkRecording(term) {
             } else {
                 displayNoBackTranslationMessage();
             }
-
-            if (data.audioFileLink.length > 0) {
-                document.querySelector('.wordLinkAudio').src = `${data.audioFileLink}`;
-            } else {
-                displayNoRecordingMessage();
-            }
         },
     });
-}
-
-function displayNoRecordingMessage() {
-    const noAudioFileMessage = document.createElement('p');
-    noAudioFileMessage.classList.add('noAudioFileMessage');
-    noAudioFileMessage.textContent = "No recording uploaded.";
-    document.querySelector('.wordLinkAudio').replaceWith(noAudioFileMessage)
 }
 
 function displayNoBackTranslationMessage() {

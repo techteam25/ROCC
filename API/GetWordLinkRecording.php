@@ -32,16 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $audioFile = "Projects/" . $androidId . "/WordLinks/" . $wordlinkRecoding['fileName'];
-
-    $audioFileLink = "";
-    // return the audio file link if exists
-    if (file_exists($GLOBALS['filesRoot'] . "/" . $audioFile)) {
-        $audioFileLink = "Files/" . $audioFile;
-    }
-
     $data = [
-        'audioFileLink' => $audioFileLink,
         'backTranslation' => $wordlinkRecoding['textBackTranslation'],
     ];
 

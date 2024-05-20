@@ -73,6 +73,5 @@ CREATE TABLE WordLinkRecordings (
   projectId INT NOT NULL REFERENCES Projects(id),
   term VARCHAR(256) NOT NULL,
   textBackTranslation TEXT,
-  fileName VARCHAR(256) NOT NULL,
   UNIQUE (projectId, term)
 );

@@ -767,12 +767,3 @@ input:checked + .slider:before {
 .wordlinks .otherLanguageExamplesList {
 	padding-left: 20px;
 }
-
-.wordlinks .wordLinkAudioCont {
-	margin: 5px 0;
-}
-
-.wordlinks .noAudioFileMessage {
-	width: 100%;
-	margin: 0;
-}
