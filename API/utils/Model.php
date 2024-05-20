@@ -884,6 +884,22 @@ class Model {
          }
     }
 
+
+    function DeleteWordLinkRecording($projectId, $term)
+    {
+        try {
+            $sql = "DELETE FROM WordLinkRecordings WHERE term = ? AND projectId = ?";
+            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+            $this->FreeStmt($stmt);
+        } catch (PDOException $e) {
+            error_log("Error deleting records: " . $e->getMessage());
+
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @throws DBException
      */
