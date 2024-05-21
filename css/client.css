@@ -671,6 +671,7 @@ input:checked + .slider:before {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	text-transform: capitalize;
+    margin-bottom: 0;
 }
 
 .wordlinks .termHeader {
@@ -777,4 +778,3 @@ input:checked + .slider:before {
     padding-left: 0;
     font-style: italic;
 }
-
