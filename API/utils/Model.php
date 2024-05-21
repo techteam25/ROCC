@@ -811,7 +811,7 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
-    public function GetWordLinkRecording($projectId, $term): array|false {
+    public function GetTextBackTranslation($projectId, $term): array|false {
         $sql = "SELECT * FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $existingRecoding = $this->FetchArray($stmt);
@@ -819,9 +819,9 @@ class Model {
         return $existingRecoding;
     }
 
-    public function CreateOrUpdateWordLinkRecording($projectId, $term, $textBackTranslation)
+    public function CreateOrUpdateTextBackTranslation($projectId, $term, $textBackTranslation)
     {
-        # check if a recording exists for given term & projectId
+        # check if a translation exists for given term & projectId
         $sql = "SELECT id FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
 
@@ -829,11 +829,11 @@ class Model {
         $this->FreeStmt($stmt);
 
         if(is_array($existingRecoding)) {
-            // update existing recording data
-           return $this->UpdateWordLinkRecording($existingRecoding['id'], $textBackTranslation);
+            // update existing translation data
+           return $this->UpdateTextBackTranslation($existingRecoding['id'], $textBackTranslation);
         } else {
-            // create new recording
-            return  $this->CreateWordLinkRecording($projectId, $term, $textBackTranslation);
+            // create new translation
+            return  $this->CreateTextBackTranslation($projectId, $term, $textBackTranslation);
         }
     }
 
@@ -843,17 +843,16 @@ class Model {
      * @param string $textBackTranslation
      * @return int
      */
-    public function CreateWordLinkRecording($projectId, $term, $textBackTranslation) {
+    public function CreateTextBackTranslation($projectId, $term, $textBackTranslation) {
         try {
             $this->conn->beginTransaction();
-            // create record entry
             $sql = "INSERT INTO WordLinkRecordings(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
             $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation));
             $this->FreeStmt($stmt);
-            $recordingId = $this->conn->lastInsertId();
+            $translationId = $this->conn->lastInsertId();
             $this->conn->commit();
 
-            return $recordingId;
+            return $translationId;
         } catch (\Exception $e) {
             error_log($e->getMessage());
             $this->conn->rollBack();
@@ -862,38 +861,35 @@ class Model {
     }
 
     /**
-     * @param int $recordingId
+     * @param int $translationId
      * @param string $textBackTranslation
      * @return int
      */
-    public function UpdateWordLinkRecording($recordingId, $textBackTranslation)
+    public function UpdateTextBackTranslation($translationId, $textBackTranslation)
     {
          try {
-             # update WordLinkRecordings
              $this->conn->beginTransaction();
              $updateSql =  "UPDATE WordLinkRecordings SET textBackTranslation = ?  WHERE id = ?;";
-             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $recordingId));
+             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $translationId));
              $this->FreeStmt($stmt);
 
              $this->conn->commit();
-             return $recordingId;
+             return $translationId;
          } catch (\Exception $e) {
              error_log($e->getMessage());
              $this->conn->rollBack();
-             RespondWithError(500, 'There was an exception while creating the world link recording.');
+             RespondWithError(500, 'There was an exception while creating the text back translation.');
          }
     }
 
-
-    function DeleteWordLinkRecording($projectId, $term)
+    function DeleteTextBacktranslation($projectId, $term)
     {
         try {
             $sql = "DELETE FROM WordLinkRecordings WHERE term = ? AND projectId = ?";
             $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
             $this->FreeStmt($stmt);
         } catch (PDOException $e) {
-            error_log("Error deleting records: " . $e->getMessage());
-
+            error_log("Error deleting translation: " . $e->getMessage());
             return false;
         }
 

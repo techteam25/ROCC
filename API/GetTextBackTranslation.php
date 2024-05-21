@@ -24,16 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         RespondWithError(404, "The requested PhoneId has not been registered.");
     }
 
-    // get wordlink recording
-    $wordlinkRecoding = $model->GetWordLinkRecording($projectId, $term);
+    $translation = $model->GetTextBackTranslation($projectId, $term);
 
-    if (!$wordlinkRecoding) {
+    if (!$translation) {
         RespondWithError(404, "The requested term has not been uploaded from the requested PhoneId.");
         exit;
     }
 
     $data = [
-        'backTranslation' => $wordlinkRecoding['textBackTranslation'],
+        'backTranslation' => json_decode($translation['textBackTranslation']),
     ];
 
     Respond\successData($data);

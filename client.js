@@ -455,7 +455,6 @@ function showTermDetails(evt, term) {
     const headerEl = template.content.querySelector('.termHeader h2');
     headerEl.innerHTML = decodedTermlink;
     template.content.querySelector('.notes').textContent = wordLinkTerms[decodedTermlink].notes;
-    template.content.querySelector('.backTranslation').textContent = wordLinkTerms[decodedTermlink].backTranslations;
 
     const alternateTerms = wordLinkTerms[decodedTermlink].alternateTerms;
     if (alternateTerms.length > 0) {
@@ -496,12 +495,16 @@ function showTermDetails(evt, term) {
     });
 
     getWordLinkRecording(decodedTermlink);
-    document.getElementById("termList").classList.add("hide");
-    document.getElementById("termDetails").classList.remove("hide");
 }
 
-function generateTermItem(t, clickable = false) {
-    let term = t.trim().toLowerCase();
+function generateTermItem(t, clickable = false, transformToLowerCase =  true) {
+
+    let term = t
+    if (transformToLowerCase)
+    {
+        term = t.trim().toLowerCase();
+    }
+
     const li = document.createElement('li');
     if (clickable && wordLinkTerms.hasOwnProperty(term)) {
         const a = document.createElement('a');
@@ -523,7 +526,7 @@ function showTermList(evt) {
 
 function getWordLinkRecording(term) {
        $.ajax({
-        url: "API/GetWordLinkRecording.php",
+        url: "API/GetTextBackTranslation.php",
         data: {
             "term": term,
             "PhoneId": projectId,
@@ -531,21 +534,27 @@ function getWordLinkRecording(term) {
         type: "POST",
         error: function() {
             displayNoBackTranslationMessage();
-            displayNoRecordingMessage();
         },
         success: function (data) {
             if (data.backTranslation.length > 0){
-                document.querySelector('p.backTranslation').textContent = data.backTranslation;
+                $('ul.backTranslationList').empty()
+                data.backTranslation.forEach(function(term) {
+                    document.querySelector('ul.backTranslationList').appendChild(generateTermItem(term, false, false))
+                });
             } else {
                 displayNoBackTranslationMessage();
             }
         },
+       complete: function (){
+           document.getElementById("termList").classList.add("hide");
+           document.getElementById("termDetails").classList.remove("hide");
+       }
     });
 }
 
 function displayNoBackTranslationMessage() {
-    const noBackTranslationMessage = document.createElement('p');
-    noBackTranslationMessage.classList.add('noBackTranslationMessage');
-    noBackTranslationMessage.textContent = "No back translation has been uploaded.";
-    document.querySelector('.backTranslation').replaceWith(noBackTranslationMessage);
+    $('ul.backTranslationList').empty();
+    const term = "No back translation has been uploaded.";
+    document.querySelector('ul.backTranslationList').appendChild(generateTermItem(term, false, false))
+    document.querySelector('ul.backTranslationList').classList.add("noBackTranslationMessage");
 }

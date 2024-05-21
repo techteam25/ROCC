@@ -768,3 +768,13 @@ input:checked + .slider:before {
 .wordlinks .otherLanguageExamplesList {
 	padding-left: 20px;
 }
+.wordlinks .backTranslationList {
+    padding-left: 15px;
+}
+
+.wordlinks .backTranslationList.noBackTranslationMessage {
+    list-style: none;
+    padding-left: 0;
+    font-style: italic;
+}
+

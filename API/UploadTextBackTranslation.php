@@ -36,7 +36,6 @@ $textBackTranslations = array_values(array_filter($textBackTranslations, functio
 }));
 
 
-// delete existing wordLinkRecording if no textBackTranslation provided
 if (empty($textBackTranslations)) {
     RespondWithError(400, "Please provide at least one item with the key 'textBackTranslation[]'");
 }
@@ -47,12 +46,12 @@ $model = new Model();
 $projectId = $model->GetProjectId($androidId);
 
 if (!$projectId) {
-    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadWordLinkRecording.php");
+    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadTextBackTranslation.php");
 }
 
-$recordingId = $model->CreateOrUpdateWordLinkRecording(
+$translationId = $model->CreateOrUpdateTextBackTranslation(
     $projectId,
     $term,
     json_encode($textBackTranslations));
 
-echo json_encode(['RecordingId' => $recordingId]);
+echo json_encode(['translationId' => $translationId]);

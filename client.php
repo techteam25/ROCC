@@ -478,7 +478,7 @@ ksort($wordLinkTerms);
             </div>
             <div class="termExplanation">
                 <ul class="alternateTerms"></ul>
-                <div><b>Back translation:</b><p class="backTranslation"></p><div>
+                <div><b>Back translation:</b><ul class="backTranslationList"></ul></div>
                 <div><b>Meaning notes. Definitions:</b><p class="notes"></p></div>
                 <div class="relatedTerms"><b>Related (but different) terms:</b>
                     <ul class="relatedTermsList"></ul>
