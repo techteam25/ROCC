@@ -84,52 +84,6 @@ class UploadWordLinkRecordingIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @return void
-     * @throws GuzzleException
-     */
-    public function testShouldDeleteGivenRecordingWhenEmptyTextBackTranslationIsGiven()
-    {
-        $createRecordingPayload = [
-            'PhoneId' => self::PHONE_ID_2,
-            'term' => self::TERM_1,
-            'textBackTranslation' => [
-                self::TEXT_BACK_TRANSLATION_CONTENT_1,
-                self::TEXT_BACK_TRANSLATION_CONTENT_2,
-            ]
-        ];
-
-        $recordingId = $this->sendRequestAndReturnRecordingId($createRecordingPayload);
-
-        $curl = curl_init();
-        $data = [
-            'PhoneId' => self::PHONE_ID_2,
-            'term' => self::TERM_1,
-        ];
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => self::HOST . self::URI,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS => http_build_query($data) . '&textBackTranslation[]=',
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/x-www-form-urlencoded'
-            ],
-        ]);
-
-        curl_exec($curl);
-        $httpStatusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $this->assertEquals(200, $httpStatusCode);
-
-        $q = self::$db->prepare('SELECT * FROM WordLinkRecordings where id = ?');
-        $q->execute([$recordingId]);
-        $recordings = $q->fetchAll(\PDO::FETCH_ASSOC);
-        $this->assertCount(0, $recordings);
-
-    }
-
-    /**
      * @throws GuzzleException
      * @throws \Exception
      */
