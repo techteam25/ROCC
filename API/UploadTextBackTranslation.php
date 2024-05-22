@@ -1,10 +1,6 @@
 <?php
 require_once('utils/Model.php');
-require_once('utils/Respond.php');
 
-use storyproducer\Respond;
-
-require_once('utils/Validate.php');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     RespondWithError(405, "Request must be a POST");
 }
@@ -54,4 +50,4 @@ $translationId = $model->CreateOrUpdateTextBackTranslation(
     $term,
     json_encode($textBackTranslations));
 
-echo json_encode(['translationId' => $translationId]);
+echo json_encode(['TranslationId' => $translationId]);

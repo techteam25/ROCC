@@ -32,7 +32,6 @@ class DeleteTextBackTranslationIntegrationTest extends BaseIntegrationTest
         $this->assertArrayHasKey('TranslationId', $createTranslationResponse);
         $createdTranslationId  = $createTranslationResponse['TranslationId'];
 
-
         // delete translation
         $deleteTranslationPayload = [
             'PhoneId' => self::PHONE_ID_1,
@@ -52,7 +51,13 @@ class DeleteTextBackTranslationIntegrationTest extends BaseIntegrationTest
     {
         $response = $this->httpClient->request("POST", self::HOST . $uri, ['form_params' => $payload]);
         $responseJson = $response->getBody()->getContents();
-        $this->assertEquals(200, $response->getStatusCode());
+
+        if ($uri == self::DELETE_URI) {
+            $this->assertEquals(204, $response->getStatusCode());
+        } else {
+            $this->assertEquals(200, $response->getStatusCode());
+        }
+
         return json_decode($responseJson, true);
     }
 }

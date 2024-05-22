@@ -1,7 +1,5 @@
 <?php
 require_once('utils/Model.php');
-require_once('utils/Respond.php');
-
 session_start();
 
 
@@ -24,12 +22,21 @@ $model = new Model();
 $projectId = $model->GetProjectId($androidId);
 
 if (!$projectId) {
-    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadTextBackTranslation.php");
+    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/DeleteTextBackTranslation.php");
 }
 
+try {
+    $statusCode = 204;
 
-if ($model->DeleteTextBacktranslation($projectId, $term)) {
+    if (!$model->DeleteTextBacktranslation($projectId, $term)) {
+        $statusCode = 404;
+    }
+
+    http_response_code($statusCode);
     exit;
+} catch (\Exception $e) {
+    $message = "There was an exception while deleting the text back translation: " . $e->getMessage();
+    $statusCode = 500;
 }
 
-RespondWithError(500, "Failed to delete WordLinkRecording");
+RespondWithError(500, $message);

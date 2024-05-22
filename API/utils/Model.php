@@ -819,7 +819,7 @@ class Model {
         return $existingRecoding;
     }
 
-    public function CreateOrUpdateTextBackTranslation($projectId, $term, $textBackTranslation)
+    public function CreateOrUpdateTextBackTranslation($projectId, $term, $textBackTranslation): int
     {
         # check if a translation exists for given term & projectId
         $sql = "SELECT id FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
@@ -882,18 +882,13 @@ class Model {
          }
     }
 
-    function DeleteTextBacktranslation($projectId, $term)
+    function DeleteTextBacktranslation($projectId, $term): bool
     {
-        try {
-            $sql = "DELETE FROM WordLinkRecordings WHERE term = ? AND projectId = ?";
-            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
-            $this->FreeStmt($stmt);
-        } catch (PDOException $e) {
-            error_log("Error deleting translation: " . $e->getMessage());
-            return false;
-        }
-
-        return true;
+        $sql = "DELETE FROM WordLinkRecordings WHERE term = ? AND projectId = ?";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+        $numRows = $this->NumRows($stmt);
+        $this->FreeStmt($stmt);
+        return $numRows !== 0;
     }
 
     /**
