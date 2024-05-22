@@ -22,7 +22,7 @@ $model = new Model();
 $projectId = $model->GetProjectId($androidId);
 
 if (!$projectId) {
-    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/DeleteTextBackTranslation.php");
+    RespondWithError(404, "");
 }
 
 try {
