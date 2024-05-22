@@ -40,8 +40,8 @@ class DeleteTextBackTranslationIntegrationTest extends BaseIntegrationTest
 
         $this->assertNull($this->sendRequestAndReturnResponse(self::DELETE_URI, $deleteTranslationPayload));
 
-        # verify in DB that WordLinkRecordings is deleted
-        $q = self::$db->prepare('SELECT * FROM WordLinkRecordings where id = ?');
+        # verify in DB that WordlinkTranslations is deleted
+        $q = self::$db->prepare('SELECT * FROM WordlinkTranslations where id = ?');
         $q->execute([$createdTranslationId]);
         $translations = $q->fetchAll(\PDO::FETCH_ASSOC);
         $this->assertCount(0, $translations);

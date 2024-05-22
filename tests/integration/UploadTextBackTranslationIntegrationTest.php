@@ -163,7 +163,7 @@ class UploadTextBackTranslationIntegrationTest extends BaseIntegrationTest
 
     private function getTranslation(int $translationId): array
     {
-        $q = self::$db->prepare('SELECT * FROM WordLinkRecordings where id = ?');
+        $q = self::$db->prepare('SELECT * FROM WordlinkTranslations where id = ?');
         $q->execute([$translationId]);
         $translations = $q->fetchAll(\PDO::FETCH_ASSOC);
         $this->assertCount(1, $translations);

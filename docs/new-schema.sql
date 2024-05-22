@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Stories;
 DROP TABLE IF EXISTS Assigned;
 DROP TABLE IF EXISTS Projects;
 DROP TABLE IF EXISTS Consultants;
-DROP TABLE IF EXISTS WordLinkRecordings;
+DROP TABLE IF EXISTS WordlinkTranslations;
 
 CREATE TABLE Consultants (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -68,7 +68,7 @@ CREATE TABLE Messages (
 );
 
 
-CREATE TABLE WordLinkRecordings (
+CREATE TABLE WordlinkTranslations (
   id int PRIMARY KEY AUTO_INCREMENT,
   projectId INT NOT NULL REFERENCES Projects(id),
   term VARCHAR(256) NOT NULL,

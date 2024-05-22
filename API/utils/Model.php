@@ -812,7 +812,7 @@ class Model {
     }
 
     public function GetTextBackTranslation($projectId, $term): array|false {
-        $sql = "SELECT * FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
+        $sql = "SELECT * FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $existingRecoding = $this->FetchArray($stmt);
         $this->FreeStmt($stmt);
@@ -822,7 +822,7 @@ class Model {
     public function CreateOrUpdateTextBackTranslation($projectId, $term, $textBackTranslation): int
     {
         # check if a translation exists for given term & projectId
-        $sql = "SELECT id FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
+        $sql = "SELECT id FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
 
         $existingRecoding = $this->FetchArray($stmt);
@@ -846,7 +846,7 @@ class Model {
     public function CreateTextBackTranslation($projectId, $term, $textBackTranslation) {
         try {
             $this->conn->beginTransaction();
-            $sql = "INSERT INTO WordLinkRecordings(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
+            $sql = "INSERT INTO WordlinkTranslations(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
             $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation));
             $this->FreeStmt($stmt);
             $translationId = $this->conn->lastInsertId();
@@ -869,7 +869,7 @@ class Model {
     {
          try {
              $this->conn->beginTransaction();
-             $updateSql =  "UPDATE WordLinkRecordings SET textBackTranslation = ?  WHERE id = ?;";
+             $updateSql =  "UPDATE WordlinkTranslations SET textBackTranslation = ?  WHERE id = ?;";
              $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $translationId));
              $this->FreeStmt($stmt);
 
@@ -884,7 +884,7 @@ class Model {
 
     function DeleteTextBacktranslation($projectId, $term): bool
     {
-        $sql = "DELETE FROM WordLinkRecordings WHERE term = ? AND projectId = ?";
+        $sql = "DELETE FROM WordlinkTranslations WHERE term = ? AND projectId = ?";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $numRows = $this->NumRows($stmt);
         $this->FreeStmt($stmt);
