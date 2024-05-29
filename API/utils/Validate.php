@@ -545,6 +545,41 @@ function containerTypes($containerType) {
 	}
 }
 
+
+/**
+ * This function process textBackTranslation data from POST request data and filter invalid values.
+ *
+ * Validation Rules are as follows:
+ *  - textBackTranslation should have numeric postfix i.e. textBackTranslation1,textBackTranslation2,textBackTranslation3
+ *  - filter empty key values i.e. key textBackTranslation2 with empty values or whitespace
+ *
+ *
+ * @param $postData
+ *
+ * @return array Array of textBackTranslation values
+ */
+function processTextBackTranslations($postData): array
+{
+    $translations = [];
+    foreach ($postData as $key => $value) {
+        if (preg_match('/^textBackTranslation(\d+)$/', $key, $matches)) {
+            $index = (int)$matches[1];
+
+            if (empty($value)) {
+                continue;
+            }
+
+            if (($val = trim($value)) && $val !== '') {
+                $translations[$index] = $val;
+            }
+        }
+    }
+
+    // sort values by keys for guaranteed order
+    ksort($translations);
+    return array_values($translations);
+}
+
 class InputException extends \Exception {
     public function __construct($message = '', $code = 0, Exception $previous = null) {
         parent::__construct($message, $code, $previous);
