@@ -28,7 +28,7 @@ if (!$projectId) {
 try {
     $statusCode = 204;
 
-    if (!$model->DeleteTextBacktranslation($projectId, $term)) {
+    if (!$model->DeleteWordLinkBackTranslation($projectId, $term)) {
         $statusCode = 404;
     }
 

@@ -526,7 +526,7 @@ function showTermList(evt) {
 
 function getWordLinkRecording(term) {
        $.ajax({
-        url: "API/GetTextBackTranslation.php",
+        url: "API/GetWordLinkBackTranslation.php",
         data: {
             "term": term,
             "PhoneId": projectId,

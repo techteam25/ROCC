@@ -5,10 +5,10 @@ namespace integration;
 
 use GuzzleHttp\Exception\GuzzleException;
 
-class DeleteTextBackTranslationIntegrationTest extends BaseIntegrationTest
+class DeleteWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
 {
-    const UPLOAD_URI = '/API/UploadTextBackTranslation.php';
-    const DELETE_URI = '/API/DeleteTextBackTranslation.php';
+    const UPLOAD_URI = '/API/UploadWordLinkBackTranslation.php';
+    const DELETE_URI = '/API/DeleteWordLinkBackTranslation.php';
     const PHONE_ID_1 = "rstuvw";
 
     const TERM_1 = "Naomi";

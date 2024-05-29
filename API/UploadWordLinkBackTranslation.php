@@ -15,7 +15,7 @@ if (!(
 
 
 if (!is_array($_POST['textBackTranslation'])) {
-    RespondWithError(400, 'Please send textBackTranslactions as repeated items with the key \'textBackTranslation[].\'');
+    RespondWithError(400, 'Please send textBackTranslations as repeated items with the key \'textBackTranslation[].\'');
 }
 
 
@@ -42,10 +42,10 @@ $model = new Model();
 $projectId = $model->GetProjectId($androidId);
 
 if (!$projectId) {
-    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadTextBackTranslation.php");
+    RespondWithError(400, "Please register a project using /API/RegisterPhone.php before using /API/UploadWordLinkBackTranslation.php");
 }
 
-$translationId = $model->CreateOrUpdateTextBackTranslation(
+$translationId = $model->CreateOrUpdateWordLinkBackTranslation(
     $projectId,
     $term,
     json_encode($textBackTranslations));

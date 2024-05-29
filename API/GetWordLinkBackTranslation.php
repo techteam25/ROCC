@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         RespondWithError(404, "The requested PhoneId has not been registered.");
     }
 
-    $translation = $model->GetTextBackTranslation($projectId, $term);
+    $translation = $model->GetWordLinkBackTranslation($projectId, $term);
 
     if (!$translation) {
         RespondWithError(404, "The requested term has not been uploaded from the requested PhoneId.");

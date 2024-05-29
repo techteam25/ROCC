@@ -811,7 +811,7 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
-    public function GetTextBackTranslation($projectId, $term): array|false {
+    public function GetWordLinkBackTranslation($projectId, $term): array|false {
         $sql = "SELECT * FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $existingRecoding = $this->FetchArray($stmt);
@@ -819,7 +819,7 @@ class Model {
         return $existingRecoding;
     }
 
-    public function CreateOrUpdateTextBackTranslation($projectId, $term, $textBackTranslation): int
+    public function CreateOrUpdateWordLinkBackTranslation($projectId, $term, $textBackTranslation): int
     {
         # check if a translation exists for given term & projectId
         $sql = "SELECT id FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
@@ -830,10 +830,10 @@ class Model {
 
         if(is_array($existingRecoding)) {
             // update existing translation data
-           return $this->UpdateTextBackTranslation($existingRecoding['id'], $textBackTranslation);
+           return $this->UpdateWordLinkBackTranslation($existingRecoding['id'], $textBackTranslation);
         } else {
             // create new translation
-            return  $this->CreateTextBackTranslation($projectId, $term, $textBackTranslation);
+            return  $this->CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation);
         }
     }
 
@@ -843,7 +843,7 @@ class Model {
      * @param string $textBackTranslation
      * @return int
      */
-    public function CreateTextBackTranslation($projectId, $term, $textBackTranslation) {
+    public function CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation) {
         try {
             $this->conn->beginTransaction();
             $sql = "INSERT INTO WordlinkTranslations(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
@@ -865,7 +865,7 @@ class Model {
      * @param string $textBackTranslation
      * @return int
      */
-    public function UpdateTextBackTranslation($translationId, $textBackTranslation)
+    public function UpdateWordLinkBackTranslation($translationId, $textBackTranslation)
     {
          try {
              $this->conn->beginTransaction();
@@ -882,7 +882,7 @@ class Model {
          }
     }
 
-    function DeleteTextBacktranslation($projectId, $term): bool
+    function DeleteWordLinkBackTranslation($projectId, $term): bool
     {
         $sql = "DELETE FROM WordlinkTranslations WHERE term = ? AND projectId = ?";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));

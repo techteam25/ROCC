@@ -5,9 +5,9 @@ namespace integration;
 
 use GuzzleHttp\Exception\GuzzleException;
 
-class UploadTextBackTranslationIntegrationTest extends BaseIntegrationTest
+class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
 {
-    const URI = '/API/UploadTextBackTranslation.php';
+    const URI = '/API/UploadWordLinkBackTranslation.php';
     const PHONE_ID_1 = "rstuvw";
     const PHONE_ID_2 = "lmnopq";
     const PHONE_ID_3 = "ghijkl";
