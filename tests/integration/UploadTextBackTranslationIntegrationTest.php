@@ -28,13 +28,12 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $payload = [
             'PhoneId' => self::PHONE_ID_1,
             'term' => self::TERM_1,
-            'textBackTranslation' => [
-                self::TEXT_BACK_TRANSLATION_CONTENT_1,
-                self::TEXT_BACK_TRANSLATION_CONTENT_2,
-                "",
-                self::TEXT_BACK_TRANSLATION_CONTENT_3,
-                null
-            ]
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_1,
+            'textBackTranslationX' => 'ignored', // it should be ignored since it's not a valid key
+            'textBackTranslation2' => '  ', // empty value should not be persisted
+            'textBackTranslation3' => null, // should be ignored
+            'textBackTranslation5' => self::TEXT_BACK_TRANSLATION_CONTENT_3,
+            'textBackTranslation4' => self::TEXT_BACK_TRANSLATION_CONTENT_2,
         ];
 
         $translationId = $this->sendRequestAndReturnTranslationId($payload);
@@ -59,10 +58,8 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $createTranslationPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_1,
-            'textBackTranslation' => [
-                self::TEXT_BACK_TRANSLATION_CONTENT_1,
-                self::TEXT_BACK_TRANSLATION_CONTENT_2,
-            ]
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_1,
+            'textBackTranslation2' => self::TEXT_BACK_TRANSLATION_CONTENT_2,
         ];
 
         $translationId = $this->sendRequestAndReturnTranslationId($createTranslationPayload);
@@ -71,7 +68,7 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $updateTranslationPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_1,
-            'textBackTranslation' => [self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED],
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
         ];
 
 
@@ -92,7 +89,7 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $createTranslationPayload = [
             'PhoneId' => self::PHONE_ID_3,
             'term' => self::TERM_1,
-            'textBackTranslation' => [self::TEXT_BACK_TRANSLATION_CONTENT_1]
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_1
         ];
 
         $createdTranslationId = $this->sendRequestAndReturnTranslationId($createTranslationPayload);
@@ -101,7 +98,7 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $updateTranslationPayload = [
             'PhoneId' => self::PHONE_ID_3,
             'term' => self::TERM_2,
-            'textBackTranslation' => [self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED],
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
         ];
 
         // should create a new translation
@@ -124,7 +121,7 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $createTranslationPayload = [
             'PhoneId' => self::PHONE_ID_1,
             'term' => self::TERM_2,
-            'textBackTranslation' => [self::TEXT_BACK_TRANSLATION_CONTENT_1],
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_1,
         ];
 
         $createdTranslationId = $this->sendRequestAndReturnTranslationId($createTranslationPayload);
@@ -132,7 +129,7 @@ class UploadWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $updateTranslationPayload = [
             'PhoneId' => self::PHONE_ID_2,
             'term' => self::TERM_2,
-            'textBackTranslation' => [self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED],
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_UPDATED,
         ];
 
         // should create a new translation

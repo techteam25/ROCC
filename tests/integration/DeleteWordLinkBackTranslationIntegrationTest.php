@@ -23,9 +23,7 @@ class DeleteWordLinkBackTranslationIntegrationTest extends BaseIntegrationTest
         $createTranslationPayload = [
             'PhoneId' => self::PHONE_ID_1,
             'term' => self::TERM_1,
-            'textBackTranslation' => [
-                self::TEXT_BACK_TRANSLATION_CONTENT_1,
-            ]
+            'textBackTranslation1' => self::TEXT_BACK_TRANSLATION_CONTENT_1,
         ];
 
         $createTranslationResponse = $this->sendRequestAndReturnResponse(self::UPLOAD_URI, $createTranslationPayload);
