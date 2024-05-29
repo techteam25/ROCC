@@ -19,7 +19,7 @@ if (!(
 $textBackTranslations = Validate\processTextBackTranslations($_POST);
 
 if (empty($textBackTranslations)) {
-    RespondWithError(400, "Please provide at least one item with the key 'textBackTranslation'");
+    RespondWithError(400, "Please provide at least one valid textBackTranslation");
 }
 
 
