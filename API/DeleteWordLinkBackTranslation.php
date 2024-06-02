@@ -22,21 +22,18 @@ $model = new Model();
 $projectId = $model->GetProjectId($androidId);
 
 if (!$projectId) {
-    RespondWithError(404, "");
+    RespondWithError(404, "Please double check the PhoneId. A project with \"$androidId\" was not found.");
 }
 
 try {
-    $statusCode = 204;
-
     if (!$model->DeleteWordLinkBackTranslation($projectId, $term)) {
-        $statusCode = 404;
+        RespondWithError(404, "Please double check the term. A textBackTranslation with \"$term\" was not found.");
     }
 
-    http_response_code($statusCode);
+    http_response_code(204);
     exit;
 } catch (\Exception $e) {
     $message = "There was an exception while deleting the text back translation: " . $e->getMessage();
-    $statusCode = 500;
 }
 
 RespondWithError(500, $message);
