@@ -811,60 +811,48 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
-    public function GetWordLinkRecording($projectId, $term): array|false {
-        $sql = "SELECT * FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
+    public function GetWordLinkBackTranslation($projectId, $term): array|false {
+        $sql = "SELECT * FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $existingRecoding = $this->FetchArray($stmt);
         $this->FreeStmt($stmt);
         return $existingRecoding;
     }
 
-    public function CreateOrUpdateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData)
+    public function CreateOrUpdateWordLinkBackTranslation($projectId, $term, $textBackTranslation): int
     {
-        # check if a recording exists for given term & projectId
-        $sql = "SELECT id, fileName FROM WordLinkRecordings WHERE term = ? AND projectId = ?;";
+        # check if a translation exists for given term & projectId
+        $sql = "SELECT id FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
 
         $existingRecoding = $this->FetchArray($stmt);
         $this->FreeStmt($stmt);
 
         if(is_array($existingRecoding)) {
-            // update existing recording data
-           return $this->UpdateWordLinkRecording($existingRecoding['id'], $existingRecoding['fileName'], $androidId, $textBackTranslation, $audioRecordingFilename, $audioData);
+            // update existing translation data
+           return $this->UpdateWordLinkBackTranslation($existingRecoding['id'], $textBackTranslation);
         } else {
-            // create new recording
-            return  $this->CreateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData);
+            // create new translation
+            return  $this->CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation);
         }
     }
 
     /**
      * @param int $projectId
-     * @param string $androidId
      * @param string $term
      * @param string $textBackTranslation
-     * @param string $audioRecordingFilename
-     * @param string $audioData
      * @return int
      */
-    public function CreateWordLinkRecording($projectId, $androidId, $term, $textBackTranslation, $audioRecordingFilename, $audioData) {
+    public function CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation) {
         try {
             $this->conn->beginTransaction();
-            $generatedFileName = $this->GenerateRecordingFileName($audioRecordingFilename);
-
-            // create record entry
-            $sql = "INSERT INTO WordLinkRecordings(term, projectId, textBackTranslation, fileName)
-				VALUES (?, ?, ?, ?);";
-            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation, $generatedFileName));
+            $sql = "INSERT INTO WordlinkTranslations(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
+            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation));
             $this->FreeStmt($stmt);
-
-            # save recording file content
-            $directory = "Projects/$androidId/WordLinks";
-            PutFile($directory, $generatedFileName, $audioData);
-
-            $recordingId = $this->conn->lastInsertId();
+            $translationId = $this->conn->lastInsertId();
             $this->conn->commit();
 
-            return $recordingId;
+            return $translationId;
         } catch (\Exception $e) {
             error_log($e->getMessage());
             $this->conn->rollBack();
@@ -873,52 +861,34 @@ class Model {
     }
 
     /**
-     * @param int $recordingId
-     * @param string $existingRecodingFileName
-     * @param string $androidId
+     * @param int $translationId
      * @param string $textBackTranslation
-     * @param string $audioRecordingFilename
-     * @param string $audioData
      * @return int
      */
-    public function UpdateWordLinkRecording($recordingId, $existingRecodingFileName, $androidId, $textBackTranslation, $audioRecordingFilename, $audioData)
+    public function UpdateWordLinkBackTranslation($translationId, $textBackTranslation)
     {
          try {
-             # generate random file for saving uploaded recording file content
-             $generatedFileName = $this->GenerateRecordingFileName($audioRecordingFilename);
-
-             # update WordLinkRecordings
              $this->conn->beginTransaction();
-             $updateSql =  "UPDATE WordLinkRecordings
-                            SET textBackTranslation = ?, fileName = ? WHERE id = ?";
-
-             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $generatedFileName, $recordingId));
+             $updateSql =  "UPDATE WordlinkTranslations SET textBackTranslation = ?  WHERE id = ?;";
+             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $translationId));
              $this->FreeStmt($stmt);
 
-             # save new recording file
-             $directory = "Projects/$androidId/WordLinks";
-             PutFile($directory, $generatedFileName, $audioData);
-
              $this->conn->commit();
-
-             # delete existing recording file
-             $existingRecodingFilepath = "{$GLOBALS['filesRoot']}/$directory/$existingRecodingFileName";
-             error_log(sprintf("Deleting old recording file '%s'", $existingRecodingFilepath));
-
-             if(file_exists($existingRecodingFilepath)) {
-                 if(!unlink($existingRecodingFilepath)) {
-                     error_log("Failed to delete existing recording file: $existingRecodingFilepath");
-                 }
-             } else {
-                 error_log("Trying to delete, but couldn't find $existingRecodingFilepath");
-             }
-
-             return $recordingId;
+             return $translationId;
          } catch (\Exception $e) {
              error_log($e->getMessage());
              $this->conn->rollBack();
-             RespondWithError(500, 'There was an exception while creating the world link recording.');
+             RespondWithError(500, 'There was an exception while creating the text back translation.');
          }
+    }
+
+    function DeleteWordLinkBackTranslation($projectId, $term): bool
+    {
+        $sql = "DELETE FROM WordlinkTranslations WHERE term = ? AND projectId = ?";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+        $numRows = $this->NumRows($stmt);
+        $this->FreeStmt($stmt);
+        return $numRows !== 0;
     }
 
     /**
@@ -933,14 +903,6 @@ class Model {
             return $project['id'];
         }
         return null;
-    }
-
-    function GenerateRecordingFileName($audioRecordingFilename): string
-    {
-        # extract file extension and verify if it's a valid one
-        $recordingFileExtension = pathinfo($audioRecordingFilename, PATHINFO_EXTENSION);
-        # generate random file name for saving uploaded recording file content
-        return sprintf("%s.%s", bin2hex(random_bytes(30)), $recordingFileExtension);
     }
 }
 

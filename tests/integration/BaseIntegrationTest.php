@@ -47,7 +47,7 @@ abstract class BaseIntegrationTest extends TestCase
         self::$process->stop();
         self::$db->query('DELETE FROM Slide');
         self::$db->query('DELETE FROM Stories');
-        self::$db->query('DELETE FROM WordLinkRecordings');
+        self::$db->query('DELETE FROM WordlinkTranslations');
         self::$db = null;
     }
 

@@ -24,25 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         RespondWithError(404, "The requested PhoneId has not been registered.");
     }
 
-    // get wordlink recording
-    $wordlinkRecoding = $model->GetWordLinkRecording($projectId, $term);
+    $translation = $model->GetWordLinkBackTranslation($projectId, $term);
 
-    if (!$wordlinkRecoding) {
+    if (!$translation) {
         RespondWithError(404, "The requested term has not been uploaded from the requested PhoneId.");
         exit;
     }
 
-    $audioFile = "Projects/" . $androidId . "/WordLinks/" . $wordlinkRecoding['fileName'];
-
-    $audioFileLink = "";
-    // return the audio file link if exists
-    if (file_exists($GLOBALS['filesRoot'] . "/" . $audioFile)) {
-        $audioFileLink = "Files/" . $audioFile;
-    }
-
     $data = [
-        'audioFileLink' => $audioFileLink,
-        'backTranslation' => $wordlinkRecoding['textBackTranslation'],
+        'backTranslation' => json_decode($translation['textBackTranslation']),
     ];
 
     Respond\successData($data);

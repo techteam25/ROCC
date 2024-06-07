@@ -641,6 +641,7 @@ input:checked + .slider:before {
 
 .transcripts #mainText a {
 	cursor: pointer;
+    text-decoration: underline;
 }
 
 /* style for wordlinks */
@@ -670,6 +671,7 @@ input:checked + .slider:before {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	text-transform: capitalize;
+    margin-bottom: 0;
 }
 
 .wordlinks .termHeader {
@@ -767,12 +769,12 @@ input:checked + .slider:before {
 .wordlinks .otherLanguageExamplesList {
 	padding-left: 20px;
 }
-
-.wordlinks .wordLinkAudioCont {
-	margin: 5px 0;
+.wordlinks .backTranslationList {
+    padding-left: 15px;
 }
 
-.wordlinks .noAudioFileMessage {
-	width: 100%;
-	margin: 0;
+.wordlinks .backTranslationList.noBackTranslationMessage {
+    list-style: none;
+    padding-left: 0;
+    font-style: italic;
 }

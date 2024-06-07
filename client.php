@@ -350,11 +350,10 @@ ksort($wordLinkTerms);
                 </div>
                 <div class ="bible">
                     <div class="tabHeader">
+                        <button class="tablinks active" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                         <button class="tablinks" onclick="openTab(event, 'bible-t')"> Bible Text Lookup </button>
-                        <button class="tablinks" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                     </div>
-                    <div id="bible-t" class="tabcontent active"><p>Bible text lookup plugin here</p></div>
-                    <div id="WordLinks" class="tabcontent wordlinks">
+                    <div id="WordLinks" class="tabcontent show active wordlinks">
                         <div id="termList" class="term-list">
                             <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
                             <div class="list-group">
@@ -366,6 +365,7 @@ ksort($wordLinkTerms);
                         </div>
                         <div id="termDetails" class="hide"></div>
                     </div>
+                    <div id="bible-t" class="tabcontent "><p>Bible text lookup plugin here</p></div>
                 </div>
         </div>
         <script src="wordlink-search-tree.js"></script>
@@ -477,13 +477,9 @@ ksort($wordLinkTerms);
                 <h2 style="margin-top:auto;"></h2>
             </div>
             <div class="termExplanation">
-                <div class="w-audio wordLinkAudioCont">
-                    <audio class="wordLinkAudio" controls></audio>
-                </div>
                 <ul class="alternateTerms"></ul>
+                <div><b>Back translation:</b><ul class="backTranslationList"></ul></div>
                 <div><b>Meaning notes. Definitions:</b><p class="notes"></p></div>
-                <div><b>Back translation:</b><p class="backTranslation"></p>
-                <div>
                 <div class="relatedTerms"><b>Related (but different) terms:</b>
                     <ul class="relatedTermsList"></ul>
                 </div>
