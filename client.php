@@ -16,7 +16,7 @@ require_once('API/utils/Model.php');
 
 $conn = GetDatabaseConnection();
 
-
+$storyId = '';
 //display currStory and currProjId, passed from index.php
 if (array_key_exists('story', $_GET)) {
 
@@ -37,6 +37,11 @@ if (array_key_exists('story', $_GET)) {
 
 $wordLinkFilePath = __DIR__ . '/data/' . ($language ?: "en") . '/wordlinks.csv';
 $handle = fopen($wordLinkFilePath, 'r');
+
+# get list of terms having WordlinkTranslations
+$sql = "SELECT LOWER(term) FROM WordlinkTranslations WHERE projectId = ?;";
+$stmt = PrepareAndExecute($conn, $sql, array($storyId));
+$termsWithBackTranslations = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column
 $wordLinkTerms = [];
 
 // parse header row and ignore data
@@ -71,6 +76,7 @@ while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
             "galensNotes" => trim($row[8] ?? ""),
             "otherConsultantComments" => trim($row[9] ?? ""),
             "otherConsultantSuggestions" => trim($row[10] ?? ""),
+            'hasWordLinkTranslations' => in_array(strtolower(trim($row[1])), $termsWithBackTranslations),
         ];
     }
 }
@@ -393,6 +399,12 @@ ksort($wordLinkTerms);
                 if (wordLinkTerms.hasOwnProperty(word.toLowerCase())) {
                     const link = document.createElement('a');
                     link.textContent = word;
+
+                    // display word link term in the slide using black color if there is back translation exits
+                    if (wordLinkTerms[word.toLowerCase()].hasWordLinkTranslations) {
+                        link.style.color = 'black';
+                    }
+
                     link.addEventListener('click', (event) => {
                         showTermDetails(event, word);
                     });
