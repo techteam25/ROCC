@@ -644,6 +644,10 @@ input:checked + .slider:before {
     text-decoration: underline;
 }
 
+.transcripts #mainText a.hasWordLinkTranslations {
+	color: #000;
+}
+
 /* style for wordlinks */
 .wordlinks {
 	height: 323px;

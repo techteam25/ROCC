@@ -400,9 +400,9 @@ ksort($wordLinkTerms);
                     const link = document.createElement('a');
                     link.textContent = word;
 
-                    // display word link term in the slide using black color if there is back translation exits
+                    // display word link term in the slide using black color if there is a backtranslation exits
                     if (wordLinkTerms[word.toLowerCase()].hasWordLinkTranslations) {
-                        link.style.color = 'black';
+                        link.classList.add('hasWordLinkTranslations')
                     }
 
                     link.addEventListener('click', (event) => {
