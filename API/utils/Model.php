@@ -811,7 +811,7 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
-    public function GetWordLinkBackTranslation($projectId, $term): array|false {
+    public function GetWordLinkBackTranslation($projectId, $term) {
         $sql = "SELECT * FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
         $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
         $existingRecoding = $this->FetchArray($stmt);
