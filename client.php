@@ -39,7 +39,7 @@ $wordLinkFilePath = __DIR__ . '/data/' . ($language ?: "en") . '/wordlinks.csv';
 $handle = fopen($wordLinkFilePath, 'r');
 
 # get list of terms having WordlinkTranslations
-$sql = "SELECT LOWER(term) FROM WordlinkTranslations WHERE projectId = ?;";
+$sql = "select lower(WT.term) from WordlinkTranslations WT join Stories S on WT.projectId = S.projectId where S.id = ?;";
 $stmt = PrepareAndExecute($conn, $sql, array($storyId));
 $termsWithBackTranslations = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column
 $wordLinkTerms = [];
