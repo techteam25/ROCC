@@ -16,18 +16,22 @@ require_once('API/utils/Model.php');
 
 $conn = GetDatabaseConnection();
 
-$storyId = '';
 //display currStory and currProjId, passed from index.php
 if (array_key_exists('story', $_GET)) {
 
     $storyId = $_GET['story'];
     $storyStmt = PrepareAndExecute($conn, 
-        'SELECT androidId, title, Stories.language AS language FROM Stories, Projects WHERE Projects.id = projectId AND Stories.id = ?', 
+        'SELECT projectId, androidId, title, Stories.language AS language FROM Stories, Projects WHERE Projects.id = projectId AND Stories.id = ?',
         array($storyId));
     if (($row = $storyStmt->fetch(PDO::FETCH_ASSOC))) {
         $projectId = $row['androidId'];
         $language = $row['language'];
         $templateTitle = $row['title'];
+
+        # get list of terms having WordlinkTranslations
+        $sql = "select lower(term) from WordlinkTranslations where projectId = ?;";
+        $stmt = PrepareAndExecute($conn, $sql, array($row['projectId']));
+        $termsWithBackTranslations = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     } else {
         RespondWithError(404, 'Story Not Found');
     }
@@ -37,11 +41,6 @@ if (array_key_exists('story', $_GET)) {
 
 $wordLinkFilePath = __DIR__ . '/data/' . ($language ?: "en") . '/wordlinks.csv';
 $handle = fopen($wordLinkFilePath, 'r');
-
-# get list of terms having WordlinkTranslations
-$sql = "select lower(WT.term) from WordlinkTranslations WT join Stories S on WT.projectId = S.projectId where S.id = ?;";
-$stmt = PrepareAndExecute($conn, $sql, array($storyId));
-$termsWithBackTranslations = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column
 $wordLinkTerms = [];
 
 // parse header row and ignore data
