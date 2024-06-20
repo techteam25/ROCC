@@ -115,7 +115,7 @@ if (array_key_exists('story', $_GET)) {
 
                 <!--Get current project number and story title-->
                 <div class="story-info">
-                    <h1 id="storyTitle">StoryProducer</h1>
+                    <h1 id="storyTitle">Story Publisher Adv</h1>
                 </div>
 
                 <div class="header-menu">

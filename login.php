@@ -80,7 +80,7 @@ if (isset($_SESSION['email'])) {
             <div class ="pgInfo">
                 <img id ="logo" src='images/SP.png'>
                 <p3> Welcome to <strong>ROCC</strong> for SPadv</p3>
-                <p4> A Remote Oral Consultant Checker tool for remote StoryProducerAdv users</p4>
+                <p4> A Remote Oral Consultant Checker tool for remote Story Publisher Adv users</p4>
             </div>
             <div class="row">
                     <div class="card card-signin my-5">

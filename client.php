@@ -251,11 +251,6 @@ if (array_key_exists('story', $_GET)) {
 
                     <div class ="right-audio">
                         <div id ="rt-t"> Current Slide Notes </div>
-                        <div class ="written-notes">
-                            <form>
-                                <div id ="editor-container"></div>
-                            </form>
-                        </div>
                                 <!--Get audio file and put it inthe player-->
                                 <div class ="theAudioPlayer">
                                 <audio controls id="audioPlayer">
@@ -263,7 +258,12 @@ if (array_key_exists('story', $_GET)) {
                                             src="<?=$storyRoot?>/0.m4a" 
                                             type="audio/x-m4a"></source>
                                 </audio>
-                                </div>                        
+                                </div>  
+                        <div class ="written-notes">
+                            <form>
+                                <div id ="editor-container"></div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -285,23 +285,24 @@ if (array_key_exists('story', $_GET)) {
 
                 <div class="lookup">
                     <div class ="w-story">
-                        <div class ="w-trans">
-                            <form id = "ws-form">
-                                <div id ="editor-container2"></div>
-                            </form>
-                        </div>
                         <div class ="w-audio">
                             <audio controls id="wholeAudio">
                                 <source id="wholeAudio" 
                                         src="<?=$storyRoot?>/wholeStory.m4a" 
                                         type="audio/x-m4a">
                             </audio>
-			<!-- Removing the save button becuase it is not necessary anymore:::
+            <!-- Removing the save button becuase it is not necessary anymore:::
                             <button id="saveButton2" onclick="saveWholeNotes()" 
                                     type="button" 
-				    value="Save">Save Whole Story Notes</button>
+                    value="Save">Save Whole Story Notes</button>
 -->
+                        </div>                        
+                        <div class ="w-trans">
+                            <form id = "ws-form">
+                                <div id ="editor-container2"></div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
 

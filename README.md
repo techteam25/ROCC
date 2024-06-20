@@ -1,6 +1,6 @@
 # Remote Oral Consultancy Checker (ROCC)
 
-This is a companion to the StoryProducer Mobile App. The mobile app will likely
+This is a companion to the Story Publisher Adv Mobile App. The mobile app will likely
 be being used by someone in the place for whom a story is being translated; in
 contrast, this web app is for consultants to give feedback and approval for
 translations made by the mobile app. Usually the consultant does not know that

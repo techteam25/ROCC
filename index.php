@@ -52,7 +52,7 @@ require_once('API/utils/Model.php');
 				<div class ="header-top">
 					<div class="story-info">
 						<img id ="logo" src='images/SP.png' width="60" height="60">
-						<h1>StoryProducer</h1>
+						<h1>Story Publisher Adv</h1>
 					</div>
 
 					<div class ="header-menu">
