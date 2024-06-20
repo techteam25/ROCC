@@ -638,3 +638,147 @@ input:checked + .slider:before {
 .tabHeader {
     background: var(--medDark);
 }
+
+.transcripts #mainText a {
+	cursor: pointer;
+    text-decoration: underline;
+}
+
+.transcripts #mainText a.hasWordLinkTranslations {
+	color: #000;
+}
+
+/* style for wordlinks */
+.wordlinks {
+	height: 323px;
+}
+
+.wordlinks .term-list .form-control {
+	margin: 8px 0 13px;
+	height: 35px;
+	line-height: 35px;
+}
+
+.wordlinks .term-list .list-group {
+	max-height: 247px;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+	scrollbar-gutter: unset;
+	height: 100%;
+	border-top: .5px solid #ddd;
+	border-bottom: .5px solid #ddd;
+}
+
+.wordlinks .term-list .list-group-item {
+	flex: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-transform: capitalize;
+    margin-bottom: 0;
+}
+
+.wordlinks .termHeader {
+	display: flex;
+	align-items: center;
+}
+
+.wordlinks .termHeader h2 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 38px;
+	text-transform: capitalize;
+	margin: 0;
+}
+
+.wordlinks .termHeader a {
+	margin: 0 10px 0 0;
+	color: var(--medDark);
+}
+
+.wordlinks .termHeader a:hover {
+	color: #337ab7;
+}
+
+.wordlinks .termExplanation {
+	max-height: 262px;
+	height: calc(100vh);
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+	scrollbar-gutter: unset;
+	position: relative;
+}
+
+.wordlinks .termExplanation a {
+	cursor: pointer;
+}
+
+.wordlinks .termExplanation::before {
+	content: '';
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	display: block;
+	height: 1px;
+	z-index: 1;
+	background: rgba(0,0,0,.32);
+}
+
+.wordlinks .termExplanation::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	display: block;
+	width: 100%;
+	height: 1rem;
+	z-index: 1;
+	background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+}
+
+.wordlinks .termExplanation b {
+	text-transform: uppercase;
+}
+
+.wordlinks .relatedTermsList {
+	padding-left: 0px;
+	list-style: none;
+}
+
+.wordlinks .relatedTermsList li {
+	display: inline;
+	padding: 0 1px;
+}
+
+.wordlinks .alternateTerms {
+	padding-left: 1px;
+	list-style: none;
+	font-weight: 500;
+}
+
+.wordlinks .alternateTerms li {
+	display: inline;
+}
+
+.wordlinks .relatedTermsList li:after,
+.wordlinks .alternateTerms li:after {
+	content: ", ";
+}
+
+.wordlinks .relatedTermsList li:last-child:after,
+.wordlinks .alternateTerms li:last-child:after {
+	content: "";
+}
+
+.wordlinks .otherLanguageExamplesList {
+	padding-left: 20px;
+}
+.wordlinks .backTranslationList {
+    padding-left: 15px;
+}
+
+.wordlinks .backTranslationList.noBackTranslationMessage {
+    list-style: none;
+    padding-left: 0;
+    font-style: italic;
+}

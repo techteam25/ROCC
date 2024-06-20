@@ -119,3 +119,56 @@ usage, but rather an auto-saved JSON file.
 MySQL database holds user, template, and project info. Web application intended 
 to be run on Apache Web Server. HTML/CSS/JS frontend with PHP api and backend 
 and MySQL DB
+
+
+## Testing
+
+### Prerequisite
+
+Before running the tests, ensure that the following prerequisites are met:
+
+The tests depend on specific values retrieved from the `API/utils/ConnectionSettings.php` file:
+* Utilize the `DB_DNS` constant in the file for the database name and server host information in the database connection.
+* Access the global variables `$databaseUser` and `$databasePassword` for authentication.
+* `$filesRoot` variable for Root file location in order to write story data
+
+#### Database connection:
+
+Tests used the database connection settings `API/utils/ConnectionSettings.php` file.
+
+#### Root files
+`$filesRoot` variable from `API/utils/ConnectionSettings.php` file is used by tests
+
+#### SQL Files:
+* The tests rely on the `docs/new-schema.sql` and `docs/seed.sql` files.
+* In particular, the `docs/seed.sql` file contains essential data for the `Projects` table, utilized by the tests.
+* If tests encounter failures due to changes in the data, ensure that the `PHONE_ID_#` in following test files corresponds to the `androidId` column value in the `Projects` table: 
+    * `tests/integration/UploadSlideBackTranslationIntegrationTest.php` .
+    * `tests/integration/UploadWordLinkBackTranslation.php`.
+* The current `androidId` values used in the test file are:
+  * `lmnopq`
+  * `ghijkl`
+  * `rstuvw`
+
+
+#### Test Story Template:
+Navigate to the test story template within the project structure:
+* Located within the `tests` directory, the test story template resides in the `tests/data/templates` directory.
+* The structure of the story template is as follows:
+  * `story_1` serves as the story template in the test file. Ensure its alignment with the `STORY_TEMPLATE` constant declared in the test file.
+  * Within the `story_1/project` directory, find a file named `story.json` containing information about the story slide. Note: Do not alter the filename.
+  * The `slideType` set to `COPYRIGHT` is not processed by `UploadSlideBacktranslation.php`.
+* Language-specific data for the template can be found in the `tests/data/templates/es` directory, maintaining the same overall structure.
+
+
+### Running Tests:
+* Ensure that all dependencies are installed by running:
+  ```php
+  php composer.phar install
+  ```
+* Execute tests using the following command:
+  ```php
+  ./vendor/bin/phpunit --testdox --no-coverage
+  ```
+
+

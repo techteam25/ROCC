@@ -51,7 +51,7 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
         $templateDirectory = $templateDirectory . $language . "/";
     }
     $templateDirectory = $templateDirectory . $templateTitle;
-    echo $templateDirectory;
+    error_log(sprintf("Template Directory for given story:%s: %s", $storyId, $templateDirectory));
     if (!file_exists($templateDirectory) || !is_dir($templateDirectory)) {
         RespondWithError(400, "Server does not contain requested template.");
     }
@@ -77,7 +77,7 @@ function InitializeNewStory($conn, $androidId, $templateTitle) {
         if ($slideEntry['slideType'] !== 'COPYRIGHT') {
         error_log("Got slide number $slideIndex");
         PrepareAndExecute($conn,
-            'INSERT IGNORE INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)', 
+            'INSERT IGNORE INTO Slide (storyId, note, slideNumber, isApproved) VALUES (?,"",?,0)',
             array($storyId, $slideIndex));
         }
         $slideIndex++;
@@ -99,7 +99,7 @@ function CheckEmailNotify($conn, $storyId, $androidId) {
     $stmt = $stmt . "WHERE Stories.id = ?";
 
     $projectIdStmt = PrepareAndExecute($conn, $stmt, array($storyId));
-	
+
     if (($row = $projectIdStmt->fetch(PDO::FETCH_ASSOC))) {
 	if (($row['FirstThreshold'] == null && $count / $totalReq >= .5) ||
 	    ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ))
@@ -117,12 +117,12 @@ function CheckEmailNotify($conn, $storyId, $androidId) {
         $dt = date('Y-m-d H:i:s');
 	if ($row['FirstThreshold'] == null && $count / $totalReq >= .5) // save timestamp
 	{
-            $sql = "UPDATE Stories SET FirstThreshold = ?  WHERE id = ?"; 
+            $sql = "UPDATE Stories SET FirstThreshold = ?  WHERE id = ?";
             $stmt = PrepareAndExecute($conn, $sql, array($dt, $storyId));
 	}
 	if ($row['SecondThreshold'] == null && $count + 1 >=  $totalReq ) // save timestamp
 	{
-            $sql = "UPDATE Stories SET SecondThreshold = ?  WHERE id = ?"; 
+            $sql = "UPDATE Stories SET SecondThreshold = ?  WHERE id = ?";
             $stmt = PrepareAndExecute($conn, $sql, array($dt, $storyId));
 	}
     }

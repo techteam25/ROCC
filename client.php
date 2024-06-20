@@ -16,6 +16,7 @@ require_once('API/utils/Model.php');
 
 $conn = GetDatabaseConnection();
 
+$storyId = '';
 //display currStory and currProjId, passed from index.php
 if (array_key_exists('story', $_GET)) {
 
@@ -33,9 +34,57 @@ if (array_key_exists('story', $_GET)) {
 } else {
     RespondWithError(400, 'No Story Requested');
 }
+
+$wordLinkFilePath = __DIR__ . '/data/' . ($language ?: "en") . '/wordlinks.csv';
+$handle = fopen($wordLinkFilePath, 'r');
+
+# get list of terms having WordlinkTranslations
+$sql = "select lower(WT.term) from WordlinkTranslations WT join Stories S on WT.projectId = S.projectId where S.id = ?;";
+$stmt = PrepareAndExecute($conn, $sql, array($storyId));
+$termsWithBackTranslations = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Fetch only the first column
+$wordLinkTerms = [];
+
+// parse header row and ignore data
+fgetcsv($handle);
+// Read the file line by line
+while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
+// skip empty row if there is any
+    if (isset($row[1]) && !empty($row[1])) {
+        $alternateForms = "";
+        $backTranslations = "";
+        $relatedTerms = "";
+
+        if (!empty($row[2])) {
+            $alternateForms = explode(",", $row[2]);
+        }
+
+        if (!empty($row[3])) {
+            $backTranslations = explode(";", $row[3]);
+        }
+
+        if (!empty($row[5])) {
+            $relatedTerms = explode(",", $row[5]);
+        }
+
+        $wordLinkTerms[strtolower(trim($row[1]))] = [
+            "alternateTerms" => $alternateForms,
+            "otherLanguageExamples" => $backTranslations,
+            "notes" => trim($row[4] ?? ""),
+            "relatedTerms" => $relatedTerms,
+            "otherComments" => trim($row[6] ?? ""),
+            "galensRationale" => trim($row[7] ?? ""),
+            "galensNotes" => trim($row[8] ?? ""),
+            "otherConsultantComments" => trim($row[9] ?? ""),
+            "otherConsultantSuggestions" => trim($row[10] ?? ""),
+            'hasWordLinkTranslations' => in_array(strtolower(trim($row[1])), $termsWithBackTranslations),
+        ];
+    }
+}
+
+// Close the file handle
+fclose($handle);
+ksort($wordLinkTerms);
 ?>
-
-
 <!doctype html>
 <html lang = "en-US">
 
@@ -135,6 +184,7 @@ if (array_key_exists('story', $_GET)) {
         var externalWebsocketPort = <?=json_encode($GLOBALS['externalWebsocketPort'])?>;
         var externalWebsocketHost = <?=json_encode($GLOBALS['externalWebsocketHost'])?>;
 
+        const wordLinkTerms = <?= json_encode($wordLinkTerms) ?>;
         </script>
 
     </head>
@@ -305,20 +355,27 @@ if (array_key_exists('story', $_GET)) {
 
                     </div>
                 </div>
-
                 <div class ="bible">
                     <div class="tabHeader">
+                        <button class="tablinks active" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                         <button class="tablinks" onclick="openTab(event, 'bible-t')"> Bible Text Lookup </button>
-                        <button class="tablinks" onclick="openTab(event, 'WordLinks')"> WordLinks </button>
                     </div>
-
-                    <div id="bible-t" class="tabcontent"><p>Bible text lookup plugin here</p></div>
-                    <div id="WordLinks" class="tabcontent"><p>WordLinks here eventually</p></div>
-
+                    <div id="WordLinks" class="tabcontent show active wordlinks">
+                        <div id="termList" class="term-list">
+                            <input class="form-control" id="termListSearchBox" type="text" placeholder="Search" aria-label="Search">
+                            <div class="list-group">
+                                <button id="noTermFound" type="button" class="hide list-group-item">Search term not matched</button>
+                                <?php foreach ($wordLinkTerms as $key => $value): ?>
+                                <button onclick="showTermDetails(event, '<?= rawurlencode($key) ?>')" type="button" class="list-group-item"><?= $key ?></button>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div id="termDetails" class="hide"></div>
+                    </div>
+                    <div id="bible-t" class="tabcontent "><p>Bible text lookup plugin here</p></div>
                 </div>
-            </div>
         </div>
-
+        <script src="wordlink-search-tree.js"></script>
         <script>
 <?php
     if (file_exists($storyjsonfile))
@@ -328,18 +385,41 @@ if (array_key_exists('story', $_GET)) {
 ?>
         //when transferring from php to json just output the string, otherwise escaped charcacters are not handled properly
         let json_a = <?php echo $storyjsonstring ?>;
-        function readProperties(slideNumber)
-        {
+        function readProperties(slideNumber) {
             document.getElementById("storyTitle").innerHTML = json_a.title;
             let currSlide = json_a.slides[slideNumber]
-            if(currSlide.reference == ""){
+            if (currSlide.reference == "") {
                 document.getElementById("lf-t").innerHTML = "&nbsp;";
-            } else{
+            } else {
                 document.getElementById("lf-t").innerHTML = currSlide.reference;
             }
-            fileDisplayArea = document.getElementById("mainText");
-            fileDisplayArea.innerHTML = currSlide.content;
+
+            const wordLinkPhrases = window.WSL.splitOnWordLinks(currSlide.content);
+            const slideContentContainer = document.createElement('p');
+            wordLinkPhrases.forEach(word => {
+                if (wordLinkTerms.hasOwnProperty(word.toLowerCase())) {
+                    const link = document.createElement('a');
+                    link.textContent = word;
+
+                    // display word link term in the slide using black color if there is a backtranslation exits
+                    if (wordLinkTerms[word.toLowerCase()].hasWordLinkTranslations) {
+                        link.classList.add('hasWordLinkTranslations')
+                    }
+
+                    link.addEventListener('click', (event) => {
+                        showTermDetails(event, word);
+                    });
+
+                    // append word link to display term details
+                    slideContentContainer.append(link)
+                } else {
+                    slideContentContainer.append(word);
+                }
+            });
+
+            document.getElementById("mainText").replaceChildren(slideContentContainer);
         }
+
 <?php
     }
     else
@@ -402,5 +482,24 @@ if (array_key_exists('story', $_GET)) {
             }
 
         </script>
+        <template id="termDetailTemplate">
+            <div class="termHeader">
+                <a href="javascript:void(0)" onclick="showTermList()" class="closeBtn">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <h2 style="margin-top:auto;"></h2>
+            </div>
+            <div class="termExplanation">
+                <ul class="alternateTerms"></ul>
+                <div><b>Back translation:</b><ul class="backTranslationList"></ul></div>
+                <div><b>Meaning notes. Definitions:</b><p class="notes"></p></div>
+                <div class="relatedTerms"><b>Related (but different) terms:</b>
+                    <ul class="relatedTermsList"></ul>
+                </div>
+                <div class="otherLanguageExamples"><b>Other language examples:</b>
+                    <ul class="otherLanguageExamplesList"></ul>
+                </div>
+            </div>
+        </template>
     </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 $serverName = 'localhost';
 $databaseName = 'StoryProducer';
 #  This is for rocc.ttapps.org server
@@ -9,6 +8,7 @@ $filesRoot = '/var/www/html/Files';
 $websocketPort = '8010';
 $externalWebsocketPort = '443';
 $externalWebsocketHost = 'wss.ttapps.org';
+
 #  This is for dev 10.10.10.248 server
 #$databaseUser = 'dharding';
 #$databasePassword = '4maria';
@@ -16,3 +16,8 @@ $externalWebsocketHost = 'wss.ttapps.org';
 #$websocketPort = '8082';
 #$externalWebsocketPort = '8082';
 #$externalWebsocketHost = '10.10.10.248';
+# ------- dev server setting end here --------
+
+
+$dns = "mysql:host={$serverName};dbname={$databaseName}";
+define('DB_DNS', $dns);

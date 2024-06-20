@@ -322,12 +322,16 @@ function openTab(evt, contentName){
     tabcontent = document.getElementsByClassName("tabcontent");
     for(i=0; i<tabcontent.length; i++){
         tabcontent[i].style.display = "none";
+
+        tabcontent[i].classList.remove('active')
+        tabcontent[i].classList.remove('show')
     }
     tablinks = document.getElementsByClassName("tablinks");
     for(i=0; i<tablinks.length; i++){
         tablinks[i].className = tablinks[i].className.replace("active", "");
     }
     document.getElementById(contentName).style.display = "block";
+    document.getElementById(contentName).classList.add('active');
     evt.currentTarget.className += " active";
 }
 
@@ -401,4 +405,156 @@ let connection = connect();
 
 for (let i in approvals) {
     syncApprovalSwitch(i);
+}
+
+const searchInput = document.getElementById("termListSearchBox");
+// Bind search input change event to filter function
+searchInput.addEventListener("input", (event) => {
+    const searchTerm = event.target.value;
+    filterList(searchTerm);
+});
+
+function filterList(searchTerm) {
+    const searchTermLowerCase = searchTerm.toLowerCase();
+    var searchItemFound = false;
+    const listContainer = document.getElementById("termList");
+    listContainer.querySelectorAll("button").forEach(listItem => {
+        // ignore no term found message item
+        if (listItem.id === "noTermFound") {
+            return;
+        }
+        const itemText = listItem.textContent.toLowerCase();
+        const isMatch = itemText.includes(searchTermLowerCase);
+        listItem.style.display = isMatch ? "block" : "none";
+
+        if (isMatch) {
+            searchItemFound = true;
+        }
+    });
+
+    // display no term found element if no item is visible
+    if (searchItemFound) {
+        document.getElementById("noTermFound").classList.add("hide");
+    } else {
+        document.getElementById("noTermFound").classList.remove("hide");
+    }
+}
+
+
+function showTermDetails(evt, term) {
+    evt.preventDefault();
+    // show WordLinks tab if not visible
+    if (!document.getElementById('WordLinks').classList.contains('active')) {
+        openTab(event, 'WordLinks');
+    }
+
+    const decodedTermlink = decodeURIComponent(term.toLowerCase());
+    const tl = document.querySelector('#termDetailTemplate');
+    // clone template and append available data
+    const template = tl.cloneNode(true);
+    const headerEl = template.content.querySelector('.termHeader h2');
+    headerEl.innerHTML = decodedTermlink;
+    template.content.querySelector('.notes').textContent = wordLinkTerms[decodedTermlink].notes;
+
+    const alternateTerms = wordLinkTerms[decodedTermlink].alternateTerms;
+    if (alternateTerms.length > 0) {
+        alternateTerms.forEach(function(term) {
+            if (term.length > 1) {
+                template.content.querySelector('.alternateTerms').appendChild(generateTermItem(term));
+            }
+        });
+    }
+
+    const relatedTerms = wordLinkTerms[decodedTermlink].relatedTerms;
+    if (relatedTerms.length > 0) {
+        relatedTerms.forEach(function(term) {
+            if (term.length > 1) {
+                template.content.querySelector('.relatedTermsList').appendChild(generateTermItem(term, true))
+            }
+        });
+    } else {
+        template.content.querySelector('.relatedTerms').classList.add('hide');
+    }
+
+    const otherLanguageExamples = wordLinkTerms[decodedTermlink].otherLanguageExamples;
+    if (otherLanguageExamples.length > 0) {
+        otherLanguageExamples.forEach(function(term) {
+            if (term.length > 1) {
+                template.content.querySelector('.otherLanguageExamplesList').appendChild(generateTermItem(term))
+            }
+        });
+    } else {
+        template.content.querySelector('.otherLanguageExamples').classList.add('hide');
+    }
+
+    document.getElementById("termDetails").replaceChildren(template.content);
+    document.querySelector('ul.relatedTermsList').addEventListener("click", function(event) {
+        if (event.target.matches('a')) {
+            showTermDetails(event, event.target.textContent)
+        }
+    });
+
+    getWordLinkRecording(decodedTermlink);
+}
+
+function generateTermItem(t, clickable = false, transformToLowerCase =  true) {
+
+    let term = t
+    if (transformToLowerCase)
+    {
+        term = t.trim().toLowerCase();
+    }
+
+    const li = document.createElement('li');
+    if (clickable && wordLinkTerms.hasOwnProperty(term)) {
+        const a = document.createElement('a');
+        a.textContent = term;
+        li.append(a);
+    } else {
+        li.textContent = term
+    }
+
+    return li;
+}
+
+function showTermList(evt) {
+    document.getElementById("termDetails").classList.add("hide");
+    document.getElementById("termList").classList.remove("hide");
+    filterList("");
+    searchInput.value = "";
+}
+
+function getWordLinkRecording(term) {
+       $.ajax({
+        url: "API/GetWordLinkBackTranslation.php",
+        data: {
+            "term": term,
+            "PhoneId": projectId,
+        },
+        type: "POST",
+        error: function() {
+            displayNoBackTranslationMessage();
+        },
+        success: function (data) {
+            if (data.backTranslation.length > 0){
+                $('ul.backTranslationList').empty()
+                data.backTranslation.forEach(function(term) {
+                    document.querySelector('ul.backTranslationList').appendChild(generateTermItem(term, false, false))
+                });
+            } else {
+                displayNoBackTranslationMessage();
+            }
+        },
+       complete: function (){
+           document.getElementById("termList").classList.add("hide");
+           document.getElementById("termDetails").classList.remove("hide");
+       }
+    });
+}
+
+function displayNoBackTranslationMessage() {
+    $('ul.backTranslationList').empty();
+    const term = "No back translation has been uploaded.";
+    document.querySelector('ul.backTranslationList').appendChild(generateTermItem(term, false, false))
+    document.querySelector('ul.backTranslationList').classList.add("noBackTranslationMessage");
 }

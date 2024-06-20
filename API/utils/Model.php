@@ -17,8 +17,7 @@ function GetDatabaseConnection() {
         // variable referenced within a function is locally scoped, the value
         // of $serverName and the other variables is null. To access the
         // global variables, we must use the $GLOBALS associative array.
-        $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
-            $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+        $cn = new PDO(DB_DNS, $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
         $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$lastConnectionTime = time();
         return $cn;
@@ -126,8 +125,8 @@ class Model {
           // variable referenced within a function is locally scoped, the value
           // of $serverName and the other variables is null. To access the
           // global variables, we must use the $GLOBALS associative array.
-            $cn = new PDO("mysql:host={$GLOBALS['serverName']};dbname={$GLOBALS['databaseName']}",
-                $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
+
+            $cn = new PDO(DB_DNS, $GLOBALS['databaseUser'], $GLOBALS['databasePassword']);
             $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Exception $e) {
             Respond\error("Unable to connect to database");
@@ -812,6 +811,99 @@ class Model {
         $this->FreeStmt($stmt);
     }
 
+    public function GetWordLinkBackTranslation($projectId, $term) {
+        $sql = "SELECT * FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+        $existingRecoding = $this->FetchArray($stmt);
+        $this->FreeStmt($stmt);
+        return $existingRecoding;
+    }
+
+    public function CreateOrUpdateWordLinkBackTranslation($projectId, $term, $textBackTranslation): int
+    {
+        # check if a translation exists for given term & projectId
+        $sql = "SELECT id FROM WordlinkTranslations WHERE term = ? AND projectId = ?;";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+
+        $existingRecoding = $this->FetchArray($stmt);
+        $this->FreeStmt($stmt);
+
+        if(is_array($existingRecoding)) {
+            // update existing translation data
+           return $this->UpdateWordLinkBackTranslation($existingRecoding['id'], $textBackTranslation);
+        } else {
+            // create new translation
+            return  $this->CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation);
+        }
+    }
+
+    /**
+     * @param int $projectId
+     * @param string $term
+     * @param string $textBackTranslation
+     * @return int
+     */
+    public function CreateWordLinkBackTranslation($projectId, $term, $textBackTranslation) {
+        try {
+            $this->conn->beginTransaction();
+            $sql = "INSERT INTO WordlinkTranslations(term, projectId, textBackTranslation) VALUES (?, ?, ?);";
+            $stmt = $this->PrepareAndExecute($sql, array($term, $projectId, $textBackTranslation));
+            $this->FreeStmt($stmt);
+            $translationId = $this->conn->lastInsertId();
+            $this->conn->commit();
+
+            return $translationId;
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            RespondWithError(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * @param int $translationId
+     * @param string $textBackTranslation
+     * @return int
+     */
+    public function UpdateWordLinkBackTranslation($translationId, $textBackTranslation)
+    {
+         try {
+             $this->conn->beginTransaction();
+             $updateSql =  "UPDATE WordlinkTranslations SET textBackTranslation = ?  WHERE id = ?;";
+             $stmt = $this->PrepareAndExecute($updateSql, array($textBackTranslation, $translationId));
+             $this->FreeStmt($stmt);
+
+             $this->conn->commit();
+             return $translationId;
+         } catch (\Exception $e) {
+             error_log($e->getMessage());
+             $this->conn->rollBack();
+             RespondWithError(500, 'There was an exception while creating the text back translation.');
+         }
+    }
+
+    function DeleteWordLinkBackTranslation($projectId, $term): bool
+    {
+        $sql = "DELETE FROM WordlinkTranslations WHERE term = ? AND projectId = ?";
+        $stmt = $this->PrepareAndExecute($sql, array($term, $projectId));
+        $numRows = $this->NumRows($stmt);
+        $this->FreeStmt($stmt);
+        return $numRows !== 0;
+    }
+
+    /**
+     * @throws DBException
+     */
+    function GetProjectId($androidId) {
+        $sql = "SELECT id FROM Projects WHERE androidId = ?";
+        $stmt = $this->PrepareAndExecute($sql, array($androidId));
+
+        if ($project = $this->FetchArray($stmt)) {
+            $this->FreeStmt($stmt);
+            return $project['id'];
+        }
+        return null;
+    }
 }
 
 class DBException extends \Exception {

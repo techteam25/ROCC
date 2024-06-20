@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS Stories;
 DROP TABLE IF EXISTS Assigned;
 DROP TABLE IF EXISTS Projects;
 DROP TABLE IF EXISTS Consultants;
+DROP TABLE IF EXISTS WordlinkTranslations;
 
 CREATE TABLE Consultants (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -37,6 +38,9 @@ CREATE TABLE Assigned (
 CREATE TABLE Stories (
   id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(256),
+  `FirstThreshold` datetime DEFAULT NULL,
+  `SecondThreshold` datetime DEFAULT NULL,
+  language VARCHAR(256),
   projectId INT NOT NULL REFERENCES Projects(id),
   note TEXT NOT NULL,
   UNIQUE (title, projectId)
@@ -61,4 +65,13 @@ CREATE TABLE Messages (
   isTranscript BOOLEAN NOT NULL,
   timeSent TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   text TEXT NOT NULL
+);
+
+
+CREATE TABLE WordlinkTranslations (
+  id int PRIMARY KEY AUTO_INCREMENT,
+  projectId INT NOT NULL REFERENCES Projects(id),
+  term VARCHAR(256) NOT NULL,
+  textBackTranslation TEXT,
+  UNIQUE (projectId, term)
 );
